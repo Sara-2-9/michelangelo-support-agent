@@ -8,6 +8,7 @@
 
 import { createSupportAgent, type AgentConfig, type SupportAnswer } from "./agent.js";
 import { createRouter, type Intent } from "./router.js";
+import { createBugReportHandler } from "./handlers/bug-report.js";
 
 export interface OrchestratedAnswer extends SupportAnswer {
   intent: Intent;
@@ -16,6 +17,7 @@ export interface OrchestratedAnswer extends SupportAnswer {
 export function createOrchestrator(config: AgentConfig) {
   const support = createSupportAgent(config);
   const router = createRouter(config.cfAccountId, config.cfApiToken);
+  const bugReport = createBugReportHandler(config.cfAccountId, config.cfApiToken);
 
   async function handle(message: string): Promise<OrchestratedAnswer> {
     const intent = await router.classify(message);
@@ -24,14 +26,10 @@ export function createOrchestrator(config: AgentConfig) {
       case "support_question":
         return { intent, ...(await support.answer(message)) };
 
-      case "bug_report":
-        // Step 2 of Phase 3: guided structured collection → issue draft.
-        return {
-          intent,
-          grounded: true,
-          sources: [],
-          text: "Vedo che vuoi segnalare un problema. La raccolta guidata dei bug report è in arrivo nel prossimo step del progetto — per ora descrivimi pure cosa è successo e ti aiuto con la documentazione se possibile.",
-        };
+      case "bug_report": {
+        const text = await bugReport.draft(message);
+        return { intent, grounded: true, sources: [], text };
+      }
 
       case "troubleshooting":
         // Step 3 of Phase 3: guided flows for known operational issues.
