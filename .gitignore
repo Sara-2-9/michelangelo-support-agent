@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Secrets — MAI committare
+.env
+
+# Output generati (riproducibili con npm run chunk)
+corpus/chunks.json
+
+# OS / editor
+.DS_Store

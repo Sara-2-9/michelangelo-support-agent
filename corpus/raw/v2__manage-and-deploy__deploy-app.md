@@ -1,0 +1,54 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Deploy App
+
+> Deploy your Michelangelo app to the App Store
+
+Michelangelo helps you generate production-ready mobile code. To ship a generated app as a standalone product, you export the source code and build it with your own credentials.
+
+## Export to GitHub
+
+The recommended path for standalone deployment is through GitHub:
+
+1. Open your project in the Michelangelo editor.
+2. Go to **App Settings → Tools → GitHub → Settings**.
+3. Connect your GitHub account and select an installation.
+4. Tap **Push** to create a repository and commit the current files.
+
+From there, you can clone the repository and build the app using your preferred mobile build service or Xcode.
+
+## Build and Submit
+
+After pushing to GitHub:
+
+1. Configure your own app identifier, signing certificates, and App Store credentials.
+2. Run a build for iOS.
+3. Submit the build to TestFlight or the App Store.
+
+## Public Preview as Distribution
+
+If you do not need a standalone binary, the public preview link is the fastest distribution method:
+
+```
+https://michelangelo.land/preview/{projectId}
+```
+
+Share this link to let anyone try your app instantly.
+
+## Deploying the Michelangelo App Itself
+
+The **Michelangelo: Vibe Coding** iOS app is built and distributed separately by the Michelangelo team. This process is independent from deploying your generated projects.
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="GitHub Integration" icon="github" color="#7c7c7c" href="/v2/michelangelo-app/github-integration">
+    Connect GitHub and push your source code.
+  </Card>
+
+  <Card title="Share Preview" icon="eye" color="#7c7c7c" href="/v2/manage-and-deploy/share-preview">
+    Share a public preview link.
+  </Card>
+</CardGroup>

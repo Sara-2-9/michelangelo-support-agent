@@ -1,0 +1,37 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Vision
+
+> The vision behind Michelangelo for Meta Glasses
+
+We believe the future of software creation is ambient. Michelangelo for Meta Glasses explores what it means to build apps without sitting at a desk or holding a screen.
+
+## Computing in Context
+
+Meta Glasses let you stay in the world while you create. You can describe an app idea while walking, preview it in your field of view, and refine it with quick voice commands. The environment becomes part of the creative process.
+
+## From Imagination to Prototype Faster
+
+The fastest way to capture an idea is often to say it out loud. With Meta Glasses, there is no unlock, no app switch, no keyboard. Just speak, see, and shape.
+
+## A Calmer Creative Flow
+
+By removing the phone from your hands, the experience becomes lighter and more present. You glance at your preview, give feedback, and move on.
+
+<Info>
+  This is a long-term vision. We are in early exploration and will share prototypes as the experience matures.
+</Info>
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="Overview" icon="glasses" color="#7c7c7c" href="/v2/michelangelo-meta-glasses/overview">
+    Read the Meta Glasses overview.
+  </Card>
+
+  <Card title="Interaction Model" icon="hand" color="#7c7c7c" href="/v2/michelangelo-meta-glasses/interaction-model">
+    Learn how interaction could work.
+  </Card>
+</CardGroup>

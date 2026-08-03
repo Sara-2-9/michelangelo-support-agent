@@ -1,0 +1,62 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Deploy App
+
+> Deploy your app from Michelangelo iOS App
+
+There are two things "deploy" can mean in Michelangelo:
+
+1. **The Michelangelo app itself** — built and shipped to the App Store by the Michelangelo team.
+2. **Your generated project** — previewed via a public link or exported to GitHub for standalone distribution.
+
+This page covers both.
+
+## Michelangelo App Distribution
+
+The **Michelangelo: Vibe Coding** app is built and submitted to the App Store by the Michelangelo team. It supports iPhone and the web preview player. iPad is not currently supported.
+
+### Over-the-Air Updates
+
+The production app receives updates automatically when the team publishes a new release.
+
+## Shipping a Generated Project
+
+Michelangelo does not provide an in-app "Build for App Store" button for generated projects. To ship a generated app as a standalone binary:
+
+1. Open the project in the Michelangelo editor.
+2. Go to **App Settings → Tools → GitHub → Settings**.
+3. Connect your GitHub account and push the code.
+4. Open the generated repository on GitHub.
+5. Clone the repository locally or run a build from a mobile build service.
+6. Configure your own app identifier, signing, and App Store credentials.
+7. Build and submit.
+
+### Fastest Distribution Path
+
+If you just want others to try your app, the public preview link is the fastest option:
+
+```
+https://michelangelo.land/preview/{projectId}
+```
+
+Anyone with the link can open and interact with the app in a browser.
+
+## App Store Metadata
+
+* **App title**: Michelangelo: Vibe Coding
+* **Subtitle**: App to build apps.
+* **Category**: Developer Tools
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="GitHub Integration" icon="github" color="#7c7c7c" href="/v2/michelangelo-app/github-integration">
+    Export your source code to GitHub.
+  </Card>
+
+  <Card title="Share App" icon="share-nodes" color="#7c7c7c" href="/v2/michelangelo-app/share-app">
+    Share a public preview link.
+  </Card>
+</CardGroup>

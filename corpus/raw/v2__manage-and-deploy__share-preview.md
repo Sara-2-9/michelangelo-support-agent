@@ -1,0 +1,61 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Share Preview
+
+> Share your app preview with others
+
+Sharing a preview is the fastest way to let someone try your Michelangelo app without installing anything.
+
+## Public Preview Link
+
+Every project has a public preview URL:
+
+```
+https://michelangelo.land/preview/{projectId}
+```
+
+Anyone with the link can open and interact with the app in a browser. No account is required.
+
+## How to Share
+
+### From the iOS App
+
+1. Open a project in the editor.
+2. Tap the settings icon in the header.
+3. Tap **Share**.
+4. Select a destination from the iOS share sheet.
+
+When the share completes, Michelangelo records the platform to help creators understand how their app is spreading.
+
+### From Explore
+
+If you discover a project you like in Explore, tap the share button on the right side of the screen to send the preview link to others.
+
+## Visibility
+
+You control whether the project appears in the Explore feed:
+
+* **Private App OFF** — the project is public and may appear in Explore.
+* **Private App ON** — the project is hidden from Explore, but existing preview links still work.
+
+<Warning>
+  Enabling Private App hides the project from Explore. It does not invalidate links that have already been shared.
+</Warning>
+
+## Reshares and Notifications
+
+When someone shares your project, the original creator may receive a notification depending on notification settings.
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="Share App" icon="share-nodes" color="#7c7c7c" href="/v2/michelangelo-app/share-app">
+    Learn about sharing from the iOS app.
+  </Card>
+
+  <Card title="Explore" icon="compass" color="#7c7c7c" href="/v2/michelangelo-app/explore">
+    Discover apps shared by the community.
+  </Card>
+</CardGroup>

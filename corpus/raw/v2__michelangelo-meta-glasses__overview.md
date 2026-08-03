@@ -1,0 +1,44 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Meta Glasses
+
+> Michelangelo for Meta Glasses platform
+
+Michelangelo for Meta Glasses is an experimental platform that brings AI app creation to lightweight, wearable devices.
+
+## Voice-First Creation
+
+The primary input is your voice. Describe an app, request changes, and navigate between versions using natural speech. The AI handles the rest.
+
+## Glanceable Previews
+
+App previews appear as simple, spatial interfaces you can view without pulling out a phone. The goal is quick validation, not immersive editing.
+
+## Built for Motion
+
+Meta Glasses are designed to be used while you are doing other things. Michelangelo adapts to short sessions, background noise, and hands-free contexts.
+
+## What Could Come Next
+
+* Live previews triggered by voice.
+* Quick approvals and rejections through head gestures or taps.
+* Audio summaries of project status.
+* Sharing a preview to someone nearby.
+
+<Info>
+  Michelangelo for Meta Glasses is in early exploration. A public preview is not yet available.
+</Info>
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="Vision" icon="lightbulb" color="#7c7c7c" href="/v2/michelangelo-meta-glasses/vision">
+    Explore the long-term vision.
+  </Card>
+
+  <Card title="Interaction Model" icon="hand" color="#7c7c7c" href="/v2/michelangelo-meta-glasses/interaction-model">
+    See how users might interact with it.
+  </Card>
+</CardGroup>

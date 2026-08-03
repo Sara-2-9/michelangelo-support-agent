@@ -1,0 +1,57 @@
+# Docs michelangelo.land
+
+## Docs
+
+- [Return the identity behind the current access token](https://docs.michelangelo.land/api-reference/auth/return-the-identity-behind-the-current-access-token.md): Cheap endpoint for clients to validate a token and discover the user, the OAuth client it was issued to, and the granted scopes. Backed by JWKS validation only — no upstream call required.
+- [Create an async job](https://docs.michelangelo.land/api-reference/jobs/create-an-async-job.md): Validates the prompt with a server-side AI evaluation step, creates a job row (`status: queued`), dispatches the work to the managed runner and returns immediately with a `job_id`. The HTTP request never waits for the work itself — poll `GET /jobs/{jobId}` for progress.
+- [Get job status](https://docs.michelangelo.land/api-reference/jobs/get-job-status.md): Polling endpoint. Clients should poll with backoff (suggested: 2s → 30s max). A future version may offer realtime delivery (SSE / Realtime) without changing this contract.
+- [Get a single project](https://docs.michelangelo.land/api-reference/projects/get-a-single-project.md)
+- [List projects of the authenticated user](https://docs.michelangelo.land/api-reference/projects/list-projects-of-the-authenticated-user.md): Returns only the projects owned by the authenticated user, paginated with an opaque cursor.
+- [Authentication](https://docs.michelangelo.land/v2/api/authentication.md): OAuth 2.1 + PKCE with Dynamic Client Registration for community apps, and bearer JWTs for first-party clients
+- [API Examples](https://docs.michelangelo.land/v2/api/examples.md): Complete, copy-pasteable curl workflows for the Michelangelo API: whoami, jobs, polling, projects, and error handling
+- [Async Jobs](https://docs.michelangelo.land/v2/api/jobs.md): The async job pattern at the heart of the Michelangelo API: lifecycle, states, polling, and results
+- [API Overview](https://docs.michelangelo.land/v2/api/overview.md): The Michelangelo public API: async AI generation jobs, project access, and OAuth 2.1 for community developers
+- [Stay Connected](https://docs.michelangelo.land/v2/community/stay-connected.md): Join the Michelangelo community
+- [Project Lifecycle](https://docs.michelangelo.land/v2/how-to-build/project-lifecycle.md): Understanding the project lifecycle in Michelangelo
+- [Prompt Engineering](https://docs.michelangelo.land/v2/how-to-build/prompt-engineering.md): Learn how to write effective prompts for Michelangelo
+- [Tokens and Limits](https://docs.michelangelo.land/v2/how-to-build/tokens-and-limits.md): Understanding tokens and usage limits in Michelangelo
+- [Vibe Coding Basics](https://docs.michelangelo.land/v2/how-to-build/vibe-coding-basics.md): Learn the fundamentals of Vibe Coding with Michelangelo
+- [Imaginer](https://docs.michelangelo.land/v2/imaginer.md): Become an Imaginer and support Michelangelo
+- [Expo Integration](https://docs.michelangelo.land/v2/integrations/expo.md): Integrate Expo with your Michelangelo projects
+- [GitHub Integration](https://docs.michelangelo.land/v2/integrations/github.md): Connect your Michelangelo projects with GitHub
+- [Supabase Integration](https://docs.michelangelo.land/v2/integrations/supabase.md): Connect your Michelangelo projects with Supabase
+- [Third-Party Integrations](https://docs.michelangelo.land/v2/integrations/third-party.md): Connect third-party services with your Michelangelo projects
+- [Welcome to Michelangelo](https://docs.michelangelo.land/v2/introduction.md): Sculpt your apps fast using natural language with Michelangelo
+- [Deploy App](https://docs.michelangelo.land/v2/manage-and-deploy/deploy-app.md): Deploy your Michelangelo app to the App Store
+- [Share Preview](https://docs.michelangelo.land/v2/manage-and-deploy/share-preview.md): Share your app preview with others
+- [Create Project](https://docs.michelangelo.land/v2/michelangelo-app/create-project.md): Create a new project in Michelangelo iOS App
+- [Deploy App](https://docs.michelangelo.land/v2/michelangelo-app/deploy-app.md): Deploy your app from Michelangelo iOS App
+- [Explore](https://docs.michelangelo.land/v2/michelangelo-app/explore.md): Discover the Explore section of the Michelangelo iOS App
+- [Getting Started](https://docs.michelangelo.land/v2/michelangelo-app/getting-started.md): Get started with Michelangelo iOS App
+- [GitHub Integration](https://docs.michelangelo.land/v2/michelangelo-app/github-integration.md): Connect GitHub with Michelangelo iOS App
+- [Michelangelo: Vibe Coding](https://docs.michelangelo.land/v2/michelangelo-app/overview.md): Sculpt your apps fast using natural language with Michelangelo iOS App
+- [Share App](https://docs.michelangelo.land/v2/michelangelo-app/share-app.md): Share your app from Michelangelo iOS App
+- [Sign In](https://docs.michelangelo.land/v2/michelangelo-app/sign-in.md): Sign in to Michelangelo iOS App
+- [View App](https://docs.michelangelo.land/v2/michelangelo-app/view-app.md): View your app in Michelangelo iOS App
+- [Interaction Model](https://docs.michelangelo.land/v2/michelangelo-meta-glasses/interaction-model.md): Understanding the interaction model for Meta Glasses
+- [Meta Glasses](https://docs.michelangelo.land/v2/michelangelo-meta-glasses/overview.md): Michelangelo for Meta Glasses platform
+- [Vision](https://docs.michelangelo.land/v2/michelangelo-meta-glasses/vision.md): The vision behind Michelangelo for Meta Glasses
+- [Design Philosophy](https://docs.michelangelo.land/v2/michelangelo-web/design-philosophy.md): The design philosophy behind Michelangelo Web
+- [Web](https://docs.michelangelo.land/v2/michelangelo-web/overview.md): Michelangelo Web platform
+- [Status](https://docs.michelangelo.land/v2/michelangelo-web/status.md): Current status of Michelangelo Web
+- [iOS App](https://docs.michelangelo.land/v2/platforms/ios-app.md): Michelangelo iOS App platform
+- [Meta Glasses](https://docs.michelangelo.land/v2/platforms/meta-glasses.md): Michelangelo for Meta Glasses platform
+- [Web](https://docs.michelangelo.land/v2/platforms/web.md): Michelangelo Web platform
+- [Contact](https://docs.michelangelo.land/v2/support/contact.md): Contact the Michelangelo team
+- [FAQ](https://docs.michelangelo.land/v2/support/faq.md): Frequently asked questions about Michelangelo
+
+## OpenAPI Specs
+
+- [openapi](https://docs.michelangelo.land/api-reference/openapi.yaml)
+
+## Optional
+
+- [Start](https://apps.apple.com/it/app/michelangelo-vibe-coding/id6744751580)
+- [Community](https://discord.com/invite/RJDhCzA7Hv)
+- [Follow on X](https://x.com/michelangelo_os)
+- [Website](https://michelangelo.land)

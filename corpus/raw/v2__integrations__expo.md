@@ -1,0 +1,39 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Expo Integration
+
+> Integrate Expo with your Michelangelo projects
+
+Michelangelo projects are designed to work naturally with the Expo ecosystem, making it easy to preview, build, and distribute your app.
+
+## What Expo Provides
+
+Expo offers a suite of tools for developing and shipping mobile apps, including preview clients, build services, and over-the-air updates. A Michelangelo project can be opened in Expo Go or exported for a standalone build.
+
+## Envisioned Workflow
+
+After exporting your project to GitHub, you will be able to open it with Expo tools, run it on a device, and build it for distribution. This gives you a familiar path from prototype to published app.
+
+## Benefits
+
+* Preview on real devices quickly.
+* Build and submit without managing native tooling.
+* Deliver updates to users over the air.
+
+<Info>
+  Expo integration is available today through GitHub export. Deeper in-app Expo workflows are planned for the future.
+</Info>
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="Deploy App" icon="rocket" color="#7c7c7c" href="/v2/michelangelo-app/deploy-app">
+    Learn how to ship your generated app.
+  </Card>
+
+  <Card title="GitHub Integration" icon="github" color="#7c7c7c" href="/v2/integrations/github">
+    Export your source code first.
+  </Card>
+</CardGroup>

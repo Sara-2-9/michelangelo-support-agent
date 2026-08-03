@@ -1,0 +1,53 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# FAQ
+
+> Frequently asked questions about Michelangelo
+
+Find answers to common questions about Michelangelo below.
+
+## What is Michelangelo?
+
+Michelangelo is an AI-powered tool that turns natural language descriptions into working mobile apps. Describe what you want, review the live preview, and iterate until it matches your vision.
+
+## Do I need to know how to code?
+
+No. Michelangelo is built for creators, founders, designers, and anyone with an idea. You describe the app in plain language and the AI handles the implementation details.
+
+## What can I build?
+
+You can build interactive mobile apps with multiple screens, navigation, data collection, styling, and external integrations. Popular starting points include tools, trackers, galleries, utilities, and simple social apps.
+
+## How much does it cost?
+
+Michelangelo is free to use with a generous starting experience. The annual Imaginer subscription removes ads and unlocks the full generation experience. All Imaginer tiers offer the same features at different support levels.
+
+## Is my data private?
+
+Your projects are public by default. You control whether a project appears in the Explore feed. Public preview links work only for projects you choose to share.
+
+## Can I export my app?
+
+Yes. You can connect your GitHub account and push the generated source code to your own repository at any time. From there you can build, sign, and submit the app using your own credentials.
+
+## What devices are supported?
+
+The Michelangelo app is available on iPhone running a recent version of iOS. Additional platforms are in development.
+
+## How do I get help?
+
+Join the Discord community for quick help, or email the team directly for priority support.
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="Contact" icon="envelope" color="#7c7c7c" href="/v2/support/contact">
+    Reach out to the Michelangelo team.
+  </Card>
+
+  <Card title="Getting Started" icon="rocket-launch" color="#7c7c7c" href="/v2/michelangelo-app/getting-started">
+    Start building your first app.
+  </Card>
+</CardGroup>

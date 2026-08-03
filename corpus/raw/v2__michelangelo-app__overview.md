@@ -1,0 +1,68 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Michelangelo: Vibe Coding
+
+> Sculpt your apps fast using natural language with Michelangelo iOS App
+
+## Product Features
+
+<a href="https://apps.apple.com/it/app/michelangelo-vibe-coding/id6744751580">**Michelangelo: Vibe Coding**</a> is the iOS app that brings the power of Michelangelo directly to your iPhone. Build **native mobile apps** with an intuitive and powerful interface, all in the palm of your hand.
+
+<img alt="michelangelo.land" classname="hidden dark:block" src="https://mintcdn.com/michelangeloland/9hCHxceedbbezArp/images/BannerMichelangelo.png?fit=max&auto=format&n=9hCHxceedbbezArp&q=85&s=921aa93bfff07b26f9e341ee448536ff" width="2076" height="1168" data-path="images/BannerMichelangelo.png" />
+
+## Overview
+
+**Michelangelo: Vibe Coding** streamlines the development of **native mobile apps** by combining advanced **AI**, automatic code generation, and an optimized mobile interface.
+With a **native iOS user experience**, fast distribution for **iOS**, and automatic synchronization with **GitHub**, the app provides developers with a **powerful** and **efficient environment** to create and deliver **high-quality native applications** directly from your iPhone, wherever you are.
+
+## What You Can Do
+
+* **Create projects with natural language** — describe the app you want and let Michelangelo generate the code.
+* **Iterate in the editor** — chat with Michelangelo to refine your app, fix errors, and add new features.
+* **Preview instantly** — run your generated app inside an inline sandbox without leaving the app.
+* **Share with a public link** — make your app discoverable in Explore or share it directly via the native iOS share sheet.
+* **Export to GitHub** — push the generated source code to a GitHub repository and continue development in your own workflow.
+* **Choose your AI source** — use cloud AI or run suggestions on-device for compatible devices.
+* **Support the project** — become an Imaginer with an annual subscription and unlock the full experience.
+
+<CardGroup cols="2">
+  <Card title="Getting Started" icon="rocket-launch" color="#7c7c7c" href="/v2/michelangelo-app/getting-started">
+    Check out our step-by-step tutorial for creating a native iOS app with Michelangelo directly on your iPhone.
+  </Card>
+
+  <Card title="Sign In" icon="right-to-bracket" color="#7c7c7c" href="/v2/michelangelo-app/sign-in">
+    Learn about the authentication options available in the app.
+  </Card>
+
+  <Card title="Create Project" icon="plus" color="#7c7c7c" href="/v2/michelangelo-app/create-project">
+    Learn how to create a new project from a prompt.
+  </Card>
+
+  <Card title="View App" icon="eye" color="#7c7c7c" href="/v2/michelangelo-app/view-app">
+    Preview your app inside Michelangelo.
+  </Card>
+
+  <Card title="Share App" icon="share-nodes" color="#7c7c7c" href="/v2/michelangelo-app/share-app">
+    Share your application with anyone via a simple public link.
+  </Card>
+
+  <Card title="Explore" icon="compass" color="#7c7c7c" href="/v2/michelangelo-app/explore">
+    Discover apps created by the Michelangelo community.
+  </Card>
+
+  <Card title="GitHub Integration" icon="github" color="#7c7c7c" href="/v2/michelangelo-app/github-integration">
+    Connect your GitHub account and sync your project's source code.
+  </Card>
+
+  <Card title="Deploy App" icon="rocket" color="#7c7c7c" href="/v2/michelangelo-app/deploy-app">
+    Ship your app to the App Store or share it as a preview.
+  </Card>
+</CardGroup>
+
+## Get the App
+
+<Card title="Download Michelangelo App" icon="apple" color="#7c7c7c" href="https://apps.apple.com/it/app/michelangelo-vibe-coding/id6744751580">
+  Get started with Michelangelo directly on your iPhone.
+</Card>

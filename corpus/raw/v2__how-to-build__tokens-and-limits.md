@@ -1,0 +1,64 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Tokens and Limits
+
+> Understanding tokens and usage limits in Michelangelo
+
+Michelangelo is designed to be generous for creators, with some limits in place to keep the service fast and fair.
+
+## Subscriptions
+
+Michelangelo offers an annual supporter subscription called **Imaginer**. You choose your support level:
+
+* **Subs10** — \$10 / year
+* **Subs15** — \$15 / year
+* **Subs20** — \$20 / year
+
+All tiers unlock the same full app experience. The price you choose reflects how much you want to support the project.
+
+<Info>
+  Subscriptions are handled through the App Store and renew automatically every year unless canceled.
+</Info>
+
+## Free Experience Limits
+
+Users without an active subscription can still create and share apps, but the free experience includes:
+
+* Ads in the Explore feed at periodic intervals.
+* Standard generation queues.
+
+Supporters do not see ads.
+
+## Generation Limits
+
+| Limit                    | Notes                                |
+| ------------------------ | ------------------------------------ |
+| Prompt timeout           | Client-side request timeout.         |
+| Streaming safety timeout | Forces reset if streaming stalls.    |
+| Image attachments        | Up to 2 per prompt, compressed JPEG. |
+| Prompt length            | Up to 4000 characters.               |
+| Auto-fix attempts        | Automatic retries on sandbox errors. |
+
+## Project Limits
+
+* Project names can be up to **30 characters**.
+* Each project can have one linked GitHub repository.
+* Projects can be made private to hide them from Explore.
+
+## Restoring Purchases
+
+If you reinstall the app or switch devices, you can restore your subscription from the subscription screen. Active subscriptions are tied to your Apple ID.
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="Imaginer" icon="star" color="#7c7c7c" href="/v2/imaginer">
+    Learn more about becoming an Imaginer.
+  </Card>
+
+  <Card title="Create Project" icon="plus" color="#7c7c7c" href="/v2/michelangelo-app/create-project">
+    Start creating your first project.
+  </Card>
+</CardGroup>

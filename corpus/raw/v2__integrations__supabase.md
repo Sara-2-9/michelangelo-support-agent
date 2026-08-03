@@ -1,0 +1,43 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Supabase Integration
+
+> Connect your Michelangelo projects with Supabase
+
+The planned Supabase integration will let you add a full backend to your Michelangelo projects without leaving the creation flow.
+
+## What Supabase Adds
+
+Supabase provides managed databases, authentication, realtime updates, and storage. Connecting it to a Michelangelo project means your app can store data, manage users, and scale beyond the device.
+
+## Envisioned Workflow
+
+You will be able to describe backend needs in your prompt, such as:
+
+* "Save user profiles to a database."
+* "Let users sign up and log in."
+* "Show live updates when data changes."
+
+Michelangelo will generate the front-end code and connect it to your Supabase project.
+
+## Who It Is For
+
+This integration is ideal for creators who want a production-ready backend without managing servers or writing backend code.
+
+<Info>
+  The Supabase integration is in development. Early access will start with database and authentication support.
+</Info>
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="Third-Party Integrations" icon="puzzle-piece" color="#7c7c7c" href="/v2/integrations/third-party">
+    See the broader integration roadmap.
+  </Card>
+
+  <Card title="GitHub Integration" icon="github" color="#7c7c7c" href="/v2/integrations/github">
+    Export your project source code.
+  </Card>
+</CardGroup>

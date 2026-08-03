@@ -1,0 +1,19 @@
+{
+  "name": "michelangelo-support-agent",
+  "version": "0.1.0",
+  "description": "AI support agent for michelangelo.land users — RAG over official docs, agent orchestration with Mastra, deployable on Cloudflare.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "chunk": "tsx scripts/chunk.ts",
+    "embed": "tsx scripts/embed.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}

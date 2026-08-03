@@ -1,0 +1,185 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# API Examples
+
+> Complete, copy-pasteable curl workflows for the Michelangelo API: whoami, jobs, polling, projects, and error handling
+
+These examples use `curl` and a token obtained through the [OAuth 2.1 flow](/v2/api/authentication). Export it once and reuse it:
+
+```bash theme={null}
+export TOKEN="<access_token>"
+export API="https://api.michelangelo.land/v1"
+```
+
+## Happy Path, Step by Step
+
+A complete iteration on an existing project, from token check to finished generation.
+
+### 1. Validate your token
+
+```bash theme={null}
+curl "$API/whoami" -H "Authorization: Bearer $TOKEN"
+```
+
+```json theme={null}
+{
+  "user_id": "7b1c3f2e-…",
+  "client_id": "a4f2…",
+  "scopes": ["email"]
+}
+```
+
+If this returns `200`, your token works. `401 missing_token` or `401 invalid_token` means go back to [Authentication](/v2/api/authentication).
+
+### 2. Find the project to iterate on
+
+Project ids are **numeric** (int64). List your projects and pick one:
+
+```bash theme={null}
+curl "$API/projects?limit=10" -H "Authorization: Bearer $TOKEN"
+```
+
+```json theme={null}
+{
+  "data": [
+    { "id": 3637, "name": "API E2E Test App", "created_at": "2026-07-30T…" }
+  ],
+  "next_cursor": null
+}
+```
+
+### 3. Create a generation job
+
+Submit a prompt against that project. `input.model` is optional — the API evaluates the prompt and picks the tier (`light` or `full`) for you.
+
+```bash theme={null}
+curl -X POST "$API/jobs" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "prompt",
+    "project_id": 3637,
+    "input": {
+      "prompt": "Add a settings screen with a dark-mode toggle persisted to user preferences"
+    }
+  }'
+```
+
+A prompt the evaluation step considers unusable fails fast here with `400 invalid_prompt`. A valid prompt returns `202 Accepted` immediately — the generation has just started:
+
+```json theme={null}
+{
+  "id": "3f8a2c1e-9d4b-4e7a-b2c5-…",
+  "type": "prompt",
+  "status": "queued",
+  "project_id": 3637,
+  "created_at": "2026-07-31T…"
+}
+```
+
+Save the job `id` (a UUID) — it is your handle for everything that follows.
+
+### 4. Poll until the job finishes
+
+```bash theme={null}
+JOB_ID="3f8a2c1e-9d4b-4e7a-b2c5-…"
+
+sleep_s=2
+while true; do
+  resp=$(curl -s "$API/jobs/$JOB_ID" -H "Authorization: Bearer $TOKEN")
+  status=$(echo "$resp" | jq -r '.status')
+  echo "[$(date +%T)] status: $status"
+  case "$status" in
+    succeeded|failed|canceled)
+      echo "$resp" | jq .
+      break
+      ;;
+  esac
+  sleep "$sleep_s"
+  sleep_s=$(( sleep_s * 2 > 30 ? 30 : sleep_s * 2 ))   # backoff: 2s → 30s max
+done
+```
+
+When the runner finishes, the job turns terminal:
+
+```json theme={null}
+{
+  "id": "3f8a2c1e-9d4b-4e7a-b2c5-…",
+  "status": "succeeded",
+  "result": { "project_id": 3637, "files_saved": 6 }
+}
+```
+
+### 5. Read the updated project
+
+```bash theme={null}
+curl "$API/projects/3637" -H "Authorization: Bearer $TOKEN"
+```
+
+That's it: prompt in, generated files saved to the project.
+
+## Error Handling
+
+Every error has the same shape — branch on `code`, not on the message text:
+
+```json theme={null}
+{ "code": "invalid_prompt", "message": "…" }
+```
+
+### 400 — prompt rejected by evaluation
+
+```bash theme={null}
+curl -s -X POST "$API/jobs" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"type":"prompt","project_id":3637,"input":{"prompt":"asdf"}}' | jq .
+# { "code": "invalid_prompt", "message": "…" }
+```
+
+Retry only with a materially better prompt — resubmitting the same text will be rejected again.
+
+### 429 — quota exceeded
+
+```bash theme={null}
+resp=$(curl -s -D - -X POST "$API/jobs" …)
+# HTTP/2 429
+# retry-after: 1200
+# { "code": "rate_limited", "message": "…" }
+```
+
+Always honor the `Retry-After` header before retrying. Rate limits are being tuned during early access; your current quota snapshot appears in `whoami` when available.
+
+### Full error code reference
+
+| HTTP | `code`              | When                              | Retry?                                |
+| ---- | ------------------- | --------------------------------- | ------------------------------------- |
+| 400  | `invalid_prompt`    | Prompt failed the evaluation step | Only with a better prompt             |
+| 401  | `missing_token`     | No `Authorization` header         | Yes, with a token                     |
+| 401  | `invalid_token`     | Expired or bad token              | Refresh the token first               |
+| 404  | `job_not_found`     | Job doesn't exist or isn't yours  | No                                    |
+| 409  | `job_terminal`      | Job already in a terminal state   | No — state is final                   |
+| 429  | `rate_limited`      | Quota exceeded                    | After `Retry-After`                   |
+| 502  | `job_create_failed` | Dispatch failed after validation  | Yes — safe before you hold a `job_id` |
+
+## Health Check
+
+An unauthenticated liveness probe, useful for monitors:
+
+```bash theme={null}
+curl https://api.michelangelo.land/v1/health
+# { "status": "ok" }
+```
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="Async Jobs" icon="arrows-rotate" color="#7c7c7c" href="/v2/api/jobs">
+    The full job lifecycle and polling guidance.
+  </Card>
+
+  <Card title="API Overview" icon="book" color="#7c7c7c" href="/v2/api/overview">
+    Back to the big picture.
+  </Card>
+</CardGroup>

@@ -1,0 +1,41 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Third-Party Integrations
+
+> Connect third-party services with your Michelangelo projects
+
+Michelangelo will let you connect external services to your projects, turning generated apps into real products that talk to the tools you already use.
+
+## Why Integrations Matter
+
+A great app rarely lives in isolation. By connecting third-party services, you can add authentication, store data, send notifications, accept payments, and pull in content from external sources.
+
+## Envisioned Use Cases
+
+* **Data and storage** — persist user-generated content in a backend.
+* **Authentication** — let users sign in with familiar providers.
+* **Payments** — accept subscriptions or one-time purchases.
+* **Notifications** — reach users with updates and reminders.
+* **Content** — pull in data from APIs, CMSs, or analytics tools.
+
+## How It Will Feel
+
+You will describe what you want in plain language, and Michelangelo will wire up the connection. For example: "Let users log in with Google" or "Save notes to a cloud database."
+
+<Info>
+  Third-party integrations are in early planning. We will start with the most requested services and expand from there.
+</Info>
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="Supabase Integration" icon="database" color="#7c7c7c" href="/v2/integrations/supabase">
+    Learn about the planned backend integration.
+  </Card>
+
+  <Card title="GitHub Integration" icon="github" color="#7c7c7c" href="/v2/integrations/github">
+    Export source code to GitHub.
+  </Card>
+</CardGroup>

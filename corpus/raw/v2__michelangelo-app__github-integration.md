@@ -1,0 +1,64 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# GitHub Integration
+
+> Connect GitHub with Michelangelo iOS App
+
+The GitHub integration lets you push the source code of any Michelangelo project to a GitHub repository.
+
+## Connecting a GitHub Account
+
+1. Open a project in the editor.
+2. Tap the settings icon in the header.
+3. Go to **Tools → GitHub → Settings**.
+4. Tap **Add GitHub Account**.
+5. Complete the GitHub App installation in the browser.
+
+After installation, the callback saves the connection in your account.
+
+## Selecting an Installation
+
+If you have multiple GitHub organizations or accounts, you can choose which installation to use for the current project. Tap the desired account to link it.
+
+## Pushing Code
+
+Once an installation is selected, Michelangelo creates a repository for your project. To push the latest code:
+
+1. Open **App Settings → Tools → GitHub → Settings**.
+2. Tap **Push**.
+
+The current project files are committed to the repository.
+
+## Unlinking
+
+To unlink a repository:
+
+1. Open the GitHub settings screen.
+2. Scroll to the **Actions** section.
+3. Tap **Unlink repository** and confirm.
+
+This removes the link between the Michelangelo project and the GitHub repository. It does not delete the repository on GitHub.
+
+## Limitations
+
+* **Pull is not implemented yet** — tapping Pull shows a "Coming Soon" alert.
+* **Database tools** are also marked as "Coming Soon".
+* The connection is per-project. Each project links to one repository.
+
+<Info>
+  If you run into permission errors, try unlinking and reconnecting your GitHub account.
+</Info>
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="Deploy App" icon="rocket" color="#7c7c7c" href="/v2/michelangelo-app/deploy-app">
+    Learn how to ship your app after exporting to GitHub.
+  </Card>
+
+  <Card title="Create Project" icon="plus" color="#7c7c7c" href="/v2/michelangelo-app/create-project">
+    Start a new project to connect with GitHub.
+  </Card>
+</CardGroup>

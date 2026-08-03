@@ -1,0 +1,37 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Web
+
+> Michelangelo Web platform
+
+Michelangelo Web brings the same AI-powered creation experience to your desktop browser, giving you more room to design, iterate, and manage projects.
+
+## A Desktop-Class Experience
+
+On the web, you get a wider canvas for editing prompts, reviewing previews, and browsing your project history. The interface is optimized for keyboard and mouse input while keeping the same calm, focused feel as the mobile app.
+
+## Seamless Sync
+
+Projects you start on your iPhone will appear on the web and vice versa. Your drafts, iterations, and shared previews stay in sync across devices, so you can pick up wherever you left off.
+
+## Built for Collaboration
+
+The web experience is designed for longer sessions: copying and pasting prompts, uploading reference images from your computer, and sharing preview links directly from the browser.
+
+<Info>
+  Michelangelo Web is currently in development. The core creation, preview, and sharing flows will be available first, followed by team and collaboration features.
+</Info>
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="Michelangelo Web Overview" icon="globe" color="#7c7c7c" href="/v2/michelangelo-web/overview">
+    Learn more about the web experience.
+  </Card>
+
+  <Card title="Getting Started" icon="rocket-launch" color="#7c7c7c" href="/v2/michelangelo-app/getting-started">
+    Start building on iPhone today.
+  </Card>
+</CardGroup>

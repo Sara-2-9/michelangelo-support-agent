@@ -1,0 +1,41 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Design Philosophy
+
+> The design philosophy behind Michelangelo Web
+
+Michelangelo Web is designed around the same principles that guide the mobile app: clarity, calm, and respect for the creative flow.
+
+## Mobile-First Heritage
+
+The web experience inherits the focused interface of the iPhone app. There are no cluttered sidebars or overwhelming panels. The workspace centers on your prompt, the preview, and the conversation with the AI.
+
+## Room to Breathe
+
+On a larger screen, every element gets more space. Previews are bigger, text is easier to scan, and navigation stays out of the way until you need it.
+
+## Keyboard Friendly
+
+Shortcuts and quick actions make desktop workflows smooth. Whether you are refining a prompt or jumping between projects, the interface responds to the way you already work.
+
+## Consistency Across Devices
+
+Colors, spacing, typography, and interactions match the mobile app. Switching between iPhone and web should feel like moving between two views of the same workspace.
+
+<Info>
+  The Michelangelo Web interface is still taking shape. Early access users will help refine the final details.
+</Info>
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="Overview" icon="globe" color="#7c7c7c" href="/v2/michelangelo-web/overview">
+    Learn more about Michelangelo Web.
+  </Card>
+
+  <Card title="Status" icon="signal" color="#7c7c7c" href="/v2/michelangelo-web/status">
+    See the current development status.
+  </Card>
+</CardGroup>

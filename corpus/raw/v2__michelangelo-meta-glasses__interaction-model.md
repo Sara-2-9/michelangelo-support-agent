@@ -1,0 +1,41 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Interaction Model
+
+> Understanding the interaction model for Meta Glasses
+
+Michelangelo for Meta Glasses is being designed around short, voice-driven sessions with minimal friction.
+
+## Voice as the Primary Input
+
+You speak your prompts naturally. The AI asks clarifying questions when needed and confirms before making changes. Complex edits can be broken into smaller steps so you stay in control.
+
+## Quick Confirmations
+
+Simple actions like approving a change, dismissing a preview, or moving to the next screen use quick verbal confirmations or small physical gestures. The goal is to avoid long menus.
+
+## Audio Feedback
+
+Since the display is small, audio plays a big role. You will hear when generation starts, completes, or needs your attention. Error messages are short and actionable.
+
+## Context Awareness
+
+The experience may adapt to where you are. A quick session on a walk might offer shorter prompts, while a session at home could surface deeper editing options.
+
+<Info>
+  The interaction model is still a prototype. Details will evolve based on early testing and feedback.
+</Info>
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="Overview" icon="glasses" color="#7c7c7c" href="/v2/michelangelo-meta-glasses/overview">
+    Read the Meta Glasses overview.
+  </Card>
+
+  <Card title="Vision" icon="lightbulb" color="#7c7c7c" href="/v2/michelangelo-meta-glasses/vision">
+    Explore the long-term vision.
+  </Card>
+</CardGroup>

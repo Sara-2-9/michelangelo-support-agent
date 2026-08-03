@@ -1,0 +1,37 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Meta Glasses
+
+> Michelangelo for Meta Glasses platform
+
+Michelangelo for Meta Glasses envisions a hands-free way to build and preview apps while staying present in the world around you.
+
+## Build With Your Voice
+
+Instead of typing on a phone, you describe your app out loud. The AI listens, understands, and starts generating. Follow-up edits are as simple as saying "make the buttons larger" or "add a dark mode."
+
+## Preview in Context
+
+Imagine seeing your app float in front of you as a lightweight preview. Walk through a room, glance at a virtual screen, and test interactions without pulling out a device.
+
+## Designed for Quick Sessions
+
+Meta Glasses are perfect for small, focused creation moments: capturing an idea on a walk, iterating on a layout while standing, or showing a friend a preview without handing over your phone.
+
+<Info>
+  Michelangelo for Meta Glasses is a future platform currently in early exploration. We are prototyping the voice and preview experience before wider access.
+</Info>
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="Meta Glasses Overview" icon="glasses" color="#7c7c7c" href="/v2/michelangelo-meta-glasses/overview">
+    Read the full overview.
+  </Card>
+
+  <Card title="Vision" icon="lightbulb" color="#7c7c7c" href="/v2/michelangelo-meta-glasses/vision">
+    Explore the vision behind spatial creation.
+  </Card>
+</CardGroup>

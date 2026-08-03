@@ -1,0 +1,40 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Status
+
+> Current status of Michelangelo Web
+
+Track the current state and upcoming milestones for Michelangelo Web.
+
+## What Is Available Now
+
+Michelangelo Web is in active development. The foundation is being built around the same creation engine that powers the iOS app, with a focus on reliability and a clean desktop interface.
+
+## Roadmap
+
+| Milestone                    | Status         | Notes                                                 |
+| ---------------------------- | -------------- | ----------------------------------------------------- |
+| Core prompt and preview flow | In development | Create projects and see live previews in the browser. |
+| Project sync with mobile     | In development | Pick up iPhone projects on the web.                   |
+| Public preview sharing       | Planned        | Share links directly from the web dashboard.          |
+| Team collaboration           | Planned        | Share projects and iterate together.                  |
+
+<Info>
+  Status updates will be posted on Discord and X as milestones are reached.
+</Info>
+
+## Get Notified
+
+Join the community to be the first to know when Michelangelo Web enters early access.
+
+<CardGroup cols="2">
+  <Card title="Discord" icon="discord" color="#7c7c7c" href="https://discord.com/invite/RJDhCzA7Hv">
+    Join the community.
+  </Card>
+
+  <Card title="X (Twitter)" icon="x-twitter" color="#7c7c7c" href="https://x.com/michelangelo_os">
+    Follow for updates.
+  </Card>
+</CardGroup>

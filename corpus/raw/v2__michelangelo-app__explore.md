@@ -1,0 +1,62 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Explore
+
+> Discover the Explore section of the Michelangelo iOS App
+
+Explore is the community feed where you can discover apps created by other Michelangelo users.
+
+## Feed
+
+The Explore screen shows a full-screen, vertical-paging list of public projects. Each page displays:
+
+* The app running in the inline sandbox.
+* The project name and creator username at the bottom.
+* Action buttons on the right.
+
+Projects shown in Explore exclude your own projects. The feed supports infinite scroll, loading more projects as you swipe up.
+
+## Interactions
+
+For each project, you can:
+
+* **Tap the creator avatar** to open the creator's profile.
+* **Tap the share button** to open the iOS share sheet and send the public preview link.
+* **Tap the report button** to report the project or user.
+* **Tap the project info area** to open the public preview screen.
+
+## Lock Mode
+
+Tap the lock icon in the header to enable lock mode. When locked:
+
+* Swiping is disabled so the current project stays on screen.
+* The back gesture is disabled.
+* The animation between pages is removed.
+
+Tap the unlock icon to resume browsing.
+
+## Ads
+
+Non-paying users see an ad slot at periodic intervals. Supporters do not see ads.
+
+## Profiles
+
+From Explore, you can navigate to any user's profile to see all their public projects. Your own profile is accessible from the home tab.
+
+<Info>
+  Explore only shows projects that are not marked as Private App.
+</Info>
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="Share App" icon="share-nodes" color="#7c7c7c" href="/v2/michelangelo-app/share-app">
+    Share your own app with the community.
+  </Card>
+
+  <Card title="Create Project" icon="plus" color="#7c7c7c" href="/v2/michelangelo-app/create-project">
+    Start building your own app.
+  </Card>
+</CardGroup>
