@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "chunk": "tsx scripts/chunk.ts",
-    "embed": "tsx scripts/embed.ts"
+    "embed": "tsx scripts/embed.ts",
+    "query": "tsx scripts/test-query.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0"
