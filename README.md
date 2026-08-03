@@ -71,7 +71,7 @@ npm run chunk          # corpus/raw/*.md → corpus/chunks.json
 npm run embed          # embeddings → Supabase (incremental)
 ```
 
-DB schema: `supabase/schema.sql` — currently applied once via the Supabase SQL Editor; CLI-based migrations (`supabase db push`) are the planned next step.
+DB schema: `supabase/migrations/` — applied via Supabase CLI (`supabase login` → `supabase link --project-ref <ref>` → `supabase db push`).
 
 ## Disclaimer
 

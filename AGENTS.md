@@ -28,10 +28,10 @@ scripts/
   chunk.ts        Step 1: structure-aware chunking → corpus/chunks.json
   embed.ts        Step 2: embeddings → incremental upsert to Supabase
 supabase/
-  schema.sql      DB schema, to be run ONCE in the Supabase SQL Editor
+  config.toml     Supabase CLI local config (created by `supabase init`)
+  migrations/     versioned DB schema — apply with `supabase db push`
+                  (requires `supabase login` + `supabase link --project-ref`)
 ```
-
-Note: the `README.md` mentions CLI-based migrations as the planned next step, but today the schema lives in `supabase/schema.sql` and is applied manually from the SQL Editor (not via `supabase db push`).
 
 `src/` does not exist yet, although it is included in `tsconfig.json` — it is the designated location for future-phase code.
 
@@ -59,7 +59,7 @@ Copy `.env.example` to `.env` and fill in: `SUPABASE_URL`, `SUPABASE_SERVICE_ROL
   - every chunk carries a SHA-256 `content_hash`; `id` = short hash (16 chars), stable key for upserts
   - explicit in-code rule: **never embed before inspecting the chunks by eye** (the script prints stats for exactly this purpose)
 - **Indexing** (`scripts/embed.ts`): idempotent and incremental — `content_hash` comparison, re-embeds only the delta, deletes chunks that disappeared from the docs. Batches: 50 texts per Workers AI call, 100 rows per upsert.
-- **Database** (`supabase/schema.sql`): `chunks` table with `embedding vector(1024)`, HNSW cosine index, index on `content_hash`, RPC function `match_chunks(query_embedding, match_count, min_similarity)` for semantic retrieval. If you change the embedding model, update the vector dimension.
+- **Database** (`supabase/migrations/`): `chunks` table with `embedding vector(1024)`, HNSW cosine index, index on `content_hash`, RPC function `match_chunks(query_embedding, match_count, min_similarity)` for semantic retrieval. If you change the embedding model, update the vector dimension in a new migration. Never edit the SQL of an already-applied migration — add a new one instead.
 
 ## Security
 
