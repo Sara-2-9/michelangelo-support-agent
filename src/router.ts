@@ -36,12 +36,28 @@ Reply with EXACTLY ONE of these words, nothing else:
 - support_question: question about how Michelangelo works, its features,
   limits, pricing, integrations, API. Also greetings and meta-questions
   about what you can do.
-- bug_report: the user reports something broken or not working in
-  Michelangelo (errors, crashes, generation failures, billing issues).
-- troubleshooting: the user asks for help fixing a known operational
-  problem (app stuck, streaming stalled, restore purchase, sync issues).
+- bug_report: the user REPORTS a defect to notify the team (statements,
+  complaints, "it's broken"). The goal is reporting, not fixing.
+- troubleshooting: the user asks for HELP FIXING an operational problem
+  right now ("what can I do?", "how do I solve?", "it's stuck, help").
+  The goal is getting unblocked, not reporting.
 - off_topic: anything unrelated to Michelangelo (recipes, general coding
-  help, other products, small talk not about Michelangelo).`,
+  help, other products, small talk not about Michelangelo).
+
+DISAMBIGUATION RULE: when something is not working, ask yourself whether
+the user wants to REPORT it (→ bug_report) or FIX it (→ troubleshooting).
+Phrases like "how do I fix", "what can I do", "help me solve" indicate
+troubleshooting even if a defect is mentioned.
+
+EXAMPLES:
+- "come funziona la condivisione dell'app?" → support_question
+- "quanto costa l'abbonamento Imaginer?" → support_question
+- "l'app crasha quando faccio deploy, vi segnalo questo bug" → bug_report
+- "ho trovato un errore nella generazione, ecco cosa è successo" → bug_report
+- "la generazione si blocca a metà, cosa posso fare?" → troubleshooting
+- "il restore acquisti non funziona dopo la reinstallazione, aiuto" → troubleshooting
+- "dimmi una barzelletta" → off_topic
+- "come si usa React?" → off_topic`,
     model: workersAi(MODEL_ROUTING),
   });
 
