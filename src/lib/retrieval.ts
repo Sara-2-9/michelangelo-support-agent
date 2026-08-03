@@ -8,6 +8,7 @@
  */
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { MODEL_EMBEDDING } from "./models.js";
 
 export interface RetrievedChunk {
   id: string;
@@ -18,7 +19,7 @@ export interface RetrievedChunk {
   similarity: number;
 }
 
-const EMBEDDING_MODEL = "@cf/baai/bge-m3";
+const EMBEDDING_MODEL = MODEL_EMBEDDING;
 
 export interface RetrievalConfig {
   supabaseUrl: string;

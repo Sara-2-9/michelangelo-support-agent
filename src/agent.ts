@@ -17,6 +17,7 @@
 import { Agent } from "@mastra/core/agent";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { createRetriever, type RetrievedChunk } from "./lib/retrieval.js";
+import { MODEL_GENERATION } from "./lib/models.js";
 
 export interface AgentConfig {
   supabaseUrl: string;
@@ -67,7 +68,7 @@ RULES — follow them strictly:
 5. Be concise and practical: this is support, not marketing. Use short
    paragraphs or bullet points. If the excerpts describe steps, list them
    in order.`,
-    model: workersAi("@cf/meta/llama-3.3-70b-instruct-fp8-fast"),
+    model: workersAi(MODEL_GENERATION),
   });
 
   /**

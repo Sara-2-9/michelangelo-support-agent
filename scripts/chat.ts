@@ -1,14 +1,15 @@
 /**
- * Phase 2 — CLI chat with the support agent.
+ * CLI chat with the orchestrated support agent.
  *
  * Usage: npm run chat -- "la tua domanda qui"
  *
- * Sends the question to the Mastra agent, which will autonomously call
- * the searchDocs tool, then print the final answer (with citations).
+ * Routes the message through the intent router, dispatches to the right
+ * handler, and prints the answer (with the detected intent, so routing
+ * quality can be eyeballed — until the Phase 4 eval harness measures it).
  */
 
 import { readFileSync } from "node:fs";
-import { createSupportAgent } from "../src/agent.js";
+import { createOrchestrator } from "../src/orchestrator.js";
 
 for (const line of readFileSync(".env", "utf-8").split("\n")) {
   const m = line.match(/^([A-Z_]+)=(.*)$/);
@@ -22,7 +23,7 @@ if (!question) {
   process.exit(1);
 }
 
-const agent = createSupportAgent({
+const orchestrator = createOrchestrator({
   supabaseUrl: SUPABASE_URL!,
   supabaseKey: SUPABASE_SERVICE_ROLE_KEY!,
   cfAccountId: CLOUDFLARE_ACCOUNT_ID!,
@@ -30,8 +31,9 @@ const agent = createSupportAgent({
 });
 
 console.log(`\n❓ ${question}\n`);
-const result = await agent.answer(question);
+const result = await orchestrator.handle(question);
+console.log(`🏷️  intent: ${result.intent}\n`);
 console.log(result.text);
-if (!result.grounded) {
+if (!result.grounded && result.intent === "support_question") {
   console.log("\n⚠️  (deterministic refusal — no relevant documentation found)");
 }
