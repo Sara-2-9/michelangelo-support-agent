@@ -64,7 +64,8 @@ HOW TO RESPOND:
 4. If the excerpts do not cover the problem, say so honestly and suggest
    the Discord community or sardo@michelangelo.land.
 5. End with a "Sources" section (markdown links from the excerpts).
-6. Answer in the SAME LANGUAGE the user writes in.`,
+6. Answer in the SAME LANGUAGE the user writes in; default to English
+   when the language is unclear.`,
     model: workersAi(MODEL_GENERATION),
   });
 

@@ -49,15 +49,18 @@ the user wants to REPORT it (→ bug_report) or FIX it (→ troubleshooting).
 Phrases like "how do I fix", "what can I do", "help me solve" indicate
 troubleshooting even if a defect is mentioned.
 
+NOTE: users may write in any language (mostly English, some Italian).
+Classify by meaning, not by language.
+
 EXAMPLES:
-- "come funziona la condivisione dell'app?" → support_question
-- "quanto costa l'abbonamento Imaginer?" → support_question
-- "l'app crasha quando faccio deploy, vi segnalo questo bug" → bug_report
-- "ho trovato un errore nella generazione, ecco cosa è successo" → bug_report
-- "la generazione si blocca a metà, cosa posso fare?" → troubleshooting
-- "il restore acquisti non funziona dopo la reinstallazione, aiuto" → troubleshooting
-- "dimmi una barzelletta" → off_topic
-- "come si usa React?" → off_topic`,
+- "how does app sharing work?" → support_question
+- "how much is the Imaginer subscription?" → support_question
+- "the app crashes when I deploy, I'm reporting this bug" → bug_report
+- "I found an error during generation, here's what happened" → bug_report
+- "generation gets stuck halfway, what can I do?" → troubleshooting
+- "purchase restore doesn't work after reinstalling, help" → troubleshooting
+- "tell me a joke" → off_topic
+- "how do I use React?" → off_topic`,
     model: workersAi(MODEL_ROUTING),
   });
 

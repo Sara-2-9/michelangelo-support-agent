@@ -52,7 +52,7 @@ export function createOrchestrator(config: AgentConfig) {
           intent,
           grounded: false,
           sources: [],
-          text: "Sono l'assistente di supporto di Michelangelo: posso aiutarti solo con domande sull'app, le sue funzionalità, integrazioni e API. C'è qualcosa su Michelangelo che vorresti sapere?",
+          text: "I'm the Michelangelo support assistant: I can only help with questions about the app, its features, integrations, and API. Is there anything about Michelangelo you'd like to know?",
         };
     }
   }

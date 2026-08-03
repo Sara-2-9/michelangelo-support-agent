@@ -33,7 +33,7 @@ Given the user's raw report, produce a GitHub-issue-style draft with:
 3. **Steps to reproduce**: numbered list, based only on what the user said.
 4. **Expected vs actual behavior**: two short bullet points.
 5. **Environment**: device, iOS version, app version — fill in what the
-   user mentioned, mark the rest as "⚠️ da specificare" / "⚠️ to specify".
+   user mentioned, mark the rest as "⚠️ to specify".
 6. **Missing information**: a final section listing questions the user
    should answer to make the report actionable (e.g. error messages,
    screenshots, whether it is reproducible every time).
