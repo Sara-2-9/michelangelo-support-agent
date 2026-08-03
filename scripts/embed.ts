@@ -31,7 +31,6 @@ for (const [k, v] of Object.entries({ SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, C
 
 const MODEL = "@cf/baai/bge-m3"; // multilingual: IT queries → EN docs works
 const CF_AI_URL = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run/${MODEL}`;
-const BATCH_SIZE = 50; // max texts per Workers AI call
 const UPSERT_BATCH = 100;
 
 interface Chunk {
@@ -46,7 +45,14 @@ interface Chunk {
 
 const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 
-/** Embeds a batch of texts via the Workers AI REST API. */
+/**
+ * Embeds a batch of texts via the Workers AI REST API.
+ *
+ * Adaptive batch splitting: if the provider answers "context overflow"
+ * (the local token estimate can be way off vs the real tokenizer —
+ * dense YAML/markdown tokenizes much worse than prose), the batch is
+ * halved and retried recursively instead of trusting the estimate.
+ */
 async function embedBatch(texts: string[]): Promise<number[][]> {
   const res = await fetch(CF_AI_URL, {
     method: "POST",
@@ -56,7 +62,17 @@ async function embedBatch(texts: string[]): Promise<number[][]> {
     },
     body: JSON.stringify({ text: texts }),
   });
-  if (!res.ok) throw new Error(`Workers AI ${res.status}: ${await res.text()}`);
+  if (!res.ok) {
+    const body = await res.text();
+    if (body.includes("Max context reached") && texts.length > 1) {
+      const mid = Math.ceil(texts.length / 2);
+      console.log(`   ⚠️  context overflow with ${texts.length} texts → splitting batch in two`);
+      const left = await embedBatch(texts.slice(0, mid));
+      const right = await embedBatch(texts.slice(mid));
+      return [...left, ...right];
+    }
+    throw new Error(`Workers AI ${res.status}: ${body}`);
+  }
   const json = (await res.json()) as { result: { data: number[][] } };
   return json.result.data;
 }
@@ -80,18 +96,41 @@ async function main() {
     return;
   }
 
-  // Embedding + batched upsert
-  for (let i = 0; i < toEmbed.length; i += BATCH_SIZE) {
-    const batch = toEmbed.slice(i, i + BATCH_SIZE);
+  // Embedding + batched upsert.
+  // Token-aware batching: bge-m3 accepts max 60k tokens PER REQUEST (not per
+  // text). Local estimate: ~1 char/token for dense technical text (YAML/
+  // markdown tokenizes far worse than prose — measured ~3x worse than the
+  // classic 3 chars/token rule of thumb). A hard cap on texts per batch
+  // plus adaptive splitting in embedBatch covers any residual misestimate.
+  const MAX_BATCH_TOKENS = 12_000; // estimated tokens, wide margin below 60k real
+  const MAX_TEXTS_PER_BATCH = 25;
+  const estimateTokens = (s: string) => s.length;
+
+  let batch: Chunk[] = [];
+  let batchTokens = 0;
+  let done = 0;
+
+  const flush = async () => {
+    if (batch.length === 0) return;
     const vectors = await embedBatch(batch.map((c) => c.content));
     const rows = batch.map((c, j) => ({ ...c, embedding: vectors[j], updated_at: new Date().toISOString() }));
-
     for (let u = 0; u < rows.length; u += UPSERT_BATCH) {
       const { error: upErr } = await supabase.from("chunks").upsert(rows.slice(u, u + UPSERT_BATCH));
       if (upErr) throw new Error(`Upsert: ${upErr.message}`);
     }
-    console.log(`   ✍️  ${Math.min(i + BATCH_SIZE, toEmbed.length)}/${toEmbed.length}`);
+    done += batch.length;
+    console.log(`   ✍️  ${done}/${toEmbed.length}`);
+    batch = [];
+    batchTokens = 0;
+  };
+
+  for (const chunk of toEmbed) {
+    const tokens = estimateTokens(chunk.content);
+    if (batchTokens + tokens > MAX_BATCH_TOKENS || batch.length >= MAX_TEXTS_PER_BATCH) await flush();
+    batch.push(chunk);
+    batchTokens += tokens;
   }
+  await flush();
 
   if (staleIds.length > 0) {
     const { error: delErr } = await supabase.from("chunks").delete().in("id", staleIds);
