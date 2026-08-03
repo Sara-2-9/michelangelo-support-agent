@@ -4,16 +4,23 @@ This file is written for AI coding agents. It describes the project as it is tod
 
 ## Project overview
 
-AI support agent for users of [Michelangelo](https://michelangelo.land) (an iOS vibe-coding app that builds Expo/React Native apps from natural language). It answers support questions using **only the official documentation**, with source citations (RAG). Educational/portfolio project, not officially affiliated with Michelangelo.
+AI support agent for users of [Michelangelo](https://michelangelo.land) (an iOS vibe-coding app that builds Expo/React Native apps from natural language). It answers support questions using **only the official documentation**, with source citations (RAG), and refuses what the docs do not cover. Educational/portfolio project, not officially affiliated with Michelangelo.
 
-**Current status**: Phase 0 (corpus) and Phase 1 (chunking + embeddings pipeline → Supabase) are complete. Later phases (Mastra agent, tool orchestration, evals, React UI, Cloudflare deployment) **do not exist in the code yet** — see the roadmap in `README.md`.
+## Current status and next step
+
+**Completed**: Phase 0 (corpus), Phase 1 (chunking + embeddings → Supabase, retrieval verified), Phase 2 (deterministic RAG agent with citations + anti-hallucination guardrail, tested via `npm run chat`).
+
+**Next step**: Phase 3 — orchestration: intent router (support_question | bug_report | troubleshooting | off_topic) as a Mastra workflow, guided troubleshooting flows, structured bug-report drafts, escalation summaries, conversation memory.
+
+Phase 1b (automatic docs sync via Cloudflare Cron Trigger + hash diff) is pending and independent; Phase 4 (eval harness) and Phase 5 (React UI + Cloudflare deploy) follow. See roadmap in `README.md`.
 
 ## Tech stack
 
 - **TypeScript** (ESM, `"type": "module"`), executed with `tsx` — no build step
-- **Supabase (Postgres + pgvector)** — vector store; `@supabase/supabase-js` client (only runtime dependency)
-- **Cloudflare Workers AI** — embeddings via REST API, model `@cf/baai/bge-m3` (1024 dimensions, multilingual: Italian queries → English docs)
-- Planned but not yet present: Mastra (agent orchestration), Cloudflare Workers/Pages/Cron (serving and deployment)
+- **Mastra** (`@mastra/core`) — agent framework; deterministic RAG pipeline today, workflows planned
+- **Cloudflare Workers AI** — embeddings `@cf/baai/bge-m3` (1024-dim, multilingual) and LLM `@cf/meta/llama-3.3-70b-instruct-fp8-fast`, both via REST; the LLM is called through the account's **OpenAI-compatible endpoint** (`/ai/v1`) with `@ai-sdk/openai-compatible`
+- **Supabase (Postgres + pgvector)** — vector store; `@supabase/supabase-js`
+- Planned but not yet present: Mastra workflows, Cloudflare Workers/Pages/Cron
 
 ## Repository structure
 
@@ -27,39 +34,47 @@ corpus/
 scripts/
   chunk.ts        Step 1: structure-aware chunking → corpus/chunks.json
   embed.ts        Step 2: embeddings → incremental upsert to Supabase
+  test-query.ts   retrieval-only smoke test (npm run query -- "...")
+  chat.ts         full agent CLI (npm run chat -- "...")
+src/
+  agent.ts        Phase 2: Mastra agent + deterministic RAG pipeline (answer())
+  lib/retrieval.ts shared "question → chunks" module (embed + match_chunks)
 supabase/
   config.toml     Supabase CLI local config (created by `supabase init`)
   migrations/     versioned DB schema — apply with `supabase db push`
-                  (requires `supabase login` + `supabase link --project-ref`)
 ```
-
-`src/` does not exist yet, although it is included in `tsconfig.json` — it is the designated location for future-phase code.
 
 ## Commands
 
 ```bash
-npm install          # install dependencies
-npm run chunk        # corpus/raw/*.md → corpus/chunks.json (+ stats)
-npm run embed        # incremental embeddings → Supabase (requires .env)
+npm install                       # install dependencies
+npm run chunk                     # corpus/raw/*.md → corpus/chunks.json (+ stats)
+npm run embed                     # incremental embeddings → Supabase (requires .env)
+npm run query -- "question"       # retrieval only, with similarity scores
+npm run chat  -- "question"       # full agent answer with citations
+npx tsc --noEmit                  # type check (strict tsconfig); run before commits
 ```
 
-No tests, linter, formatter or build step are configured. Validate code with `npx tsc --noEmit` (strict tsconfig).
+No tests, linter, formatter or build step are configured (the eval harness of Phase 4 will change this).
 
 ## Setup and environment variables
 
-Copy `.env.example` to `.env` and fill in: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`. `embed.ts` loads `.env` with a manual parser (no dotenv) and fails at startup if a variable is missing or still a placeholder.
+Copy `.env.example` to `.env` and fill in: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`. Scripts load `.env` with a manual parser (no dotenv) and fail at startup if a variable is missing or still a placeholder.
 
 ## Conventions and design decisions to preserve
 
-- **Language**: comments, documentation, log messages and commit messages are in **English**; keep it that way in new code.
+- **Language**: code comments, docs, log messages and commit messages are in **English**.
+- **Architecture: deterministic RAG, not agentic tool calling.** Two reasons: (1) Workers AI's OpenAI-compatible endpoint rejects serialized tool-call history (assistant `content: null` + `tool_calls`), so multi-turn tool calling fails with a 400; (2) single-hop support Q&A is more predictable, cheaper and easier to evaluate with retrieve→generate. Agent orchestration will live in explicit Mastra workflows (Phase 3), not in a free tool-calling loop.
+- **Anti-hallucination guardrail**: retrieval threshold `minSimilarity = 0.45` (measured: relevant ~55-70%, out-of-scope ~33%). When retrieval returns nothing, `answer()` returns a fixed honest refusal WITHOUT calling the LLM.
 - **Chunking** (`scripts/chunk.ts`):
-  - split on `##`/`###` sections; every chunk is prepended with the context `# Page title > Section` (self-contained chunks for retrieval)
+  - split on `##`/`###` sections; every chunk is prepended with `# Page title > Section`
   - fenced code blocks are **atomic**: never split inside a fence
   - thresholds: `MAX_CHUNK_CHARS = 2000`, `MIN_CHUNK_CHARS = 150` (tiny chunks merged into a same-page neighbor)
   - every chunk carries a SHA-256 `content_hash`; `id` = short hash (16 chars), stable key for upserts
-  - explicit in-code rule: **never embed before inspecting the chunks by eye** (the script prints stats for exactly this purpose)
-- **Indexing** (`scripts/embed.ts`): idempotent and incremental — `content_hash` comparison, re-embeds only the delta, deletes chunks that disappeared from the docs. Batches: 50 texts per Workers AI call, 100 rows per upsert.
-- **Database** (`supabase/migrations/`): `chunks` table with `embedding vector(1024)`, HNSW cosine index, index on `content_hash`, RPC function `match_chunks(query_embedding, match_count, min_similarity)` for semantic retrieval. If you change the embedding model, update the vector dimension in a new migration. Never edit the SQL of an already-applied migration — add a new one instead.
+  - explicit in-code rule: **never embed before inspecting the chunks by eye**
+- **Indexing** (`scripts/embed.ts`): idempotent and incremental — `content_hash` comparison, re-embeds only the delta, deletes chunks gone from the docs. Token-aware batching with conservative estimate (1 char/token: the real bge-m3 tokenizer counts ~3x more on dense YAML), 25-text cap per request, and adaptive recursive splitting on provider context overflow.
+- **Database** (`supabase/migrations/`): `chunks` table with `embedding vector(1024)`, HNSW cosine index, index on `content_hash`, RPC `match_chunks(query_embedding, match_count, min_similarity)`. Never edit the SQL of an already-applied migration — add a new one. If you change the embedding model, update the vector dimension in a new migration.
+- **Shared retrieval** lives ONLY in `src/lib/retrieval.ts` — do not duplicate embed/RPC logic elsewhere.
 
 ## Security
 
