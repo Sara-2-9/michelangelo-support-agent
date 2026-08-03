@@ -76,5 +76,14 @@ EXAMPLES:
     return parsed.success ? parsed.data : "support_question";
   }
 
-  return { classify };
+  /**
+   * Raw access to the small model for cheap utility tasks (summaries,
+   * classifications) that do not need the 70B.
+   */
+  async function rawGenerate(prompt: string): Promise<string> {
+    const result = await router.generate(prompt);
+    return result.text;
+  }
+
+  return { classify, rawGenerate };
 }

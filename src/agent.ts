@@ -18,6 +18,7 @@ import { Agent } from "@mastra/core/agent";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { createRetriever, type RetrievedChunk } from "./lib/retrieval.js";
 import { MODEL_GENERATION } from "./lib/models.js";
+import type { HistoryMessage } from "./lib/logging.js";
 
 export interface AgentConfig {
   supabaseUrl: string;
@@ -79,7 +80,7 @@ RULES — follow them strictly:
    *      (a deterministic guardrail cannot hallucinate)
    *   3. otherwise → generate with the excerpts as context
    */
-  async function answer(question: string): Promise<SupportAnswer> {
+  async function answer(question: string, history: HistoryMessage[] = []): Promise<SupportAnswer> {
     const chunks = await retriever.retrieve(question, 5, 0.45);
 
     if (chunks.length === 0) {
@@ -94,8 +95,15 @@ RULES — follow them strictly:
       )
       .join("\n\n");
 
+    // Conversation memory: recent turns become context, so follow-up
+    // questions ("and what about the other limit?") resolve correctly.
+    const historyBlock =
+      history.length > 0
+        ? `CONVERSATION SO FAR:\n${history.map((m) => `${m.role.toUpperCase()}: ${m.content}`).join("\n")}\n\n`
+        : "";
+
     const prompt =
-      `DOCUMENTATION EXCERPTS:\n\n${context}\n\n` +
+      `${historyBlock}DOCUMENTATION EXCERPTS:\n\n${context}\n\n` +
       `---\nUSER QUESTION: ${question}\n\n` +
       `Answer following your rules. Remember the "Sources" section.`;
 

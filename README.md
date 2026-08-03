@@ -68,9 +68,9 @@ Michelangelo currently offers support via Discord and email. This agent:
 - [x] **Phase 1** — Structure-aware chunking (221 chunks) + embeddings pipeline → Supabase (retrieval verified: cross-lingual IT→EN, healthy similarity gradient)
 - [ ] **Phase 1b** — Automatic docs sync (Cron Trigger + hash-based diff)
 - [x] **Phase 2** — Deterministic RAG agent with citations and anti-hallucination guardrail (Mastra + Llama 70B)
-- [ ] **Phase 3** — Orchestration: intent routing, guided troubleshooting, structured bug reports, escalation, conversation memory
-- [ ] **Phase 4** — Eval harness with golden dataset and metrics
-- [ ] **Phase 5** — React UI + public Cloudflare deployment
+- [x] **Phase 3** — Orchestration: intent router (few-shot, 5/5 routes), bug-report drafts, guided troubleshooting, conversation memory + logging (conversations/messages tables), escalation with auto-generated operator summary
+- [ ] **Phase 4** — Eval harness with golden dataset and metrics (incl. similarity-threshold and escalation-gate calibration)
+- [ ] **Phase 5** — React UI + public Cloudflare deployment + Supabase Auth (anonymous sign-in, conversation history, RLS)
 
 ## Setup
 
@@ -81,7 +81,9 @@ cp .env.example .env   # fill in Supabase + Cloudflare credentials
 npm run chunk                     # corpus/raw/*.md → corpus/chunks.json
 npm run embed                     # embeddings → Supabase (incremental)
 npm run query -- "your question"  # retrieval-only smoke test
-npm run chat  -- "your question"  # full agent answer with citations
+npm run chat                      # interactive agent chat (memory + logging)
+npm run chat -- --resume <uuid>   # resume a logged conversation
+npm run test:memory               # multi-turn memory smoke test
 ```
 
 DB schema: `supabase/migrations/` — applied via Supabase CLI (`supabase login` → `supabase link --project-ref <ref>` → `supabase db push`).

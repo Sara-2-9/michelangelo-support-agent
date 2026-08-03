@@ -8,11 +8,11 @@ AI support agent for users of [Michelangelo](https://michelangelo.land) (an iOS 
 
 ## Current status and next step
 
-**Completed**: Phase 0 (corpus), Phase 1 (chunking + embeddings → Supabase, retrieval verified), Phase 2 (deterministic RAG agent with citations + anti-hallucination guardrail, tested via `npm run chat`).
+**Completed**: Phase 0 (corpus), Phase 1 (chunking + embeddings → Supabase, retrieval verified), Phase 2 (deterministic RAG agent with citations + anti-hallucination guardrail), Phase 3 (orchestration: intent router, bug-report drafts, guided troubleshooting, conversation memory + DB logging, escalation with operator summary).
 
-**Next step**: Phase 3 — orchestration: intent router (support_question | bug_report | troubleshooting | off_topic) as a Mastra workflow, guided troubleshooting flows, structured bug-report drafts, escalation summaries, conversation memory.
+**Next step**: Phase 4 — eval harness with golden dataset. Includes calibrating: the 0.45/0.3 similarity thresholds, escalation trigger (today: `support_question/troubleshooting` + `grounded=false`; in this focused corpus almost every product question retrieves something, so the gate rarely fires — needs an answerability judge, not just retrieval grounding). Known eval cases: "e in che formato vengono salvate?" (should answer "compressed JPEG"), borderline bug_report/troubleshooting intents.
 
-Phase 1b (automatic docs sync via Cloudflare Cron Trigger + hash diff) is pending and independent; Phase 4 (eval harness) and Phase 5 (React UI + Cloudflare deploy) follow. See roadmap in `README.md`.
+Phase 1b (automatic docs sync via Cloudflare Cron Trigger + hash diff) is pending and independent; Phase 5 (React UI + Supabase Auth anonymous sign-in + RLS + Cloudflare deploy) follows. See roadmap in `README.md`.
 
 ## Tech stack
 
@@ -35,10 +35,19 @@ scripts/
   chunk.ts        Step 1: structure-aware chunking → corpus/chunks.json
   embed.ts        Step 2: embeddings → incremental upsert to Supabase
   test-query.ts   retrieval-only smoke test (npm run query -- "...")
-  chat.ts         full agent CLI (npm run chat -- "...")
+  chat.ts         interactive REPL with memory + logging (npm run chat)
+  test-memory.ts  multi-turn memory smoke test (npm run test:memory)
 src/
-  agent.ts        Phase 2: Mastra agent + deterministic RAG pipeline (answer())
-  lib/retrieval.ts shared "question → chunks" module (embed + match_chunks)
+  orchestrator.ts entry point: intent routing → handler dispatch + logging
+  router.ts       intent classification (few-shot, small model)
+  agent.ts        support_question handler: deterministic RAG (answer())
+  handlers/
+    bug-report.ts       raw report → structured issue draft
+    troubleshooting.ts  guided diagnostic checklists
+  lib/
+    retrieval.ts  shared "question → chunks" module (embed + match_chunks)
+    logging.ts    conversations/messages persistence + history loading
+    models.ts     central model registry — the ONLY place model IDs live
 supabase/
   config.toml     Supabase CLI local config (created by `supabase init`)
   migrations/     versioned DB schema — apply with `supabase db push`
@@ -51,7 +60,9 @@ npm install                       # install dependencies
 npm run chunk                     # corpus/raw/*.md → corpus/chunks.json (+ stats)
 npm run embed                     # incremental embeddings → Supabase (requires .env)
 npm run query -- "question"       # retrieval only, with similarity scores
-npm run chat  -- "question"       # full agent answer with citations
+npm run chat                      # interactive chat (memory + DB logging)
+npm run chat -- --resume <uuid>   # resume a logged conversation
+npm run test:memory               # multi-turn memory smoke test
 npx tsc --noEmit                  # type check (strict tsconfig); run before commits
 ```
 
@@ -63,7 +74,11 @@ Copy `.env.example` to `.env` and fill in: `SUPABASE_URL`, `SUPABASE_SERVICE_ROL
 
 ## Conventions and design decisions to preserve
 
-- **Language**: code comments, docs, log messages and commit messages are in **English**.
+- **Language**: code comments, docs, log messages and commit messages are in **English**. All prompts/instructions for AI models are in English too (better model performance, predictable behavior); user language affects only the OUTPUT — answers mirror the user's language, defaulting to English.
+- **Model registry** (`src/lib/models.ts`): the ONLY place model IDs live. Serverless models get deprecated without warning (llama-3.1-8b died mid-development) — check status at https://developers.cloudflare.com/workers-ai/models/. Model routing by task complexity: 3B for classification/summaries, 70B for answers.
+- **Intent routing** (`src/router.ts`): few-shot examples + explicit disambiguation rule (REPORT → bug_report vs FIX → troubleshooting). Intent boundaries are measured, not guessed — borderline cases go to the Phase 4 golden dataset.
+- **Logging & memory**: every exchange is persisted (`conversations`/`messages` tables) with intent, sources, similarity, latency, model. History (last 10 messages) is passed as context for follow-up questions. Conversations are resumable (`ended_at` NULL) — the Phase 5 UI reads these same tables. user_id is nullable until Supabase Auth (Phase 5), then per-table RLS with `user_id = auth.uid()`.
+- **Escalation**: ungrounded answers on real support intents mark the conversation `escalated=true` with an auto-generated operator summary (small model). off_topic refusals never escalate.
 - **Architecture: deterministic RAG, not agentic tool calling.** Two reasons: (1) Workers AI's OpenAI-compatible endpoint rejects serialized tool-call history (assistant `content: null` + `tool_calls`), so multi-turn tool calling fails with a 400; (2) single-hop support Q&A is more predictable, cheaper and easier to evaluate with retrieve→generate. Agent orchestration will live in explicit Mastra workflows (Phase 3), not in a free tool-calling loop.
 - **Anti-hallucination guardrail**: retrieval threshold `minSimilarity = 0.45` (measured: relevant ~55-70%, out-of-scope ~33%). When retrieval returns nothing, `answer()` returns a fixed honest refusal WITHOUT calling the LLM.
 - **Chunking** (`scripts/chunk.ts`):
