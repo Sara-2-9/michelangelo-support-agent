@@ -7,10 +7,14 @@
   "scripts": {
     "chunk": "tsx scripts/chunk.ts",
     "embed": "tsx scripts/embed.ts",
-    "query": "tsx scripts/test-query.ts"
+    "query": "tsx scripts/test-query.ts",
+    "chat": "tsx scripts/chat.ts"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.45.0"
+    "@ai-sdk/openai-compatible": "^3.0.20",
+    "@mastra/core": "^1.55.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
