@@ -69,8 +69,8 @@ Michelangelo currently offers support via Discord and email. This agent:
 - [ ] **Phase 1b** — Automatic docs sync (Cron Trigger + hash-based diff)
 - [x] **Phase 2** — Deterministic RAG agent with citations and anti-hallucination guardrail (Mastra + Llama 70B)
 - [x] **Phase 3** — Orchestration: intent router (few-shot, 5/5 routes), bug-report drafts, guided troubleshooting, conversation memory + logging (conversations/messages tables), escalation with auto-generated operator summary
-- [ ] **Phase 4** — Eval harness with golden dataset and metrics (incl. similarity-threshold and escalation-gate calibration)
-- [ ] **Phase 5** — React UI + public Cloudflare deployment + Supabase Auth (anonymous sign-in, conversation history, RLS)
+- [x] **Phase 4** — Eval harness: golden dataset (25 cases) + hybrid metrics (rule-based + LLM judge). First run 92% → 100% after label/judge calibration; dataset growth is ongoing
+- [ ] **Phase 5** — React UI + public Cloudflare deployment + Supabase Auth (anonymous sign-in, conversation history, RLS policies)
 
 ## Setup
 

@@ -1,0 +1,185 @@
+{
+  "_about": "Golden dataset for the Michelangelo Support Agent eval harness. Cases are labeled from real manual testing + systematic coverage of the docs. expected_intent may be an array when two routes are defensible (borderline cases). answer_must_include checks are case-insensitive and language-agnostic tokens. judge_ground_truth cases are graded by the LLM judge (semantic correctness), not by rules.",
+  "cases": [
+    {
+      "id": "sq-01",
+      "question": "How many images can I attach to a prompt?",
+      "expected_intent": "support_question",
+      "expected_source_contains": "create-project",
+      "answer_must_include": ["2"],
+      "expect_grounded": true
+    },
+    {
+      "id": "sq-02",
+      "question": "What is the maximum prompt length?",
+      "expected_intent": "support_question",
+      "expected_source_contains": "tokens-and-limits",
+      "answer_must_include": ["4000"],
+      "expect_grounded": true
+    },
+    {
+      "id": "sq-03",
+      "question": "How do I connect my GitHub account?",
+      "expected_intent": "support_question",
+      "expected_source_contains": "github",
+      "expect_grounded": true
+    },
+    {
+      "id": "sq-04",
+      "question": "How much does the Imaginer subscription cost?",
+      "expected_intent": "support_question",
+      "expected_source_contains": "imaginer",
+      "answer_must_include": ["10", "15", "20"],
+      "expect_grounded": true
+    },
+    {
+      "id": "sq-05",
+      "question": "How do I restore my subscription after reinstalling the app?",
+      "expected_intent": ["support_question", "troubleshooting"],
+      "expected_source_contains": "tokens-and-limits",
+      "answer_must_include": ["restore"],
+      "expect_grounded": true,
+      "notes": "borderline: phrased as how-to (support) but implies something broken (troubleshooting) — both routes defensible"
+    },
+    {
+      "id": "sq-06",
+      "question": "Can I export my app's source code?",
+      "expected_intent": "support_question",
+      "answer_must_include": ["GitHub"],
+      "expect_grounded": true
+    },
+    {
+      "id": "sq-07",
+      "question": "quante immagini posso allegare a un prompt?",
+      "expected_intent": "support_question",
+      "expected_source_contains": "create-project",
+      "answer_must_include": ["2"],
+      "expect_grounded": true,
+      "notes": "cross-lingual: Italian question, English docs"
+    },
+    {
+      "id": "sq-08",
+      "question": "come condivido la mia app con un amico?",
+      "expected_intent": "support_question",
+      "expected_source_contains": "share",
+      "expect_grounded": true,
+      "notes": "cross-lingual"
+    },
+    {
+      "id": "sq-09",
+      "question": "What is the maximum length for a project name?",
+      "expected_intent": "support_question",
+      "expected_source_contains": "tokens-and-limits",
+      "answer_must_include": ["30"],
+      "expect_grounded": true
+    },
+    {
+      "id": "sq-10",
+      "question": "How do I authenticate with the Michelangelo public API?",
+      "expected_intent": "support_question",
+      "expected_source_contains": "api",
+      "answer_must_include": ["OAuth"],
+      "expect_grounded": true
+    },
+    {
+      "id": "sq-11",
+      "question": "Is my project public by default?",
+      "expected_intent": "support_question",
+      "answer_must_include": ["public"],
+      "expect_grounded": true
+    },
+    {
+      "id": "sq-12",
+      "question": "What's the difference between the Imaginer tiers?",
+      "expected_intent": "support_question",
+      "expected_source_contains": "imaginer",
+      "judge_ground_truth": "All Imaginer tiers (Subs10, Subs15, Subs20) unlock the same features; the price only reflects how much you want to support the project.",
+      "expect_grounded": true
+    },
+    {
+      "id": "sq-13",
+      "question": "Does Michelangelo work on Android?",
+      "expected_intent": "support_question",
+      "judge_ground_truth": "The documentation says Michelangelo is available on iPhone (iOS), with Web and Meta Glasses as platforms in development. Android is not covered by the docs. A correct answer states the documented platforms and honestly says Android is not covered.",
+      "expect_grounded": true
+    },
+    {
+      "id": "br-01",
+      "question": "The app crashes every time I tap deploy, I'm reporting this bug",
+      "expected_intent": "bug_report"
+    },
+    {
+      "id": "br-02",
+      "question": "I found an error during generation, here's what happened: the sandbox failed twice",
+      "expected_intent": "bug_report"
+    },
+    {
+      "id": "tr-01",
+      "question": "Generation gets stuck halfway and never finishes, what can I do?",
+      "expected_intent": ["troubleshooting", "bug_report"],
+      "notes": "borderline: 'what can I do' should win → troubleshooting"
+    },
+    {
+      "id": "tr-02",
+      "question": "Purchase restore doesn't work after reinstalling, help me fix it",
+      "expected_intent": "troubleshooting"
+    },
+    {
+      "id": "ot-01",
+      "question": "Tell me a joke",
+      "expected_intent": "off_topic",
+      "expect_grounded": false
+    },
+    {
+      "id": "ot-02",
+      "question": "How do I center a div in CSS?",
+      "expected_intent": "off_topic",
+      "expect_grounded": false
+    },
+    {
+      "id": "ot-03",
+      "question": "come si cucina la carbonara?",
+      "expected_intent": "off_topic",
+      "expect_grounded": false,
+      "notes": "cross-lingual out-of-scope"
+    },
+    {
+      "id": "edge-01",
+      "question": "How do I export my project to Kotlin Multiplatform?",
+      "expected_intent": "support_question",
+      "judge_ground_truth": "The docs cover exporting source code via GitHub (EAS/own credentials), but do NOT cover Kotlin Multiplatform. A correct answer explains the GitHub export and honestly states Kotlin is not covered.",
+      "expect_grounded": true,
+      "notes": "domain-adjacent: retrieval finds export chunks (61% similarity) but the specific answer is absent"
+    },
+    {
+      "id": "edge-02",
+      "question": "In what format are prompt image attachments saved?",
+      "expected_intent": "support_question",
+      "answer_must_include": ["JPEG"],
+      "expect_grounded": true,
+      "notes": "KNOWN FAILURE at Phase 3: agent said 'not specified' while docs say 'compressed JPEG'"
+    },
+    {
+      "id": "edge-03",
+      "question": "Can I pay the Imaginer subscription with Bitcoin?",
+      "expected_intent": "support_question",
+      "judge_ground_truth": "The docs only say subscriptions are handled through the App Store. Bitcoin is not covered; a correct answer says so honestly and does not invent payment methods.",
+      "expect_grounded": true,
+      "notes": "retrieval succeeds (subscription chunks) but the answer is absent — retrieval success ≠ answer success"
+    },
+    {
+      "id": "edge-04",
+      "question": "Can Michelangelo generate apps for Apple Vision Pro?",
+      "expected_intent": "support_question",
+      "judge_ground_truth": "The docs mention iOS now, and Web and Meta Glasses as coming platforms. Vision Pro is not covered; a correct answer says so honestly.",
+      "expect_grounded": true,
+      "notes": "Meta Glasses pages are semantically close (61%) but Vision Pro is absent"
+    },
+    {
+      "id": "meta-01",
+      "question": "Hello! What can you help me with?",
+      "expected_intent": "support_question",
+      "notes": "greeting/meta-question routed to support handler"
+    }
+  ]
+}

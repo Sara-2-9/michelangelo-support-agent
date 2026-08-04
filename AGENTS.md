@@ -8,11 +8,11 @@ AI support agent for users of [Michelangelo](https://michelangelo.land) (an iOS 
 
 ## Current status and next step
 
-**Completed**: Phase 0 (corpus), Phase 1 (chunking + embeddings → Supabase, retrieval verified), Phase 2 (deterministic RAG agent with citations + anti-hallucination guardrail), Phase 3 (orchestration: intent router, bug-report drafts, guided troubleshooting, conversation memory + DB logging, escalation with operator summary).
+**Completed**: Phase 0 (corpus), Phase 1 (chunking + embeddings → Supabase), Phase 2 (deterministic RAG agent), Phase 3 (orchestration: router, bug-report, troubleshooting, memory, logging, escalation), Phase 4 (eval harness: 25-case golden dataset, hybrid rule-based + LLM-judge metrics, 100% pass after calibration). Security: RLS default-deny on all tables.
 
-**Next step**: Phase 4 — eval harness with golden dataset. Includes calibrating: the 0.45/0.3 similarity thresholds, escalation trigger (today: `support_question/troubleshooting` + `grounded=false`; in this focused corpus almost every product question retrieves something, so the gate rarely fires — needs an answerability judge, not just retrieval grounding). Known eval cases: "e in che formato vengono salvate?" (should answer "compressed JPEG"), borderline bug_report/troubleshooting intents.
+**Next step**: Phase 5 — React chat UI + Cloudflare deployment (Pages + Worker) + Supabase Auth anonymous sign-in (conversation history per user, RLS policies: `user_id = auth.uid()` on conversations/messages, read-only on chunks). Phase 1b (docs auto-sync via Cron Trigger) is pending and independent — good candidate to do alongside Phase 5 since it also deploys to Cloudflare.
 
-Phase 1b (automatic docs sync via Cloudflare Cron Trigger + hash diff) is pending and independent; Phase 5 (React UI + Supabase Auth anonymous sign-in + RLS + Cloudflare deploy) follows. See roadmap in `README.md`.
+**Eval discipline**: `npm run eval` before any prompt/threshold/model change. A 100% pass rate means "the current dataset is covered" — grow the dataset with harder cases, don't celebrate. Eval runs do NOT write to the conversations/messages tables (no conversationId passed).
 
 ## Tech stack
 
