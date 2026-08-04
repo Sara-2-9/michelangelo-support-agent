@@ -94,5 +94,5 @@ Copy `.env.example` to `.env` and fill in: `SUPABASE_URL`, `SUPABASE_SERVICE_ROL
 ## Security
 
 - **Never commit `.env`** (already in `.gitignore`); the Supabase service role key runs only in local scripts/backend, never in the browser.
-- No auto-RLS: the browser never talks to Supabase directly; per-table RLS only when needed.
+- **RLS is ENABLED on all tables with zero policies** (default-deny): the anon key cannot read or write anything. Backend/scripts use the service_role key, which bypasses RLS by design. Phase 5 adds explicit per-table policies: `conversations`/`messages` → `user_id = auth.uid()`; `chunks` → read-only for all (public knowledge base). Rule: RLS on at table creation, policies added only when access is needed.
 - Cloudflare API token with minimal permissions (Workers AI → Read).
