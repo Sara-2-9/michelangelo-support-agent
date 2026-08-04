@@ -2,11 +2,13 @@
  * Phase 5.1 — Cloudflare Worker: the agent as an HTTP API.
  *
  * Endpoints:
- *   POST /api/chat    { message, conversationId?, history? }
- *                     → { intent, text, sources, grounded, conversationId }
- *                     Creates a new conversation (channel "web") when no
- *                     conversationId is provided; logs the exchange.
- *   GET  /api/health  → { ok: true }
+ *   POST /api/chat      { message, conversationId?, history? }
+ *                       → { intent, text, sources, grounded, conversationId, messageId }
+ *                       Creates a new conversation (channel "web") when no
+ *                       conversationId is provided; logs the exchange.
+ *   POST /api/feedback  { messageId, feedback: "up" | "down" }
+ *                       → { ok: true } — thumbs up/down on an answer.
+ *   GET  /api/health    → { ok: true }
  *
  * Runtime differences vs local scripts: no filesystem, no process.env —
  * config arrives via the Worker `env` binding (wrangler secrets).
@@ -80,7 +82,29 @@ export default {
           section: s.section,
         })),
         conversationId,
+        messageId: result.messageId ?? null,
       });
+    }
+
+    if (url.pathname === "/api/feedback" && request.method === "POST") {
+      let body: { messageId?: string; feedback?: string };
+      try {
+        body = await request.json();
+      } catch {
+        return json({ error: "Invalid JSON body" }, 400);
+      }
+      if (!body.messageId || (body.feedback !== "up" && body.feedback !== "down")) {
+        return json({ error: "Fields 'messageId' and 'feedback' (\"up\" | \"down\") are required" }, 400);
+      }
+
+      const orchestrator = createOrchestrator({
+        supabaseUrl: env.SUPABASE_URL,
+        supabaseKey: env.SUPABASE_SERVICE_ROLE_KEY,
+        cfAccountId: env.CLOUDFLARE_ACCOUNT_ID,
+        cfApiToken: env.CLOUDFLARE_API_TOKEN,
+      });
+      await orchestrator.logger.setFeedback(body.messageId, body.feedback);
+      return json({ ok: true });
     }
 
     return json({ error: "Not found" }, 404);

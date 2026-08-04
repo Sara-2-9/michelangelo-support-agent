@@ -13,3 +13,6 @@ corpus/chunks.json
 # Cloudflare Workers
 .dev.vars
 .wrangler/
+
+# Web build output (rebuilt by npm run build)
+web/dist/

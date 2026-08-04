@@ -32,6 +32,11 @@ export function createLogger(supabaseUrl: string, supabaseKey: string) {
     return data.id as string;
   }
 
+  /**
+   * Persists one message. Returns the inserted row id (null on failure):
+   * the UI needs it to attach thumbs up/down feedback to a specific answer.
+   * Failure is non-blocking: logging must never break the user's answer.
+   */
   async function logMessage(
     conversationId: string,
     role: "user" | "assistant",
@@ -43,23 +48,37 @@ export function createLogger(supabaseUrl: string, supabaseKey: string) {
       model?: string;
       latencyMs?: number;
     }
-  ): Promise<void> {
-    const { error } = await supabase.from("messages").insert({
-      conversation_id: conversationId,
-      role,
-      content,
-      intent: meta?.intent ?? null,
-      grounded: meta?.grounded ?? null,
-      sources: meta?.sources?.map((s) => ({
-        source_url: s.source_url,
-        page_title: s.page_title,
-        similarity: s.similarity,
-      })) ?? null,
-      similarity_top: meta?.sources?.[0]?.similarity ?? null,
-      model: meta?.model ?? null,
-      latency_ms: meta?.latencyMs ?? null,
-    });
-    if (error) console.error(`⚠️  logMessage failed (non-blocking): ${error.message}`);
+  ): Promise<string | null> {
+    const { data, error } = await supabase
+      .from("messages")
+      .insert({
+        conversation_id: conversationId,
+        role,
+        content,
+        intent: meta?.intent ?? null,
+        grounded: meta?.grounded ?? null,
+        sources: meta?.sources?.map((s) => ({
+          source_url: s.source_url,
+          page_title: s.page_title,
+          similarity: s.similarity,
+        })) ?? null,
+        similarity_top: meta?.sources?.[0]?.similarity ?? null,
+        model: meta?.model ?? null,
+        latency_ms: meta?.latencyMs ?? null,
+      })
+      .select("id")
+      .single();
+    if (error) {
+      console.error(`⚠️  logMessage failed (non-blocking): ${error.message}`);
+      return null;
+    }
+    return data.id as string;
+  }
+
+  /** Records thumbs up/down on an assistant message (Phase 5.2 UI). */
+  async function setFeedback(messageId: string, feedback: "up" | "down"): Promise<void> {
+    const { error } = await supabase.from("messages").update({ feedback }).eq("id", messageId);
+    if (error) console.error(`⚠️  setFeedback failed (non-blocking): ${error.message}`);
   }
 
   /**
@@ -89,5 +108,5 @@ export function createLogger(supabaseUrl: string, supabaseKey: string) {
     if (error) console.error(`⚠️  markEscalated failed (non-blocking): ${error.message}`);
   }
 
-  return { createConversation, logMessage, loadHistory, markEscalated };
+  return { createConversation, logMessage, loadHistory, markEscalated, setFeedback };
 }

@@ -70,7 +70,10 @@ Michelangelo currently offers support via Discord and email. This agent:
 - [x] **Phase 2** — Deterministic RAG agent with citations and anti-hallucination guardrail (Mastra + Llama 70B)
 - [x] **Phase 3** — Orchestration: intent router (few-shot, 5/5 routes), bug-report drafts, guided troubleshooting, conversation memory + logging (conversations/messages tables), escalation with auto-generated operator summary
 - [x] **Phase 4** — Eval harness: golden dataset (25 cases) + hybrid metrics (rule-based + LLM judge). First run 92% → 100% after label/judge calibration; dataset growth is ongoing
-- [ ] **Phase 5** — React UI + public Cloudflare deployment + Supabase Auth (anonymous sign-in, conversation history, RLS policies)
+- [x] **Phase 5.1** — Cloudflare Worker API (`src/worker.ts`): `GET /api/health`, `POST /api/chat` (validated, creates/resumes conversations, returns answer + intent + sources). Verified locally with `wrangler dev`
+- [x] **Phase 5.2** — React chat UI (Vite SPA in `web/`) served as Workers Static Assets via `@cloudflare/vite-plugin`: one `npm run dev` runs UI (HMR) + Worker (workerd) together; thumbs up/down feedback persisted to `messages.feedback`; conversation resumed via localStorage
+- [ ] **Phase 5.3** — Supabase Auth (anonymous sign-in, conversation history sidebar, final RLS policies)
+- [ ] **Phase 5.4** — Public deploy (`wrangler deploy` + secrets, CORS restricted to the real origin) + Phase 1b Cron Trigger for docs sync
 
 ## Setup
 
@@ -84,6 +87,10 @@ npm run query -- "your question"  # retrieval-only smoke test
 npm run chat                      # interactive agent chat (memory + logging)
 npm run chat -- --resume <uuid>   # resume a logged conversation
 npm run test:memory               # multi-turn memory smoke test
+
+npm run dev                       # full app: React UI + Worker, one server (:5173)
+npm run build                     # production build → web/dist (client + worker)
+npm run deploy                    # wrangler deploy (Phase 5.4)
 ```
 
 DB schema: `supabase/migrations/` — applied via Supabase CLI (`supabase login` → `supabase link --project-ref <ref>` → `supabase db push`).

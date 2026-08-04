@@ -8,9 +8,11 @@ AI support agent for users of [Michelangelo](https://michelangelo.land) (an iOS 
 
 ## Current status and next step
 
-**Completed**: Phase 0 (corpus), Phase 1 (chunking + embeddings → Supabase), Phase 2 (deterministic RAG agent), Phase 3 (orchestration: router, bug-report, troubleshooting, memory, logging, escalation), Phase 4 (eval harness: 25-case golden dataset, hybrid rule-based + LLM-judge metrics, 100% pass after calibration). Security: RLS default-deny on all tables.
+**Completed**: Phase 0 (corpus), Phase 1 (chunking + embeddings → Supabase), Phase 2 (deterministic RAG agent), Phase 3 (orchestration: router, bug-report, troubleshooting, memory, logging, escalation), Phase 4 (eval harness: 25-case golden dataset, hybrid rule-based + LLM-judge metrics, 100% pass after calibration). Security: RLS default-deny on all tables. Phase 5.1 (Cloudflare Worker API): `src/worker.ts` exposes `GET /api/health` and `POST /api/chat` (message validation ≤4000 chars, creates a conversation with channel "web" when no `conversationId` is passed, returns answer + intent + sources). CORS is `*` for now — restrict to the real origin at deploy time (marked in code). Phase 5.2 (React UI): Vite SPA in `web/` served as Workers Static Assets through `@cloudflare/vite-plugin` — one `npm run dev` runs UI + Worker together. New endpoint `POST /api/feedback` (thumbs up/down → `messages.feedback`); `/api/chat` also returns `messageId`. `logMessage` now returns the inserted row id. Conversation resume via localStorage `conversationId` (replaced by Auth in 5.3).
 
-**Next step**: Phase 5 — React chat UI + Cloudflare deployment (Pages + Worker) + Supabase Auth anonymous sign-in (conversation history per user, RLS policies: `user_id = auth.uid()` on conversations/messages, read-only on chunks). Phase 1b (docs auto-sync via Cron Trigger) is pending and independent — good candidate to do alongside Phase 5 since it also deploys to Cloudflare.
+**Gotcha learned**: with `root: "web"` in vite.config.ts, `@cloudflare/vite-plugin` does NOT find `wrangler.toml` on its own (it searches the Vite root) — `configPath` must point to the repo-root wrangler.toml explicitly, otherwise the dev server silently serves only the SPA and /api/* returns empty.
+
+**Next step**: Phase 5.3 — Supabase Auth anonymous sign-in, conversation history sidebar, final RLS policies (`user_id = auth.uid()` on conversations/messages, read-only on chunks). Then 5.4 (public deploy with `wrangler secret put`, CORS restriction, Phase 1b Cron Trigger for docs sync — note: `scripts/embed.ts` reads the corpus from disk, the Worker version must fetch `/llms.txt` + pages over HTTP instead).
 
 **Eval discipline**: `npm run eval` before any prompt/threshold/model change. A 100% pass rate means "the current dataset is covered" — grow the dataset with harder cases, don't celebrate. Eval runs do NOT write to the conversations/messages tables (no conversationId passed).
 
@@ -20,7 +22,7 @@ AI support agent for users of [Michelangelo](https://michelangelo.land) (an iOS 
 - **Mastra** (`@mastra/core`) — agent framework; deterministic RAG pipeline today, workflows planned
 - **Cloudflare Workers AI** — embeddings `@cf/baai/bge-m3` (1024-dim, multilingual) and LLM `@cf/meta/llama-3.3-70b-instruct-fp8-fast`, both via REST; the LLM is called through the account's **OpenAI-compatible endpoint** (`/ai/v1`) with `@ai-sdk/openai-compatible`
 - **Supabase (Postgres + pgvector)** — vector store; `@supabase/supabase-js`
-- Planned but not yet present: Mastra workflows, Cloudflare Workers/Pages/Cron
+- Planned but not yet present: Mastra workflows, Cloudflare Cron Triggers
 
 ## Repository structure
 
@@ -37,7 +39,10 @@ scripts/
   test-query.ts   retrieval-only smoke test (npm run query -- "...")
   chat.ts         interactive REPL with memory + logging (npm run chat)
   test-memory.ts  multi-turn memory smoke test (npm run test:memory)
+  patch-unicorn-magic.mjs  postinstall patch: fixes esbuild resolving unicorn-magic
+                  without npm-run-path exports when bundling for workerd
 src/
+  worker.ts       Cloudflare Worker API: GET /api/health, POST /api/chat
   orchestrator.ts entry point: intent routing → handler dispatch + logging
   router.ts       intent classification (few-shot, small model)
   agent.ts        support_question handler: deterministic RAG (answer())
@@ -51,6 +56,20 @@ src/
 supabase/
   config.toml     Supabase CLI local config (created by `supabase init`)
   migrations/     versioned DB schema — apply with `supabase db push`
+web/              React SPA (Phase 5.2) — Vite root, own tsconfig, Tailwind CSS v4
+  index.html
+  src/
+    App.tsx            composition only (Provider + layout)
+    index.css          Tailwind v4 entry: @import + @theme design tokens
+    types/chat.ts      shared types (ChatMessage, Source, ChatResponse)
+    constants/         static data (intent labels, storage keys)
+    lib/api.ts         the ONLY file that knows HTTP/endpoints
+    context/chat.tsx   ChatProvider + useChat() — conversation state
+    hooks/             reusable logic (use-auto-scroll)
+    components/        feature components (chat-header, message-list, …)
+    components/ui/     primitives (intent-badge, feedback-buttons, …)
+vite.config.ts    Vite root=web + tailwindcss() + cloudflare({ configPath: <repo-root wrangler.toml> }) + alias @/→web/src
+wrangler.toml     Worker config; [assets] not_found_handling = "single-page-application"
 ```
 
 ## Commands
@@ -63,7 +82,10 @@ npm run query -- "question"       # retrieval only, with similarity scores
 npm run chat                      # interactive chat (memory + DB logging)
 npm run chat -- --resume <uuid>   # resume a logged conversation
 npm run test:memory               # multi-turn memory smoke test
-npx tsc --noEmit                  # type check (strict tsconfig); run before commits
+npx wrangler dev                  # local Worker API only on :8787 (reads .dev.vars)
+npm run dev                       # full app: React UI + Worker in one server (:5173)
+npm run build                     # production build → web/dist (client + worker bundle)
+npm run typecheck                 # type check BOTH backend (root tsconfig) and web/
 ```
 
 No tests, linter, formatter or build step are configured (the eval harness of Phase 4 will change this).

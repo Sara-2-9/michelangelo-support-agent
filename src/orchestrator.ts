@@ -22,6 +22,9 @@ import { MODEL_GENERATION } from "./lib/models.js";
 
 export interface OrchestratedAnswer extends SupportAnswer {
   intent: Intent;
+  /** Id of the persisted assistant message (null when not logged) — the UI
+   * uses it to attach thumbs up/down feedback (Phase 5.2). */
+  messageId?: string | null;
 }
 
 export interface HandleOptions {
@@ -93,7 +96,7 @@ export function createOrchestrator(config: AgentConfig) {
     // break the user's answer).
     if (options.conversationId) {
       await logger.logMessage(options.conversationId, "user", message);
-      await logger.logMessage(options.conversationId, "assistant", result.text, {
+      result.messageId = await logger.logMessage(options.conversationId, "assistant", result.text, {
         intent,
         grounded: result.grounded,
         sources: result.sources,

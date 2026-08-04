@@ -11,19 +11,33 @@
     "query": "tsx scripts/test-query.ts",
     "chat": "tsx scripts/chat.ts",
     "test:memory": "tsx scripts/test-memory.ts",
-    "eval": "tsx scripts/eval.ts"
+    "eval": "tsx scripts/eval.ts",
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p web"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "^3.0.20",
     "@mastra/core": "^1.55.0",
     "@supabase/supabase-js": "^2.45.0",
     "ai": "^7.0.51",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.50.0",
+    "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^24.0.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
+    "tailwindcss": "^4.3.3",
     "tsx": "^4.20.0",
     "typescript": "^5.9.0",
+    "vite": "^8.2.0",
     "wrangler": "^4.118.0"
   }
 }

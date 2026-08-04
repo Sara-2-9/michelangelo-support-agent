@@ -10,3 +10,9 @@ compatibility_flags = ["nodejs_compat"]
 # in production they are set with `wrangler secret put <NAME>`.
 # Expected vars: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY,
 #                CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN
+
+# Static assets (the React SPA built from web/) are wired automatically
+# by @cloudflare/vite-plugin. Non-API routes fall back to index.html so
+# client-side routing works (standard SPA behavior).
+[assets]
+not_found_handling = "single-page-application"
