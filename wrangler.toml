@@ -1,0 +1,12 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "michelangelo-support-agent"
+main = "src/worker.ts"
+compatibility_date = "2026-08-04"
+# Some transitive deps (via supabase-js) import Node built-ins (fs, path).
+# nodejs_compat provides them inside workerd.
+compatibility_flags = ["nodejs_compat"]
+
+# Secrets are NOT here: locally they live in .dev.vars (gitignored),
+# in production they are set with `wrangler secret put <NAME>`.
+# Expected vars: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY,
+#                CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN

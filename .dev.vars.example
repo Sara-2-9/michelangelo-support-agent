@@ -1,0 +1,6 @@
+# Local secrets for `wrangler dev` — same names as .env
+# (production uses `wrangler secret put`). NEVER commit this file.
+SUPABASE_URL=https://TUO_PROJECT_REF.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOi...
+CLOUDFLARE_ACCOUNT_ID=
+CLOUDFLARE_API_TOKEN=

@@ -9,3 +9,7 @@ corpus/chunks.json
 
 # OS / editor
 .DS_Store
+
+# Cloudflare Workers
+.dev.vars
+.wrangler/
