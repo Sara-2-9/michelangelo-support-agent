@@ -21,6 +21,7 @@
  */
 
 import { createOrchestrator } from "./orchestrator.js";
+import { syncDocs } from "./lib/docs-sync.js";
 import type { HistoryMessage } from "./lib/logging.js";
 
 export interface Env {
@@ -69,6 +70,22 @@ export default {
       console.error("Unhandled error:", err);
       return json({ error: "Internal error — please try again" }, request, 500);
     }
+  },
+
+  /**
+   * Phase 1b — Cron Trigger (schedule in wrangler.toml [triggers]):
+   * re-indexes the documentation over HTTP, embedding only the delta.
+   * Stats are logged → inspectable with `wrangler tail` or the dashboard.
+   */
+  async scheduled(_event: unknown, env: Env, ctx: { waitUntil: (p: Promise<unknown>) => void }): Promise<void> {
+    ctx.waitUntil(
+      syncDocs({
+        supabaseUrl: env.SUPABASE_URL,
+        supabaseKey: env.SUPABASE_SERVICE_ROLE_KEY,
+        cfAccountId: env.CLOUDFLARE_ACCOUNT_ID,
+        cfApiToken: env.CLOUDFLARE_API_TOKEN,
+      }).catch((err) => console.error("Docs sync FAILED:", err))
+    );
   },
 };
 

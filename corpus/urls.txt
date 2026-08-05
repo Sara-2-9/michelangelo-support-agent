@@ -6,6 +6,7 @@ https://docs.michelangelo.land/api-reference/projects/list-projects-of-the-authe
 https://docs.michelangelo.land/v2/api/authentication.md
 https://docs.michelangelo.land/v2/api/examples.md
 https://docs.michelangelo.land/v2/api/jobs.md
+https://docs.michelangelo.land/v2/api/mcp-server.md
 https://docs.michelangelo.land/v2/api/overview.md
 https://docs.michelangelo.land/v2/community/stay-connected.md
 https://docs.michelangelo.land/v2/how-to-build/project-lifecycle.md

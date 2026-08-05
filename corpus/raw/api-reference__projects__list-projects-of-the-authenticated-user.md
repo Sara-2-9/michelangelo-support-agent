@@ -4,7 +4,7 @@
 
 # List projects of the authenticated user
 
-> Returns only the projects owned by the authenticated user, paginated with an opaque cursor.
+> Returns the authenticated user's own projects by default (`visibility=mine`). Pass `visibility=all` to also include public/shared community projects. RLS of the underlying backend applies on top: users can never see other people's private rows.
 
 
 
@@ -47,8 +47,10 @@ paths:
         - projects
       summary: List projects of the authenticated user
       description: >
-        Returns only the projects owned by the authenticated user, paginated
-        with an opaque cursor.
+        Returns the authenticated user's own projects by default
+        (`visibility=mine`). Pass `visibility=all` to also include public/shared
+        community projects. RLS of the underlying backend applies on top: users
+        can never see other people's private rows.
       operationId: listProjects
       parameters:
         - name: limit
@@ -63,6 +65,17 @@ paths:
           description: Opaque cursor from a previous response
           schema:
             type: string
+        - name: visibility
+          in: query
+          description: >
+            `mine` (default): only the caller's own projects. `all`: own
+            projects plus public/shared community projects.
+          schema:
+            type: string
+            enum:
+              - mine
+              - all
+            default: mine
       responses:
         '200':
           description: Page of projects

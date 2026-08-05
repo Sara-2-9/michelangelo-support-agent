@@ -6,10 +6,11 @@
 - [Create an async job](https://docs.michelangelo.land/api-reference/jobs/create-an-async-job.md): Validates the prompt with a server-side AI evaluation step, creates a job row (`status: queued`), dispatches the work to the managed runner and returns immediately with a `job_id`. The HTTP request never waits for the work itself — poll `GET /jobs/{jobId}` for progress.
 - [Get job status](https://docs.michelangelo.land/api-reference/jobs/get-job-status.md): Polling endpoint. Clients should poll with backoff (suggested: 2s → 30s max). A future version may offer realtime delivery (SSE / Realtime) without changing this contract.
 - [Get a single project](https://docs.michelangelo.land/api-reference/projects/get-a-single-project.md)
-- [List projects of the authenticated user](https://docs.michelangelo.land/api-reference/projects/list-projects-of-the-authenticated-user.md): Returns only the projects owned by the authenticated user, paginated with an opaque cursor.
+- [List projects of the authenticated user](https://docs.michelangelo.land/api-reference/projects/list-projects-of-the-authenticated-user.md): Returns the authenticated user's own projects by default (`visibility=mine`). Pass `visibility=all` to also include public/shared community projects. RLS of the underlying backend applies on top: users can never see other people's private rows.
 - [Authentication](https://docs.michelangelo.land/v2/api/authentication.md): OAuth 2.1 + PKCE with Dynamic Client Registration for community apps, and bearer JWTs for first-party clients
 - [API Examples](https://docs.michelangelo.land/v2/api/examples.md): Complete, copy-pasteable curl workflows for the Michelangelo API: whoami, jobs, polling, projects, and error handling
 - [Async Jobs](https://docs.michelangelo.land/v2/api/jobs.md): The async job pattern at the heart of the Michelangelo API: lifecycle, states, polling, and results
+- [MCP Server](https://docs.michelangelo.land/v2/api/mcp-server.md): Connect Claude, Cursor, and other MCP-compatible agents to Michelangelo — they become clients of the platform with the user's OAuth token
 - [API Overview](https://docs.michelangelo.land/v2/api/overview.md): The Michelangelo public API: async AI generation jobs, project access, and OAuth 2.1 for community developers
 - [Stay Connected](https://docs.michelangelo.land/v2/community/stay-connected.md): Join the Michelangelo community
 - [Project Lifecycle](https://docs.michelangelo.land/v2/how-to-build/project-lifecycle.md): Understanding the project lifecycle in Michelangelo

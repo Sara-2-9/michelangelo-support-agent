@@ -12,7 +12,9 @@ AI support agent for users of [Michelangelo](https://michelangelo.land) (an iOS 
 
 **Deploy learnings (Phase 5.4)**: (1) The Workers-AI-only API token CANNOT deploy — use `wrangler login` OAuth (scopes include workers:write). (2) Wrangler AUTO-LOADS the project `.env`, so `CLOUDFLARE_API_TOKEN` there shadows the OAuth login: run wrangler from a neutral cwd with `-c <abs config path>` (OAuth), or unset the var. (3) `vite build` emits a self-contained `web/dist/michelangelo_support_agent/wrangler.json` — `npm run deploy` = build + deploy that config. (4) Transient "error code: 1042" right after first deploy (edge propagation); top-level try/catch in the Worker now converts any crash into a JSON 500 + console.error visible via `wrangler tail`.
 
-**Next step**: Phase 1b — docs auto-sync via Cron Trigger in the Worker (note: `scripts/embed.ts` reads the corpus from disk; the Worker version must fetch `/llms.txt` + pages over HTTP instead, chunk, embed via Workers AI REST, delta-upsert to Supabase).
+**Next step**: UI restyle (Sara's request). The project is otherwise feature-complete and LIVE: https://michelangelo-support-agent.moro-sara29.workers.dev — Phase 1b docs auto-sync runs daily at 05:37 UTC via Cron Trigger.
+
+**Phase 1b notes**: chunking/embeddings logic lives in `src/lib/chunking.ts` + `src/lib/embeddings.ts` (shared by local scripts AND the Worker — single source of truth; Web Crypto hashing, identical output to node:crypto). `src/lib/docs-sync.ts` fetches `/llms.txt` + pages over HTTP, diffs content_hash, embeds only the delta, deletes stale chunks; `parseDocsIndex` is reused by `scripts/fetch-corpus.ts` (reproducible local snapshot). First live test caught a real docs change (new MCP server page: 42→43 pages). Local cron test: `wrangler dev --test-scheduled` + `curl "localhost:8787/__scheduled?cron=37+5+*+*+*"` (needs `assets.directory` in root wrangler.toml).
 
 **Eval discipline**: `npm run eval` before any prompt/threshold/model change. A 100% pass rate means "the current dataset is covered" — grow the dataset with harder cases, don't celebrate. Eval runs do NOT write to the conversations/messages tables (no conversationId passed).
 
@@ -34,7 +36,8 @@ corpus/
   llms.txt        machine-readable index of the source docs
   chunks.json     generated output of `npm run chunk` — gitignored, reproducible
 scripts/
-  chunk.ts        Step 1: structure-aware chunking → corpus/chunks.json
+  fetch-corpus.ts Step 0: downloads live docs → corpus/raw/ + urls.txt + llms.txt
+  chunk.ts        Step 1: local corpus → corpus/chunks.json (uses src/lib/chunking)
   embed.ts        Step 2: embeddings → incremental upsert to Supabase
   test-query.ts   retrieval-only smoke test (npm run query -- "...")
   chat.ts         interactive REPL with memory + logging (npm run chat)
@@ -53,6 +56,9 @@ src/
     retrieval.ts  shared "question → chunks" module (embed + match_chunks)
     logging.ts    conversations/messages persistence + history loading
     models.ts     central model registry — the ONLY place model IDs live
+    chunking.ts   structure-aware chunking (shared: local scripts + Worker sync)
+    embeddings.ts Workers AI bge-m3 batch embedding with adaptive splitting
+    docs-sync.ts  Phase 1b: HTTP docs fetch → hash diff → delta embed + stale cleanup
 supabase/
   config.toml     Supabase CLI local config (created by `supabase init`)
   migrations/     versioned DB schema — apply with `supabase db push`

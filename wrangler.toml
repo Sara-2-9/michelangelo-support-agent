@@ -12,7 +12,14 @@ compatibility_flags = ["nodejs_compat"]
 #                CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN
 
 # Static assets (the React SPA built from web/) are wired automatically
-# by @cloudflare/vite-plugin. Non-API routes fall back to index.html so
-# client-side routing works (standard SPA behavior).
+# by @cloudflare/vite-plugin (which injects the directory at dev/build).
+# `directory` is set here too so that PLAIN `wrangler dev` (e.g. for
+# --test-scheduled cron tests) also works from the repo root.
 [assets]
+directory = "web/dist/client"
 not_found_handling = "single-page-application"
+
+# Phase 1b — daily docs sync at 05:37 UTC (07:37 CEST): the Worker fetches
+# the docs index + pages over HTTP and re-embeds only what changed.
+[triggers]
+crons = ["37 5 * * *"]

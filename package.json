@@ -7,6 +7,7 @@
   "scripts": {
     "postinstall": "node scripts/patch-unicorn-magic.mjs",
     "chunk": "tsx scripts/chunk.ts",
+    "fetch:corpus": "tsx scripts/fetch-corpus.ts",
     "embed": "tsx scripts/embed.ts",
     "query": "tsx scripts/test-query.ts",
     "chat": "tsx scripts/chat.ts",

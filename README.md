@@ -68,7 +68,7 @@ Michelangelo currently offers support via Discord and email. This agent:
 
 - [x] **Phase 0** — Documentation corpus (42 pages, incl. the new public API)
 - [x] **Phase 1** — Structure-aware chunking (221 chunks) + embeddings pipeline → Supabase (retrieval verified: cross-lingual IT→EN, healthy similarity gradient)
-- [ ] **Phase 1b** — Automatic docs sync (Cron Trigger + hash-based diff)
+- [x] **Phase 1b** — Automatic docs sync: Cron Trigger in the Worker (daily 05:37 UTC) fetches the docs index + pages over HTTP, hash-diffs vs the indexed chunks, embeds only the delta and removes stale sections. First live test caught a real change (new MCP server page: 42→43 pages, 11 chunks re-embedded, 4 removed)
 - [x] **Phase 2** — Deterministic RAG agent with citations and anti-hallucination guardrail (Mastra + Llama 70B)
 - [x] **Phase 3** — Orchestration: intent router (few-shot, 5/5 routes), bug-report drafts, guided troubleshooting, conversation memory + logging (conversations/messages tables), escalation with auto-generated operator summary
 - [x] **Phase 4** — Eval harness: golden dataset (25 cases) + hybrid metrics (rule-based + LLM judge). First run 92% → 100% after label/judge calibration; dataset growth is ongoing
@@ -84,6 +84,7 @@ npm install
 cp .env.example .env           # backend secrets (Supabase service key + Cloudflare)
 cp web/.env.example web/.env   # browser config (Supabase URL + publishable key — public by design)
 
+npm run fetch:corpus              # refresh the local corpus snapshot from live docs
 npm run chunk                     # corpus/raw/*.md → corpus/chunks.json
 npm run embed                     # embeddings → Supabase (incremental)
 npm run query -- "your question"  # retrieval-only smoke test
