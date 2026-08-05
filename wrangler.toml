@@ -23,3 +23,14 @@ not_found_handling = "single-page-application"
 # the docs index + pages over HTTP and re-embeds only what changed.
 [triggers]
 crons = ["37 5 * * *"]
+
+# Observability: persist console.log output + invocation metadata to the
+# dashboard (Workers → michelangelo-support-agent → Logs). Without this,
+# logs are visible ONLY during a live `wrangler tail` — and nobody tails
+# a 05:37 cron run.
+[observability.logs]
+enabled = true
+invocation_logs = true
+
+[observability.traces]
+enabled = true
