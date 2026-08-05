@@ -8,11 +8,9 @@ AI support agent for users of [Michelangelo](https://michelangelo.land) (an iOS 
 
 ## Current status and next step
 
-**Completed**: Phase 0 (corpus), Phase 1 (chunking + embeddings → Supabase), Phase 2 (deterministic RAG agent), Phase 3 (orchestration: router, bug-report, troubleshooting, memory, logging, escalation), Phase 4 (eval harness: 25-case golden dataset, hybrid rule-based + LLM-judge metrics, 100% pass after calibration). Security: RLS default-deny on all tables. Phase 5.1 (Cloudflare Worker API): `src/worker.ts` exposes `GET /api/health` and `POST /api/chat` (message validation ≤4000 chars, creates a conversation with channel "web" when no `conversationId` is passed, returns answer + intent + sources). CORS is `*` for now — restrict to the real origin at deploy time (marked in code). Phase 5.2 (React UI): Vite SPA in `web/` served as Workers Static Assets through `@cloudflare/vite-plugin` — one `npm run dev` runs UI + Worker together. New endpoint `POST /api/feedback` (thumbs up/down → `messages.feedback`); `/api/chat` also returns `messageId`. `logMessage` now returns the inserted row id. Conversation resume via localStorage `conversationId` (replaced by Auth in 5.3).
+**Completed**: Phase 0 (corpus), Phase 1 (chunking + embeddings → Supabase), Phase 2 (deterministic RAG agent), Phase 3 (orchestration: router, bug-report, troubleshooting, memory, logging, escalation), Phase 4 (eval harness: 25-case golden dataset, hybrid rule-based + LLM-judge metrics, 100% pass after calibration). Security: RLS default-deny on all tables. Phase 5.1 (Cloudflare Worker API): `src/worker.ts` exposes `GET /api/health` and `POST /api/chat` (message validation ≤4000 chars, creates a conversation with channel "web" when no `conversationId` is passed, returns answer + intent + sources). CORS is `*` for now — restrict to the real origin at deploy time (marked in code). Phase 5.2 (React UI): Vite SPA in `web/` served as Workers Static Assets through `@cloudflare/vite-plugin` — one `npm run dev` runs UI + Worker together. Phase 5.3 (Supabase Auth): automatic anonymous sign-in (must be enabled in the Supabase dashboard), conversation sidebar, magic-link account claim (same user id, history preserved). Security model: browser reads go DIRECT to Supabase (publishable key + RLS SELECT policies: `conversations_select_own`, `messages_select_own`, `chunks_select_all`); ALL writes go through the Worker, which requires `Authorization: Bearer <JWT>`, verifies it via `auth.getUser()`, and enforces ownership (403 on foreign conversations/messages, 401 without token). E2E verified: 401/403/RLS isolation/public chunks/write-block all pass.
 
-**Gotcha learned**: with `root: "web"` in vite.config.ts, `@cloudflare/vite-plugin` does NOT find `wrangler.toml` on its own (it searches the Vite root) — `configPath` must point to the repo-root wrangler.toml explicitly, otherwise the dev server silently serves only the SPA and /api/* returns empty.
-
-**Next step**: Phase 5.3 — Supabase Auth anonymous sign-in, conversation history sidebar, final RLS policies (`user_id = auth.uid()` on conversations/messages, read-only on chunks). Then 5.4 (public deploy with `wrangler secret put`, CORS restriction, Phase 1b Cron Trigger for docs sync — note: `scripts/embed.ts` reads the corpus from disk, the Worker version must fetch `/llms.txt` + pages over HTTP instead).
+**Next step**: Phase 5.4 — public deploy (`wrangler secret put` × 4, `wrangler deploy`), CORS restricted to the real origin, then Phase 1b Cron Trigger for docs sync (note: `scripts/embed.ts` reads the corpus from disk; the Worker version must fetch `/llms.txt` + pages over HTTP instead).
 
 **Eval discipline**: `npm run eval` before any prompt/threshold/model change. A 100% pass rate means "the current dataset is covered" — grow the dataset with harder cases, don't celebrate. Eval runs do NOT write to the conversations/messages tables (no conversationId passed).
 
@@ -63,11 +61,14 @@ web/              React SPA (Phase 5.2) — Vite root, own tsconfig, Tailwind CS
     index.css          Tailwind v4 entry: @import + @theme design tokens
     types/chat.ts      shared types (ChatMessage, Source, ChatResponse)
     constants/         static data (intent labels, storage keys)
-    lib/api.ts         the ONLY file that knows HTTP/endpoints
-    context/chat.tsx   ChatProvider + useChat() — conversation state
+    lib/api.ts         the ONLY file that knows HTTP/endpoints (adds Bearer JWT)
+    lib/supabase.ts    browser client — DIRECT reads only, scoped by RLS
+    context/auth.tsx   AuthProvider + useAuth() — anonymous session, email claim
+    context/chat.tsx   ChatProvider + useChat() — conversation state + sidebar data
     hooks/             reusable logic (use-auto-scroll)
-    components/        feature components (chat-header, message-list, …)
+    components/        feature components (chat-header, message-list, conversation-sidebar, …)
     components/ui/     primitives (intent-badge, feedback-buttons, …)
+  .env.example      VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY (publishable — public by design)
 vite.config.ts    Vite root=web + tailwindcss() + cloudflare({ configPath: <repo-root wrangler.toml> }) + alias @/→web/src
 wrangler.toml     Worker config; [assets] not_found_handling = "single-page-application"
 ```
@@ -116,5 +117,5 @@ Copy `.env.example` to `.env` and fill in: `SUPABASE_URL`, `SUPABASE_SERVICE_ROL
 ## Security
 
 - **Never commit `.env`** (already in `.gitignore`); the Supabase service role key runs only in local scripts/backend, never in the browser.
-- **RLS is ENABLED on all tables with zero policies** (default-deny): the anon key cannot read or write anything. Backend/scripts use the service_role key, which bypasses RLS by design. Phase 5 adds explicit per-table policies: `conversations`/`messages` → `user_id = auth.uid()`; `chunks` → read-only for all (public knowledge base). Rule: RLS on at table creation, policies added only when access is needed.
+- **RLS is ENABLED on all tables** — Phase 5.3 added SELECT-only policies: `conversations_select_own` / `messages_select_own` (`auth.uid() = user_id`, messages via parent conversation), `chunks_select_all` (public knowledge base). No INSERT/UPDATE/DELETE policies exist: all writes go through the Worker (service key) after JWT verification + ownership checks. Rule: RLS on at table creation, policies added only when access is needed.
 - Cloudflare API token with minimal permissions (Workers AI → Read).

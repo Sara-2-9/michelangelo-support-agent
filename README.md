@@ -72,14 +72,15 @@ Michelangelo currently offers support via Discord and email. This agent:
 - [x] **Phase 4** — Eval harness: golden dataset (25 cases) + hybrid metrics (rule-based + LLM judge). First run 92% → 100% after label/judge calibration; dataset growth is ongoing
 - [x] **Phase 5.1** — Cloudflare Worker API (`src/worker.ts`): `GET /api/health`, `POST /api/chat` (validated, creates/resumes conversations, returns answer + intent + sources). Verified locally with `wrangler dev`
 - [x] **Phase 5.2** — React chat UI (Vite SPA in `web/`) served as Workers Static Assets via `@cloudflare/vite-plugin`: one `npm run dev` runs UI (HMR) + Worker (workerd) together; thumbs up/down feedback persisted to `messages.feedback`; conversation resumed via localStorage
-- [ ] **Phase 5.3** — Supabase Auth (anonymous sign-in, conversation history sidebar, final RLS policies)
+- [x] **Phase 5.3** — Supabase Auth: automatic anonymous sign-in, conversation history sidebar (direct browser reads scoped by RLS policies), magic-link account claim preserving history, JWT verification + ownership checks in the Worker (IDOR-safe), writes stay behind the service key only
 - [ ] **Phase 5.4** — Public deploy (`wrangler deploy` + secrets, CORS restricted to the real origin) + Phase 1b Cron Trigger for docs sync
 
 ## Setup
 
 ```bash
 npm install
-cp .env.example .env   # fill in Supabase + Cloudflare credentials
+cp .env.example .env           # backend secrets (Supabase service key + Cloudflare)
+cp web/.env.example web/.env   # browser config (Supabase URL + publishable key — public by design)
 
 npm run chunk                     # corpus/raw/*.md → corpus/chunks.json
 npm run embed                     # embeddings → Supabase (incremental)
@@ -94,6 +95,8 @@ npm run deploy                    # wrangler deploy (Phase 5.4)
 ```
 
 DB schema: `supabase/migrations/` — applied via Supabase CLI (`supabase login` → `supabase link --project-ref <ref>` → `supabase db push`).
+
+Auth: requires "Anonymous Sign-Ins" enabled in Supabase → Authentication → Sign In / Up. The browser uses the publishable key — safe to expose because RLS policies scope every read to the owner; all writes go through the Worker (service key + JWT verification).
 
 ## Disclaimer
 

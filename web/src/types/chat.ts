@@ -28,3 +28,10 @@ export interface ChatResponse {
 }
 
 export type Feedback = "up" | "down";
+
+/** One row of the sidebar list (subset of the conversations table). */
+export interface ConversationSummary {
+  id: string;
+  started_at: string;
+  escalated: boolean;
+}

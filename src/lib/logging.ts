@@ -108,5 +108,51 @@ export function createLogger(supabaseUrl: string, supabaseKey: string) {
     if (error) console.error(`⚠️  markEscalated failed (non-blocking): ${error.message}`);
   }
 
-  return { createConversation, logMessage, loadHistory, markEscalated, setFeedback };
+  // ----------------------------------------------------------
+  // Phase 5.3 — Auth helpers (used by the Worker endpoints).
+  // ----------------------------------------------------------
+
+  /**
+   * Verifies a user JWT against Supabase Auth and returns the user id.
+   * Works with the service client: getUser() calls the Auth server,
+   * so token validity is checked remotely, not just the signature.
+   */
+  async function getUserIdFromToken(token: string): Promise<string | null> {
+    const { data, error } = await supabase.auth.getUser(token);
+    if (error || !data.user) return null;
+    return data.user.id;
+  }
+
+  /** Returns the owner of a conversation (null if it does not exist). */
+  async function getConversationOwner(conversationId: string): Promise<string | null> {
+    const { data, error } = await supabase
+      .from("conversations")
+      .select("user_id")
+      .eq("id", conversationId)
+      .maybeSingle();
+    if (error || !data) return null;
+    return (data.user_id as string | null) ?? null;
+  }
+
+  /** Returns the owner of the conversation a message belongs to (feedback IDOR check). */
+  async function getMessageOwner(messageId: string): Promise<string | null> {
+    const { data, error } = await supabase
+      .from("messages")
+      .select("conversation_id")
+      .eq("id", messageId)
+      .maybeSingle();
+    if (error || !data) return null;
+    return getConversationOwner(data.conversation_id as string);
+  }
+
+  return {
+    createConversation,
+    logMessage,
+    loadHistory,
+    markEscalated,
+    setFeedback,
+    getUserIdFromToken,
+    getConversationOwner,
+    getMessageOwner,
+  };
 }
