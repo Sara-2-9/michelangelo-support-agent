@@ -1,8 +1,10 @@
 # Michelangelo Support Agent
 
+**Live: https://michelangelo-support-agent.moro-sara29.workers.dev**
+
 AI support agent for users of [Michelangelo](https://michelangelo.land) — the iOS vibe-coding app that turns natural language into native Expo/React Native apps.
 
-It answers support questions 24/7 using **only the official documentation**, with precise source citations, and refuses honestly what the docs do not cover. Designed for public deployment on Cloudflare.
+It answers support questions 24/7 using **only the official documentation**, with precise source citations, and refuses honestly what the docs do not cover. Deployed publicly on Cloudflare Workers (React SPA + API in a single deploy), with Supabase Auth anonymous sign-in and RLS-protected per-user history.
 
 ## Why this project
 
@@ -73,7 +75,7 @@ Michelangelo currently offers support via Discord and email. This agent:
 - [x] **Phase 5.1** — Cloudflare Worker API (`src/worker.ts`): `GET /api/health`, `POST /api/chat` (validated, creates/resumes conversations, returns answer + intent + sources). Verified locally with `wrangler dev`
 - [x] **Phase 5.2** — React chat UI (Vite SPA in `web/`) served as Workers Static Assets via `@cloudflare/vite-plugin`: one `npm run dev` runs UI (HMR) + Worker (workerd) together; thumbs up/down feedback persisted to `messages.feedback`; conversation resumed via localStorage
 - [x] **Phase 5.3** — Supabase Auth: automatic anonymous sign-in, conversation history sidebar (direct browser reads scoped by RLS policies), magic-link account claim preserving history, JWT verification + ownership checks in the Worker (IDOR-safe), writes stay behind the service key only
-- [ ] **Phase 5.4** — Public deploy (`wrangler deploy` + secrets, CORS restricted to the real origin) + Phase 1b Cron Trigger for docs sync
+- [x] **Phase 5.4** — Public deploy on Cloudflare Workers: OAuth login, 4 secrets via `wrangler secret put`, CORS locked to the Worker's own origin, SPA + API live in one deploy. Live at https://michelangelo-support-agent.moro-sara29.workers.dev
 
 ## Setup
 

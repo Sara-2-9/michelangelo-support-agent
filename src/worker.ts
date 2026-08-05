@@ -30,16 +30,25 @@ export interface Env {
   CLOUDFLARE_API_TOKEN: string;
 }
 
-const CORS = {
-  "Access-Control-Allow-Origin": "*", // Phase 5.4: restrict to the real UI origin
-  "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
+/**
+ * CORS: the UI is served SAME-ORIGIN (static assets + Worker in one deploy),
+ * so browsers do not even preflight those requests. For any cross-origin
+ * caller we only ever allow THIS Worker's own origin — derived from the
+ * request URL, so it works on *.workers.dev now and on a custom domain
+ * later, with zero config.
+ */
+function corsHeaders(request: Request) {
+  return {
+    "Access-Control-Allow-Origin": new URL(request.url).origin,
+    "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  };
+}
 
-function json(data: unknown, status = 200): Response {
+function json(data: unknown, request: Request, status = 200): Response {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { "Content-Type": "application/json", ...CORS },
+    headers: { "Content-Type": "application/json", ...corsHeaders(request) },
   });
 }
 
@@ -51,12 +60,25 @@ function bearerToken(request: Request): string | null {
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    if (request.method === "OPTIONS") return new Response(null, { headers: CORS });
+    // Top-level guard: a thrown error (network hiccup, Supabase/Workers AI
+    // unreachable, …) must become a JSON 500 + a log line — never the raw
+    // platform error page ("error code: 10xx") the user cannot act on.
+    try {
+      return await handleRequest(request, env);
+    } catch (err) {
+      console.error("Unhandled error:", err);
+      return json({ error: "Internal error — please try again" }, request, 500);
+    }
+  },
+};
+
+async function handleRequest(request: Request, env: Env): Promise<Response> {
+    if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders(request) });
 
     const url = new URL(request.url);
 
     if (url.pathname === "/api/health") {
-      return json({ ok: true, service: "michelangelo-support-agent" });
+      return json({ ok: true, service: "michelangelo-support-agent" }, request);
     }
 
     // Everything below requires authentication.
@@ -70,7 +92,7 @@ export default {
     const token = bearerToken(request);
     const userId = token ? await orchestrator.logger.getUserIdFromToken(token) : null;
     if (!userId) {
-      return json({ error: "Missing or invalid Authorization: Bearer <token>" }, 401);
+      return json({ error: "Missing or invalid Authorization: Bearer <token>" }, request, 401);
     }
 
     if (url.pathname === "/api/chat" && request.method === "POST") {
@@ -78,10 +100,10 @@ export default {
       try {
         body = await request.json();
       } catch {
-        return json({ error: "Invalid JSON body" }, 400);
+        return json({ error: "Invalid JSON body" }, request, 400);
       }
       if (!body.message || typeof body.message !== "string" || body.message.length > 4000) {
-        return json({ error: "Field 'message' (string, max 4000 chars) is required" }, 400);
+        return json({ error: "Field 'message' (string, max 4000 chars) is required" }, request, 400);
       }
 
       // Resuming? You must OWN the conversation (IDOR protection).
@@ -89,8 +111,8 @@ export default {
       let history = body.history;
       if (conversationId) {
         const owner = await orchestrator.logger.getConversationOwner(conversationId);
-        if (!owner) return json({ error: "Conversation not found" }, 404);
-        if (owner !== userId) return json({ error: "Not your conversation" }, 403);
+        if (!owner) return json({ error: "Conversation not found" }, request, 404);
+        if (owner !== userId) return json({ error: "Not your conversation" }, request, 403);
         // Memory: load recent turns from the DB unless the caller passed them.
         history = history ?? (await orchestrator.logger.loadHistory(conversationId));
       } else {
@@ -111,7 +133,7 @@ export default {
         })),
         conversationId,
         messageId: result.messageId ?? null,
-      });
+      }, request);
     }
 
     if (url.pathname === "/api/feedback" && request.method === "POST") {
@@ -119,20 +141,19 @@ export default {
       try {
         body = await request.json();
       } catch {
-        return json({ error: "Invalid JSON body" }, 400);
+        return json({ error: "Invalid JSON body" }, request, 400);
       }
       if (!body.messageId || (body.feedback !== "up" && body.feedback !== "down")) {
-        return json({ error: "Fields 'messageId' and 'feedback' (\"up\" | \"down\") are required" }, 400);
+        return json({ error: "Fields 'messageId' and 'feedback' (\"up\" | \"down\") are required" }, request, 400);
       }
 
       // Feedback only on messages of your own conversations.
       const owner = await orchestrator.logger.getMessageOwner(body.messageId);
-      if (owner !== userId) return json({ error: "Not your message" }, 403);
+      if (owner !== userId) return json({ error: "Not your message" }, request, 403);
 
       await orchestrator.logger.setFeedback(body.messageId, body.feedback);
-      return json({ ok: true });
+      return json({ ok: true }, request);
     }
 
-    return json({ error: "Not found" }, 404);
-  },
-};
+    return json({ error: "Not found" }, request, 404);
+}

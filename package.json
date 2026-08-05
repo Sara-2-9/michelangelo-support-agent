@@ -15,7 +15,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "wrangler deploy",
+    "deploy": "npm run build && wrangler deploy --config web/dist/michelangelo_support_agent/wrangler.json",
     "typecheck": "tsc --noEmit && tsc --noEmit -p web"
   },
   "dependencies": {
