@@ -7,6 +7,7 @@
 import { useState } from "react";
 import { AuthProvider, useAuth } from "@/context/auth";
 import { ChatProvider } from "@/context/chat";
+import AnimatedBackground from "@/components/animated-background";
 import ConversationSidebar from "@/components/conversation-sidebar";
 import ChatHeader from "@/components/chat-header";
 import MessageList from "@/components/message-list";
@@ -23,7 +24,8 @@ function Shell() {
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="relative flex h-screen">
+      <AnimatedBackground />
       <ConversationSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="mx-auto flex w-full max-w-[820px] flex-1 flex-col px-4">
         <ChatHeader onMenuClick={() => setSidebarOpen(true)} />
