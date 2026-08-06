@@ -20,13 +20,13 @@ export default function ConversationSidebar({ open, onClose }: { open: boolean; 
 
   return (
     <>
-      {/* Mobile backdrop */}
+      {/* Backdrop — all breakpoints: the sidebar is an overlay (mockup 7) */}
       {open && (
-        <div className="fixed inset-0 z-20 bg-black/50 md:hidden" onClick={onClose} />
+        <div className="fixed inset-0 z-20 bg-black/40" onClick={onClose} />
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-30 flex w-64 flex-col border-r border-border bg-bg transition-transform md:static md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-30 flex w-64 flex-col border-r border-border bg-bg transition-transform ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
