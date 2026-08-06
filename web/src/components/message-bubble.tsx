@@ -23,8 +23,8 @@ export default function MessageBubble({ message }: { message: ChatMessage }) {
       <div
         className={`max-w-[78%] rounded-2xl px-4 py-3 text-sm leading-relaxed break-words whitespace-pre-wrap ${
           isUser
-            ? "bg-bubble-user text-white"
-            : "border border-border-ui bg-surface text-white"
+            ? "rounded-br-none bg-bubble-user text-white"
+            : "rounded-bl-none border border-border-ui bg-surface text-white"
         }`}
       >
         {message.intent && <IntentBadge intent={message.intent} />}
