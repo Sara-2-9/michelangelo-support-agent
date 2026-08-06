@@ -18,7 +18,7 @@ export default function MessageList() {
 
       {loading && (
         <div className="flex">
-          <div className="rounded-2xl border border-border bg-panel">
+          <div className="rounded-2xl border border-border-ui bg-surface">
             <ThinkingIndicator />
           </div>
         </div>

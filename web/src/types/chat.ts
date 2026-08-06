@@ -15,6 +15,8 @@ export interface ChatMessage {
   /** Server-side row id (assistant only) — needed to attach feedback. */
   messageId?: string;
   feedback?: "up" | "down";
+  /** ISO timestamp — shown in the bubble corner (restyle step 4). */
+  createdAt?: string;
 }
 
 /** Response contract of POST /api/chat (see src/worker.ts). */

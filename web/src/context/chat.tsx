@@ -71,7 +71,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
     setError(null);
     const { data, error: loadError } = await supabase
       .from("messages")
-      .select("id, role, content, intent, sources, feedback")
+      .select("id, role, content, intent, sources, feedback, created_at")
       .eq("conversation_id", id)
       .order("created_at", { ascending: true });
 
@@ -88,6 +88,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
         sources: (m.sources as Source[] | null) ?? undefined,
         messageId: String(m.id),
         feedback: (m.feedback as Feedback | null) ?? undefined,
+        createdAt: m.created_at,
       }))
     );
     setConversationId(id);
@@ -99,7 +100,10 @@ export function ChatProvider({ children }: PropsWithChildren) {
 
     const isNewConversation = !conversationId;
     setError(null);
-    setMessages((prev) => [...prev, { role: "user", content: message }]);
+    setMessages((prev) => [
+      ...prev,
+      { role: "user", content: message, createdAt: new Date().toISOString() },
+    ]);
     setLoading(true);
 
     try {
@@ -119,6 +123,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
           intent: data.intent,
           sources: data.sources,
           messageId: data.messageId ?? undefined,
+          createdAt: new Date().toISOString(),
         },
       ]);
     } catch (err) {
