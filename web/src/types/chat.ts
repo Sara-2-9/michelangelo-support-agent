@@ -36,4 +36,6 @@ export interface ConversationSummary {
   id: string;
   started_at: string;
   escalated: boolean;
+  /** Beginning of the first user message — shown in the sidebar (mockup 7). */
+  preview: string | null;
 }

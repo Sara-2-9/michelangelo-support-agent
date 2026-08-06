@@ -51,15 +51,30 @@ export function ChatProvider({ children }: PropsWithChildren) {
     localStorage.getItem(STORAGE_KEY)
   );
 
-  /** Sidebar data — direct read, RLS scopes it to the current user. */
+  /**
+   * Sidebar data — direct read, RLS scopes it to the current user.
+   * PostgREST resource embedding fetches each conversation TOGETHER WITH
+   * its first user message (filtered + ordered + limited on the embedded
+   * `messages` table) — one round trip, no DB migration needed.
+   */
   const refreshConversations = useCallback(async () => {
     if (!userId) return;
     const { data } = await supabase
       .from("conversations")
-      .select("id, started_at, escalated")
+      .select("id, started_at, escalated, messages(content)")
+      .eq("messages.role", "user")
       .order("started_at", { ascending: false })
+      .order("created_at", { referencedTable: "messages", ascending: true })
+      .limit(1, { referencedTable: "messages" })
       .limit(50);
-    setConversations(data ?? []);
+    setConversations(
+      (data ?? []).map((row) => ({
+        id: row.id,
+        started_at: row.started_at,
+        escalated: row.escalated,
+        preview: row.messages?.[0]?.content ?? null,
+      }))
+    );
   }, [userId]);
 
   useEffect(() => {
