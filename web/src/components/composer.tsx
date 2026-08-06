@@ -36,7 +36,9 @@ export default function Composer() {
           }}
           placeholder="Ask a question…"
           rows={2}
-          className="w-full resize-none rounded-2xl border border-border-ui bg-surface px-4 py-3.5 pr-14 text-sm text-white placeholder:text-white/40 focus:border-white/50 focus:outline-none"
+          // 16px minimum on touch devices: iOS Safari auto-zooms on focus
+          // when an input's font-size is smaller than 16px.
+          className="w-full resize-none rounded-2xl border border-border-ui bg-surface px-4 py-3.5 pr-14 text-[16px] text-white placeholder:text-white/40 focus:border-white/50 focus:outline-none md:text-sm"
         />
         <button
           onClick={handleSend}

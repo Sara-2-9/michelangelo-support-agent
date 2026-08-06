@@ -21,12 +21,15 @@ function Shell() {
 
   if (!ready) {
     return (
-      <div className="flex h-screen items-center justify-center text-muted">Loading…</div>
+      <div className="flex h-dvh items-center justify-center text-white">Loading…</div>
     );
   }
 
   return (
-    <div className="relative flex h-screen">
+    // h-dvh: tracks the REAL visible height on mobile (unlike h-screen,
+    // which ignores Safari's collapsing toolbar). Safe-area insets keep
+    // content clear of the notch and the home indicator.
+    <div className="relative flex h-dvh pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]">
       <AnimatedBackground />
       <ConversationSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="mx-auto flex w-full max-w-[820px] flex-1 flex-col px-4">
