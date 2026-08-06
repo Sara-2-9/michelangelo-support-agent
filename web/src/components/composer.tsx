@@ -23,7 +23,7 @@ export default function Composer() {
   }
 
   return (
-    <footer className="px-1 pb-5">
+    <footer className="px-1 pt-4 pb-5">
       <div className="relative">
         <textarea
           value={input}
