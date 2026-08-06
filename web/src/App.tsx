@@ -5,6 +5,7 @@
  */
 
 import { useState } from "react";
+import { Route, Routes } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/context/auth";
 import { ChatProvider } from "@/context/chat";
 import AnimatedBackground from "@/components/animated-background";
@@ -12,6 +13,7 @@ import ConversationSidebar from "@/components/conversation-sidebar";
 import ChatHeader from "@/components/chat-header";
 import MessageList from "@/components/message-list";
 import Composer from "@/components/composer";
+import AuthPage from "@/pages/auth-page";
 
 function Shell() {
   const { ready } = useAuth();
@@ -40,7 +42,10 @@ export default function App() {
   return (
     <AuthProvider>
       <ChatProvider>
-        <Shell />
+        <Routes>
+          <Route path="/" element={<Shell />} />
+          <Route path="/auth" element={<AuthPage />} />
+        </Routes>
       </ChatProvider>
     </AuthProvider>
   );

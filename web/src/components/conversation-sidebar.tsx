@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { useAuth } from "@/context/auth";
 import { useChat } from "@/context/chat";
 
 function formatDate(iso: string) {
@@ -11,21 +9,9 @@ function formatDate(iso: string) {
   });
 }
 
-/** Conversation history + account section. Hidden overlay on mobile, fixed on desktop. */
+/** Conversation history. Account actions live on the /auth page now. */
 export default function ConversationSidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { isAnonymous, claimEmail, resetIdentity, session } = useAuth();
   const { conversations, conversationId, selectConversation, newConversation } = useChat();
-
-  const [email, setEmail] = useState("");
-  const [claimState, setClaimState] = useState<"idle" | "sent" | "error">("idle");
-  const [claimError, setClaimError] = useState<string | null>(null);
-
-  async function handleClaim() {
-    if (!email.trim()) return;
-    const error = await claimEmail(email.trim());
-    setClaimState(error ? "error" : "sent");
-    setClaimError(error);
-  }
 
   function openConversation(id: string) {
     selectConversation(id);
@@ -72,39 +58,6 @@ export default function ConversationSidebar({ open, onClose }: { open: boolean; 
               {c.escalated && <span className="text-[11px] text-warn">escalated</span>}
             </button>
           ))}
-        </div>
-
-        <div className="border-t border-border p-3 text-[13px]">
-          {isAnonymous ? (
-            claimState === "sent" ? (
-              <p className="text-accent">Check your inbox to confirm ✉️</p>
-            ) : (
-              <div className="flex flex-col gap-2">
-                <p className="m-0 text-muted">Save your history:</p>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@email.com"
-                  className="rounded-lg border border-border bg-panel px-2.5 py-1.5 text-text placeholder:text-muted focus:border-accent focus:outline-none"
-                />
-                <button
-                  onClick={handleClaim}
-                  className="rounded-lg bg-accent px-3 py-1.5 font-semibold text-[#0b0e14]"
-                >
-                  Email me a sign-in link
-                </button>
-                {claimState === "error" && <p className="m-0 text-danger">{claimError}</p>}
-              </div>
-            )
-          ) : (
-            <div className="flex flex-col gap-1.5">
-              <p className="m-0 truncate text-muted">{session?.user.email}</p>
-              <button onClick={resetIdentity} className="text-left text-muted hover:text-text">
-                Sign out & start fresh
-              </button>
-            </div>
-          )}
         </div>
       </aside>
     </>
