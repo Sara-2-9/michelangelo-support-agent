@@ -44,13 +44,13 @@ export default function UserMenu() {
         <FontAwesomeIcon icon={faUser} />
       </button>
       {open && (
-        <div className="absolute right-0 top-12 z-40 flex w-56 flex-col items-center gap-3 rounded-2xl border border-border-ui bg-grad-violet p-4 shadow-xl">
-          <p className="m-0 max-w-full truncate text-sm text-white" title={session?.user.email ?? ""}>
+        <div className="absolute right-0 top-12 z-40 flex w-56 flex-col items-center gap-3 rounded-2xl border border-border-ui bg-gradient-to-br from-grad-blue via-grad-violet to-grad-pink p-4 shadow-xl">
+          <p className="m-0 max-w-full truncate text-sm font-medium text-black" title={session?.user.email ?? ""}>
             {session?.user.email}
           </p>
           <button
             onClick={resetIdentity}
-            className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-surface transition-opacity hover:opacity-85"
+            className="rounded-xl border border-border-ui bg-surface px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-85"
           >
             Sign out
           </button>
