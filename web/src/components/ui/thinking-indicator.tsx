@@ -5,7 +5,7 @@ export default function ThinkingIndicator() {
       {[0, 1, 2].map((i) => (
         <span
           key={i}
-          className="h-[7px] w-[7px] animate-pulse rounded-full bg-muted"
+          className="h-[7px] w-[7px] animate-pulse rounded-full bg-btn-light"
           style={{ animationDelay: `${i * 200}ms` }}
         />
       ))}

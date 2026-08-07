@@ -66,7 +66,7 @@ export default function MessageList() {
 
       {loading && (
         <div className="flex">
-          <div className="rounded-2xl rounded-bl-none border border-border-ui bg-surface">
+          <div className="rounded-2xl rounded-bl-none border border-border-bubble bg-surface">
             <ThinkingIndicator />
           </div>
         </div>

@@ -1,9 +1,11 @@
 /**
- * Thumbs feedback — restyle step 4 (Figma mockup 6/8).
+ * Thumbs feedback — restyle (mockup 9).
  *
- * Font Awesome thumbs-up / thumbs-down in gold, inside small bordered
- * square buttons. The active choice stays fully opaque; clicking the same
- * thumb again toggles it off (handled in chat context).
+ * Font Awesome thumbs-up / thumbs-down in light gray (#D9D9D9) inside
+ * small bordered square buttons — always fully visible on the dark agent
+ * bubble. Interaction is preserved: hover grows the button slightly,
+ * click presses it down, the active vote gets a filled background.
+ * Clicking the same thumb again toggles it off (handled in chat context).
  */
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -25,10 +27,8 @@ export default function FeedbackButtons({
       onClick={() => sendFeedback(messageId, value)}
       aria-label={label}
       aria-pressed={feedback === value}
-      className={`flex h-8 w-8 items-center justify-center rounded-lg border text-warn transition-opacity ${
-        feedback === value
-          ? "border-warn/70 opacity-100"
-          : "border-border-ui opacity-70 hover:opacity-100"
+      className={`flex h-8 w-8 items-center justify-center rounded-lg border border-border-ui text-btn-light transition-all duration-150 hover:scale-110 active:scale-95 ${
+        feedback === value ? "bg-white/20" : "bg-transparent"
       }`}
     >
       <FontAwesomeIcon icon={icon} />

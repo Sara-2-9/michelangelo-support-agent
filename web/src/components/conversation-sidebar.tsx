@@ -26,7 +26,7 @@ export default function ConversationSidebar({ open, onClose }: { open: boolean; 
       {open && <div className="fixed inset-0 z-20 bg-black/20" onClick={onClose} />}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-30 flex w-72 flex-col bg-grad-violet shadow-2xl transition-transform pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] ${
+        className={`fixed inset-y-0 left-0 z-30 flex w-72 flex-col rounded-r-2xl bg-grad-violet shadow-2xl transition-transform pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >

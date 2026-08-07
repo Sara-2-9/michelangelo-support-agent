@@ -2,7 +2,7 @@
  *
  * In v4 there is no tailwind.config.js: the design tokens live here in
  * `@theme`. Each `--color-*` token becomes a utility (bg-surface,
- * text-muted, border-border-ui, …) and is also exposed as a plain CSS
+ * border-border-ui, text-icon-dark, …) and is also exposed as a plain CSS
  * variable.
  */
 
@@ -18,7 +18,8 @@
 
   /* UI palette (mockup 9). */
   --color-surface: #262626; /* page background, agent bubble, popover */
-  --color-border-ui: #afafaf; /* borders: textarea, buttons, bubbles */
+  --color-border-ui: #afafaf; /* borders: textarea, buttons, popover */
+  --color-border-bubble: #595959; /* borders: user & agent bubbles */
   --color-bubble-user: #1a4674;
   --color-btn-light: #d9d9d9; /* avatar, "+" button, Sign out */
   --color-placeholder-dark: #363636; /* composer placeholder on gradient */

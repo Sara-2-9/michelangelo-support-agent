@@ -30,10 +30,10 @@ export default function MessageBubble({ message }: { message: ChatMessage }) {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[78%] rounded-2xl px-4 py-3 text-sm leading-relaxed break-words ${
+        className={`max-w-[78%] rounded-2xl border border-border-bubble px-4 py-3 text-sm leading-relaxed break-words ${
           isUser
-            ? "rounded-br-none border border-border-ui bg-bubble-user text-white whitespace-pre-wrap"
-            : "rounded-bl-none border border-border-ui bg-surface text-white"
+            ? "rounded-br-none bg-bubble-user text-white whitespace-pre-wrap"
+            : "rounded-bl-none bg-surface text-white"
         }`}
       >
         {message.intent && <IntentBadge intent={message.intent} />}

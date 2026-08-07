@@ -30,7 +30,7 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center bg-black px-4 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+    <div className="flex min-h-dvh flex-col items-center justify-center bg-surface px-4 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
       <div className="w-full max-w-sm rounded-3xl bg-gradient-to-br from-grad-blue via-grad-lilac to-grad-pink p-8 shadow-2xl">
         {!ready ? (
           <p className="m-0 text-center text-black/70">Loading…</p>
