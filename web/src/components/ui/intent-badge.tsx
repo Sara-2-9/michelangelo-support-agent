@@ -10,7 +10,7 @@ import { INTENT_LABELS } from "@/constants/intents";
 
 export default function IntentBadge({ intent }: { intent: string }) {
   return (
-    <span className="mb-2 inline-block rounded-md bg-btn-light px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-surface">
+    <span className="mb-2 inline-block rounded-md bg-grad-violet px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-surface">
       {INTENT_LABELS[intent] ?? intent}
     </span>
   );

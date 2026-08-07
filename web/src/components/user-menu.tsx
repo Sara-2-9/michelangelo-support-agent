@@ -39,18 +39,18 @@ export default function UserMenu() {
         onClick={() => setOpen((v) => !v)}
         aria-label="Account menu"
         aria-expanded={open}
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-btn-light text-surface shadow transition-transform hover:scale-105"
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-btn-light text-icon-dark shadow transition-transform hover:scale-105"
       >
         <FontAwesomeIcon icon={faUser} />
       </button>
       {open && (
-        <div className="absolute right-0 top-12 z-40 flex w-56 flex-col items-center gap-3 rounded-2xl border border-border-ui bg-surface p-4 shadow-xl">
+        <div className="absolute right-0 top-12 z-40 flex w-56 flex-col items-center gap-3 rounded-2xl border border-border-ui bg-grad-violet p-4 shadow-xl">
           <p className="m-0 max-w-full truncate text-sm text-white" title={session?.user.email ?? ""}>
             {session?.user.email}
           </p>
           <button
             onClick={resetIdentity}
-            className="rounded-full bg-btn-light px-4 py-1.5 text-sm font-semibold text-black transition-opacity hover:opacity-85"
+            className="rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-surface transition-opacity hover:opacity-85"
           >
             Sign out
           </button>

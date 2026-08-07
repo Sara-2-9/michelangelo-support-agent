@@ -32,7 +32,7 @@ export default function MessageBubble({ message }: { message: ChatMessage }) {
       <div
         className={`max-w-[78%] rounded-2xl px-4 py-3 text-sm leading-relaxed break-words ${
           isUser
-            ? "rounded-br-none bg-bubble-user text-white whitespace-pre-wrap"
+            ? "rounded-br-none border border-border-ui bg-bubble-user text-white whitespace-pre-wrap"
             : "rounded-bl-none border border-border-ui bg-surface text-white"
         }`}
       >

@@ -8,7 +8,6 @@ import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/context/auth";
 import { ChatProvider } from "@/context/chat";
-import AnimatedBackground from "@/components/animated-background";
 import ConversationSidebar from "@/components/conversation-sidebar";
 import ChatHeader from "@/components/chat-header";
 import MessageList from "@/components/message-list";
@@ -30,7 +29,6 @@ function Shell() {
     // which ignores Safari's collapsing toolbar). Safe-area insets keep
     // content clear of the notch and the home indicator.
     <div className="relative flex h-dvh pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]">
-      <AnimatedBackground />
       <ConversationSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="mx-auto flex w-full max-w-[820px] flex-1 flex-col px-4">
         <ChatHeader onMenuClick={() => setSidebarOpen(true)} />

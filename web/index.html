@@ -5,8 +5,9 @@
     <!-- viewport-fit=cover: the page extends edge-to-edge under the notch;
          content is then padded back in with env(safe-area-inset-*). -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <!-- Tints Safari's chrome (status bar area) like the page background. -->
-    <meta name="theme-color" content="#3c70ab" />
+    <!-- Tints Safari's chrome on older iOS (iOS 26+ samples the body's
+         background-color instead, which is the same #262626). -->
+    <meta name="theme-color" content="#262626" />
     <title>Michelangelo Support Agent</title>
   </head>
   <body>

@@ -1,9 +1,10 @@
 /**
- * Composer — restyle step 4 (Figma mockups 1/4).
+ * Composer — restyle (mockup 9).
  *
- * Large rounded dark textarea (surface + border-ui) with a circular
- * arrow-up send button inside its bottom-right corner. Enter sends,
- * Shift+Enter adds a new line.
+ * The brand gradient lives HERE now: large rounded textarea with the
+ * four-color gradient, dark placeholder, black typed text, light border.
+ * Circular white send button with a dark arrow in its bottom-right
+ * corner. Enter sends, Shift+Enter adds a new line.
  */
 
 import { useState } from "react";
@@ -38,13 +39,13 @@ export default function Composer() {
           rows={4}
           // 16px minimum on touch devices: iOS Safari auto-zooms on focus
           // when an input's font-size is smaller than 16px.
-          className="w-full resize-none rounded-2xl border border-border-ui bg-surface px-4 py-3.5 pr-14 text-[16px] text-white placeholder:text-white/40 focus:border-white/50 focus:outline-none md:text-sm"
+          className="w-full resize-none rounded-2xl border border-border-ui bg-gradient-to-br from-grad-blue via-grad-violet to-grad-pink px-4 py-3.5 pr-14 text-[16px] text-black placeholder:text-placeholder-dark focus:border-white/70 focus:outline-none md:text-sm"
         />
         <button
           onClick={handleSend}
           disabled={loading || !input.trim()}
           aria-label="Send message"
-          className="absolute right-3 bottom-4 flex h-9 w-9 items-center justify-center rounded-full border border-border-ui text-white transition-opacity hover:opacity-80 disabled:cursor-default disabled:opacity-30"
+          className="absolute right-3 bottom-4 flex h-9 w-9 items-center justify-center rounded-full bg-white text-icon-dark shadow transition-opacity hover:opacity-85 disabled:cursor-default disabled:opacity-40"
         >
           <FontAwesomeIcon icon={faArrowUp} />
         </button>

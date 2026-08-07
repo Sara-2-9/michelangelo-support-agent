@@ -26,7 +26,7 @@ export default function ConversationSidebar({ open, onClose }: { open: boolean; 
       {open && <div className="fixed inset-0 z-20 bg-black/20" onClick={onClose} />}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-30 flex w-72 flex-col bg-white/25 shadow-2xl backdrop-blur-2xl transition-transform pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] ${
+        className={`fixed inset-y-0 left-0 z-30 flex w-72 flex-col bg-grad-violet shadow-2xl transition-transform pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -37,7 +37,7 @@ export default function ConversationSidebar({ open, onClose }: { open: boolean; 
               onClose();
             }}
             aria-label="New chat"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-btn-light text-surface shadow transition-transform hover:scale-105"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-btn-light text-icon-dark shadow transition-transform hover:scale-105"
           >
             <FontAwesomeIcon icon={faPlus} />
           </button>
