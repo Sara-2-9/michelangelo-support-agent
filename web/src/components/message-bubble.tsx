@@ -1,18 +1,27 @@
 /**
  * One chat bubble — restyle step 4 (Figma mockups 5/6/8).
  *
- * User: dark-blue bubble (bubble-user) on the right.
+ * User: dark-blue bubble (bubble-user) on the right, plain text.
  * Assistant: dark card (surface + border-ui) on the left with a dynamic
- * intent badge on top, sources as blue links, thumbs feedback and the
- * timestamp in the bottom-right corner of the bubble.
+ * intent badge on top, the answer rendered as MARKDOWN (bold, lists,
+ * links), clean source links, thumbs feedback and the timestamp in the
+ * bottom-right corner. The inner-bottom corner is square (chat-tail look).
  */
 
-import type { ChatMessage } from "@/types/chat";
+import type { ChatMessage, Source } from "@/types/chat";
 import IntentBadge from "@/components/ui/intent-badge";
 import FeedbackButtons from "@/components/ui/feedback-buttons";
+import Markdown from "@/components/ui/markdown";
 
 function formatTime(iso: string) {
   return new Date(iso).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+}
+
+/** "Web > (intro)" → "Intro"; falls back to the full title. */
+function sourceLabel(s: Source) {
+  const tail = s.page_title.split(">").pop()?.trim() ?? "";
+  const cleaned = tail.replace(/^\((.*)\)$/, "$1").trim() || s.page_title;
+  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
 }
 
 export default function MessageBubble({ message }: { message: ChatMessage }) {
@@ -21,15 +30,15 @@ export default function MessageBubble({ message }: { message: ChatMessage }) {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[78%] rounded-2xl px-4 py-3 text-sm leading-relaxed break-words whitespace-pre-wrap ${
+        className={`max-w-[78%] rounded-2xl px-4 py-3 text-sm leading-relaxed break-words ${
           isUser
-            ? "rounded-br-none bg-bubble-user text-white"
+            ? "rounded-br-none bg-bubble-user text-white whitespace-pre-wrap"
             : "rounded-bl-none border border-border-ui bg-surface text-white"
         }`}
       >
         {message.intent && <IntentBadge intent={message.intent} />}
 
-        <div>{message.content}</div>
+        {isUser ? <div>{message.content}</div> : <Markdown>{message.content}</Markdown>}
 
         {message.sources && message.sources.length > 0 && (
           <div className="mt-3 flex flex-col gap-1">
@@ -37,12 +46,12 @@ export default function MessageBubble({ message }: { message: ChatMessage }) {
             {message.sources.map((s, i) => (
               <a
                 key={i}
-                href={s.source_url}
+                href={s.source_url.replace(/\.md$/, "")}
                 target="_blank"
                 rel="noreferrer"
                 className="text-[13px] font-medium text-[#4d9fff] hover:underline"
               >
-                {s.page_title}
+                {sourceLabel(s)}
               </a>
             ))}
           </div>

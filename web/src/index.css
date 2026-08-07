@@ -6,6 +6,7 @@
  */
 
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   /* Brand gradient — Figma mockups (restyle). */

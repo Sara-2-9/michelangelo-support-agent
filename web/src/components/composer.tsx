@@ -35,7 +35,7 @@ export default function Composer() {
             }
           }}
           placeholder="Ask a question…"
-          rows={2}
+          rows={4}
           // 16px minimum on touch devices: iOS Safari auto-zooms on focus
           // when an input's font-size is smaller than 16px.
           className="w-full resize-none rounded-2xl border border-border-ui bg-surface px-4 py-3.5 pr-14 text-[16px] text-white placeholder:text-white/40 focus:border-white/50 focus:outline-none md:text-sm"
@@ -44,7 +44,7 @@ export default function Composer() {
           onClick={handleSend}
           disabled={loading || !input.trim()}
           aria-label="Send message"
-          className="absolute right-3 bottom-3 flex h-9 w-9 items-center justify-center rounded-full border border-border-ui text-white transition-opacity hover:opacity-80 disabled:cursor-default disabled:opacity-30"
+          className="absolute right-3 bottom-4 flex h-9 w-9 items-center justify-center rounded-full border border-border-ui text-white transition-opacity hover:opacity-80 disabled:cursor-default disabled:opacity-30"
         >
           <FontAwesomeIcon icon={faArrowUp} />
         </button>
