@@ -63,7 +63,8 @@ HOW TO RESPOND:
    guided flow: one exchange at a time).
 4. If the excerpts do not cover the problem, say so honestly and suggest
    the Discord community or sardo@michelangelo.land.
-5. End with a "Sources" section (markdown links from the excerpts).
+5. Do NOT write a "Sources" section and do NOT include raw URLs: the app
+   UI shows the source links automatically from structured data.
 6. Answer in the SAME LANGUAGE the user writes in; default to English
    when the language is unclear.`,
     model: workersAi(MODEL_GENERATION),
@@ -71,7 +72,7 @@ HOW TO RESPOND:
 
   async function guide(problem: string, chunks: RetrievedChunk[]): Promise<string> {
     const context = chunks
-      .map((c, i) => `--- EXCERPT ${i + 1} ("${c.page_title} > ${c.section}")\nURL: ${c.source_url}\n\n${c.content}`)
+      .map((c, i) => `--- EXCERPT ${i + 1} ("${c.page_title} > ${c.section}")\n\n${c.content}`)
       .join("\n\n");
 
     const result = await agent.generate(

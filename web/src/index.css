@@ -42,8 +42,12 @@
 
 body {
   margin: 0;
-  /* Soft base wash; the animated blobs in AnimatedBackground sit on top. */
-  background: linear-gradient(135deg, var(--color-grad-blue), var(--color-grad-violet) 45%, var(--color-grad-pink));
+  /* iOS 26 Safari (Liquid Glass) IGNORES theme-color and background-image:
+   * it tints the top status area and bottom toolbar by sampling the
+   * body's solid background-color. Keep the two declarations separate —
+   * the `background` shorthand would reset background-color. */
+  background-color: var(--color-grad-violet);
+  background-image: linear-gradient(135deg, var(--color-grad-blue), var(--color-grad-violet) 45%, var(--color-grad-pink));
   color: var(--color-text);
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;

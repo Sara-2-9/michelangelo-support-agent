@@ -5,6 +5,12 @@
  * gradient colors) drift slowly over a soft base wash. Animations are
  * transform-only (GPU-cheap) and freeze entirely when the user prefers
  * reduced motion. Decorative only — hidden from assistive technology.
+ *
+ * NOTE on iOS 26 Safari (Liquid Glass) chrome tinting: Safari ignores
+ * theme-color and tints its top/bottom bars from the body's solid
+ * background-color (set in index.css). The documented "fixed strip near
+ * the edge" trick for per-bar colors proved unreliable across iOS 26.x
+ * sub-versions (WebKit bugs) — we tried it and reverted.
  */
 export default function AnimatedBackground() {
   return (
