@@ -27,6 +27,13 @@ interface AuthContextValue {
    * If the email already belongs to a past account, the link LOGS INTO it.
    */
   claimEmail: (email: string) => Promise<string | null>;
+  /**
+   * Google sign-in. For anonymous users it LINKS the Google identity to the
+   * current account (same user id, history preserved); if that Google
+   * account is already registered, falls back to a plain OAuth login.
+   * The flow redirects the whole page to Google and back.
+   */
+  signInWithGoogle: () => Promise<string | null>;
   /** Signs out and starts a fresh anonymous session (new identity, new history). */
   resetIdentity: () => Promise<void>;
 }
@@ -91,6 +98,28 @@ export function AuthProvider({ children }: PropsWithChildren) {
     return error.message;
   }
 
+  async function signInWithGoogle(): Promise<string | null> {
+    const redirectTo = window.location.origin;
+    if (session?.user.is_anonymous) {
+      // linkIdentity upgrades the ANONYMOUS account: same user id, so the
+      // conversation history survives. If Google was used before (identity
+      // belongs to an older account), fall back to a plain OAuth login.
+      const { error } = await supabase.auth.linkIdentity({
+        provider: "google",
+        options: { redirectTo },
+      });
+      if (!error) return null;
+      if (!error.message.toLowerCase().includes("already linked")) {
+        return error.message;
+      }
+    }
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo },
+    });
+    return error ? error.message : null;
+  }
+
   async function resetIdentity() {
     await supabase.auth.signOut();
     await supabase.auth.signInAnonymously();
@@ -102,6 +131,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     ready,
     isAnonymous: session?.user.is_anonymous ?? true,
     claimEmail,
+    signInWithGoogle,
     resetIdentity,
   };
 
