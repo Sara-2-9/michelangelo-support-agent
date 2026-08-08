@@ -57,6 +57,23 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    // OAuth callback errors come back IN THE URL (after the Google redirect
+    // round-trip), so a client-side try/catch can never see them.
+    // error_code=email_exists: linkIdentity failed because this Google
+    // email already owns an account (e.g. registered earlier via magic
+    // link) — the right move is a plain Google LOGIN into that account,
+    // exactly like the email flow's OTP fallback. Clean the URL first so
+    // a refresh does not retrigger the redirect.
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("error_code") === "email_exists") {
+      window.history.replaceState(null, "", window.location.pathname);
+      supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: window.location.origin },
+      });
+      return;
+    }
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, newSession) => {
