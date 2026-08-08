@@ -59,7 +59,14 @@ export function createRetriever(config: RetrievalConfig) {
       min_similarity: minSimilarity,
     });
     if (error) throw new Error(`Supabase match_chunks: ${error.message}`);
-    return (data ?? []) as RetrievedChunk[];
+    // Source URLs are stored with the raw ".md" suffix (the docs repo
+    // file); the live web page is the same URL without it — normalize
+    // here so BOTH the model's citations and the structured sources use
+    // the public docs URL.
+    return (data ?? []).map((c: RetrievedChunk) => ({
+      ...c,
+      source_url: c.source_url.replace(/\.md$/, ""),
+    }));
   }
 
   return { retrieve };

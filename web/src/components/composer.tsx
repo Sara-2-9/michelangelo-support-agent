@@ -1,7 +1,17 @@
+/**
+ * Composer — restyle (mockup 9).
+ *
+ * The brand gradient lives HERE now: large rounded textarea with the
+ * four-color gradient, dark placeholder, black typed text, light border.
+ * Circular white send button with a dark arrow in its bottom-right
+ * corner. Enter sends, Shift+Enter adds a new line.
+ */
+
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { useChat } from "@/context/chat";
 
-/** Input box + send button. Enter sends, Shift+Enter adds a new line. */
 export default function Composer() {
   const { send, loading } = useChat();
   const [input, setInput] = useState("");
@@ -14,27 +24,32 @@ export default function Composer() {
   }
 
   return (
-    <footer className="flex gap-2.5 border-t border-border px-1 pt-3.5 pb-4">
-      <textarea
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            handleSend();
-          }
-        }}
-        placeholder="Ask a question… (Enter to send, Shift+Enter for a new line)"
-        rows={2}
-        className="flex-1 resize-none rounded-xl border border-border bg-panel px-3 py-2.5 text-sm text-text placeholder:text-muted focus:border-accent focus:outline-none"
-      />
-      <button
-        onClick={handleSend}
-        disabled={loading || !input.trim()}
-        className="rounded-xl bg-accent px-5 text-sm font-semibold text-[#0b0e14] disabled:cursor-default disabled:opacity-40"
-      >
-        Send
-      </button>
+    <footer className="px-1 pt-4 pb-5">
+      <div className="relative">
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSend();
+            }
+          }}
+          placeholder="Ask a question…"
+          rows={4}
+          // 16px minimum on touch devices: iOS Safari auto-zooms on focus
+          // when an input's font-size is smaller than 16px.
+          className="w-full resize-none rounded-2xl border border-border-ui bg-gradient-to-br from-grad-blue via-grad-violet to-grad-pink px-4 py-3.5 pr-14 text-[16px] text-black placeholder:text-placeholder-dark focus:border-white/70 focus:outline-none md:text-sm"
+        />
+        <button
+          onClick={handleSend}
+          disabled={loading || !input.trim()}
+          aria-label="Send message"
+          className="absolute right-3 bottom-4 flex h-9 w-9 items-center justify-center rounded-full bg-white text-icon-dark shadow transition-opacity hover:opacity-85 disabled:cursor-default disabled:opacity-40"
+        >
+          <FontAwesomeIcon icon={faArrowUp} />
+        </button>
+      </div>
     </footer>
   );
 }

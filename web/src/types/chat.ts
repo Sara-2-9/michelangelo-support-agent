@@ -15,6 +15,8 @@ export interface ChatMessage {
   /** Server-side row id (assistant only) — needed to attach feedback. */
   messageId?: string;
   feedback?: "up" | "down";
+  /** ISO timestamp — shown in the bubble corner (restyle step 4). */
+  createdAt?: string;
 }
 
 /** Response contract of POST /api/chat (see src/worker.ts). */
@@ -34,4 +36,6 @@ export interface ConversationSummary {
   id: string;
   started_at: string;
   escalated: boolean;
+  /** Beginning of the first user message — shown in the sidebar (mockup 7). */
+  preview: string | null;
 }

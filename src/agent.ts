@@ -62,9 +62,8 @@ RULES — follow them strictly:
 2. If the excerpts do not actually answer the question, say honestly that
    the documentation does not cover it and suggest the Discord community
    or sardo@michelangelo.land.
-3. ALWAYS cite sources: end your answer with a "Sources" section listing
-   the documentation pages used, as markdown links. Use the URLs provided
-   with each excerpt.
+3. Do NOT write a "Sources" section and do NOT include raw URLs: the app
+   UI shows the source links automatically from structured data.
 4. Answer in the SAME LANGUAGE the user writes in; default to English
    (most Michelangelo users speak English) when the language is unclear.
 5. Be concise and practical: this is support, not marketing. Use short
@@ -90,8 +89,8 @@ RULES — follow them strictly:
     const context = chunks
       .map(
         (c, i) =>
-          `--- EXCERPT ${i + 1} (from "${c.page_title} > ${c.section}", relevance ${(c.similarity * 100).toFixed(0)}%)\n` +
-          `URL: ${c.source_url}\n\n${c.content}`
+          `--- EXCERPT ${i + 1} (from "${c.page_title} > ${c.section}", relevance ${(c.similarity * 100).toFixed(0)}%)\n\n` +
+          c.content
       )
       .join("\n\n");
 
@@ -105,7 +104,7 @@ RULES — follow them strictly:
     const prompt =
       `${historyBlock}DOCUMENTATION EXCERPTS:\n\n${context}\n\n` +
       `---\nUSER QUESTION: ${question}\n\n` +
-      `Answer following your rules. Remember the "Sources" section.`;
+      `Answer following your rules.`;
 
     const result = await agent.generate(prompt);
     return { text: result.text, sources: chunks, grounded: true };

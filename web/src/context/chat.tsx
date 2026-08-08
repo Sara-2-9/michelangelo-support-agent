@@ -51,15 +51,30 @@ export function ChatProvider({ children }: PropsWithChildren) {
     localStorage.getItem(STORAGE_KEY)
   );
 
-  /** Sidebar data — direct read, RLS scopes it to the current user. */
+  /**
+   * Sidebar data — direct read, RLS scopes it to the current user.
+   * PostgREST resource embedding fetches each conversation TOGETHER WITH
+   * its first user message (filtered + ordered + limited on the embedded
+   * `messages` table) — one round trip, no DB migration needed.
+   */
   const refreshConversations = useCallback(async () => {
     if (!userId) return;
     const { data } = await supabase
       .from("conversations")
-      .select("id, started_at, escalated")
+      .select("id, started_at, escalated, messages(content)")
+      .eq("messages.role", "user")
       .order("started_at", { ascending: false })
+      .order("created_at", { referencedTable: "messages", ascending: true })
+      .limit(1, { referencedTable: "messages" })
       .limit(50);
-    setConversations(data ?? []);
+    setConversations(
+      (data ?? []).map((row) => ({
+        id: row.id,
+        started_at: row.started_at,
+        escalated: row.escalated,
+        preview: row.messages?.[0]?.content ?? null,
+      }))
+    );
   }, [userId]);
 
   useEffect(() => {
@@ -71,7 +86,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
     setError(null);
     const { data, error: loadError } = await supabase
       .from("messages")
-      .select("id, role, content, intent, sources, feedback")
+      .select("id, role, content, intent, sources, feedback, created_at")
       .eq("conversation_id", id)
       .order("created_at", { ascending: true });
 
@@ -88,6 +103,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
         sources: (m.sources as Source[] | null) ?? undefined,
         messageId: String(m.id),
         feedback: (m.feedback as Feedback | null) ?? undefined,
+        createdAt: m.created_at,
       }))
     );
     setConversationId(id);
@@ -97,15 +113,18 @@ export function ChatProvider({ children }: PropsWithChildren) {
   async function send(message: string) {
     if (!message.trim() || loading || !token) return;
 
-    const isNewConversation = !conversationId;
     setError(null);
-    setMessages((prev) => [...prev, { role: "user", content: message }]);
+    setMessages((prev) => [
+      ...prev,
+      { role: "user", content: message, createdAt: new Date().toISOString() },
+    ]);
     setLoading(true);
 
-    try {
-      const data = await postChat(message, conversationId ?? undefined, token);
+    /** Posts to the Worker and appends the assistant reply. */
+    const deliver = async (convId: string | null) => {
+      const data = await postChat(message, convId ?? undefined, token);
 
-      if (isNewConversation) {
+      if (!convId) {
         setConversationId(data.conversationId);
         localStorage.setItem(STORAGE_KEY, data.conversationId);
         refreshConversations(); // the new chat appears in the sidebar
@@ -119,18 +138,32 @@ export function ChatProvider({ children }: PropsWithChildren) {
           intent: data.intent,
           sources: data.sources,
           messageId: data.messageId ?? undefined,
+          createdAt: new Date().toISOString(),
         },
       ]);
+    };
+
+    try {
+      await deliver(conversationId);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Something went wrong";
-      // A stored conversationId from BEFORE auth existed (user_id NULL in
-      // the DB) can never pass the ownership check — drop it and start fresh.
-      if (conversationId && /conversation/i.test(message)) {
+      const errMsg = err instanceof Error ? err.message : "Something went wrong";
+      // A conversationId stored under a PREVIOUS identity (e.g. after sign
+      // out, which creates a fresh anonymous user) can never pass the
+      // Worker's ownership check. Instead of surfacing "Not your
+      // conversation", silently retry as a brand-new conversation — the
+      // user's message simply goes through.
+      const stale = conversationId && /not your conversation|conversation not found/i.test(errMsg);
+      if (stale) {
         localStorage.removeItem(STORAGE_KEY);
         setConversationId(null);
-        setMessages([]);
+        try {
+          await deliver(null);
+        } catch (retryErr) {
+          setError(retryErr instanceof Error ? retryErr.message : "Something went wrong");
+        }
+      } else {
+        setError(errMsg);
       }
-      setError(message);
     } finally {
       setLoading(false);
     }

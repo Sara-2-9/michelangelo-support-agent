@@ -1,0 +1,232 @@
+{
+  "timestamp": "2026-08-07T20:39:48.795Z",
+  "pass_rate": 100,
+  "avg_latency_ms": 2284,
+  "results": [
+    {
+      "id": "sq-01",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 2647,
+      "answer_preview": "According to the documentation excerpts, you can attach up to **2 images** to a prompt. This is mentioned in:\n* EXCERPT 1: \"Up to **2 image attachments**, compressed for fast upload.\"\n* EXCERPT 2: \"Op"
+    },
+    {
+      "id": "sq-02",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 1440,
+      "answer_preview": "The maximum prompt length is **4000 characters**. This is stated in both EXCERPT 1 and EXCERPT 2."
+    },
+    {
+      "id": "sq-03",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 2549,
+      "answer_preview": "To connect your GitHub account, follow these steps:\n1. Open a project in the editor.\n2. Tap the settings icon in the header.\n3. Go to **Tools → GitHub → Settings**.\n4. Tap **Add GitHub Account**.\n5. C"
+    },
+    {
+      "id": "sq-04",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 1547,
+      "answer_preview": "The Imaginer subscription has three tiers with different prices:\n* **Subs10**: $10 / year\n* **Subs15**: $15 / year\n* **Subs20**: $20 / year\n\nAll tiers offer the same features, with the price reflectin"
+    },
+    {
+      "id": "sq-05",
+      "pass": true,
+      "failures": [],
+      "intent": "troubleshooting",
+      "grounded": true,
+      "latency_ms": 3179,
+      "answer_preview": "The user is likely experiencing an issue with restoring their subscription after reinstalling the app, which is related to the \"restore_purchase\" troubleshooting area.\n\nHere is a numbered diagnostic c"
+    },
+    {
+      "id": "sq-06",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 1767,
+      "answer_preview": "Yes, you can export your app's source code. To do this, connect your GitHub account from **App Settings → Tools → GitHub**, then push the source code to your own repository. This gives you full owners"
+    },
+    {
+      "id": "sq-07",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 1839,
+      "answer_preview": "Secondo la documentazione, puoi allegare fino a **2 immagini** a un prompt. Questo è specificato in più sezioni della documentazione, tra cui \"Create Project > Prompt Input\", \"Create Project > Startin"
+    },
+    {
+      "id": "sq-08",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 3693,
+      "answer_preview": "Per condividere la tua app con un amico, puoi seguire questi passaggi:\n\n* Apri il progetto nell'editor.\n* Tocca l'icona delle impostazioni nell'header.\n* Tocca **Condividi**.\n* Scegli la destinazione "
+    },
+    {
+      "id": "sq-09",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 1225,
+      "answer_preview": "The maximum length for a project name is **30 characters**."
+    },
+    {
+      "id": "sq-10",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 4509,
+      "answer_preview": "To authenticate with the Michelangelo public API, you have two options:\n\n* **OAuth 2.1 + PKCE**: For third-party and community applications, your app registers itself and sends the user through a cons"
+    },
+    {
+      "id": "sq-11",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 1635,
+      "answer_preview": "According to the documentation excerpts, yes, your project is public by default. This is stated in EXCERPT 1: \"Your projects are public by default.\" and also supported by EXCERPT 2 and EXCERPT 4, whic"
+    },
+    {
+      "id": "sq-12",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 2971,
+      "answer_preview": "The documentation excerpts do not cover the specific differences between the Imaginer tiers, other than their prices. According to EXCERPT 1, the tiers are Subs10 ($10/year), Subs15 ($15/year), and Su"
+    },
+    {
+      "id": "sq-13",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 2150,
+      "answer_preview": "The documentation excerpts do not mention Android as a supported platform. They specifically mention iPhone, iOS version 18.0 or later, and web as supported platforms. Therefore, the documentation doe"
+    },
+    {
+      "id": "br-01",
+      "pass": true,
+      "failures": [],
+      "intent": "bug_report",
+      "grounded": true,
+      "latency_ms": 4033,
+      "answer_preview": "**Title**: App Crashes When Tapping Deploy\n**Summary**: The Michelangelo app crashes every time the user attempts to deploy. This issue occurs consistently, suggesting a reproducible problem. The user"
+    },
+    {
+      "id": "br-02",
+      "pass": true,
+      "failures": [],
+      "intent": "bug_report",
+      "grounded": true,
+      "latency_ms": 3815,
+      "answer_preview": "**Title**: Error During Generation: Sandbox Failure\n**Summary**: The user encountered an error during the generation process, resulting in the sandbox failing twice. This issue occurred during their u"
+    },
+    {
+      "id": "tr-01",
+      "pass": true,
+      "failures": [],
+      "intent": "troubleshooting",
+      "grounded": true,
+      "latency_ms": 4301,
+      "answer_preview": "The generation getting stuck halfway and never finishing is likely due to a streaming stall, which is a known issue in Michelangelo that can cause the generation process to hang indefinitely.\n\nHere is"
+    },
+    {
+      "id": "tr-02",
+      "pass": true,
+      "failures": [],
+      "intent": "troubleshooting",
+      "grounded": true,
+      "latency_ms": 3091,
+      "answer_preview": "The problem you're experiencing with restoring your purchase after reinstalling the app is likely due to an issue with the restore purchase process, which is tied to your Apple ID.\n\nHere's a numbered "
+    },
+    {
+      "id": "ot-01",
+      "pass": true,
+      "failures": [],
+      "intent": "off_topic",
+      "grounded": false,
+      "latency_ms": 115,
+      "answer_preview": "I'm the Michelangelo support assistant: I can only help with questions about the app, its features, integrations, and API. Is there anything about Michelangelo you'd like to know?"
+    },
+    {
+      "id": "ot-02",
+      "pass": true,
+      "failures": [],
+      "intent": "off_topic",
+      "grounded": false,
+      "latency_ms": 187,
+      "answer_preview": "I'm the Michelangelo support assistant: I can only help with questions about the app, its features, integrations, and API. Is there anything about Michelangelo you'd like to know?"
+    },
+    {
+      "id": "ot-03",
+      "pass": true,
+      "failures": [],
+      "intent": "off_topic",
+      "grounded": false,
+      "latency_ms": 116,
+      "answer_preview": "I'm the Michelangelo support assistant: I can only help with questions about the app, its features, integrations, and API. Is there anything about Michelangelo you'd like to know?"
+    },
+    {
+      "id": "edge-01",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 2262,
+      "answer_preview": "The documentation does not cover exporting projects to Kotlin Multiplatform. It only discusses exporting to GitHub and then building the app using Expo tools or other preferred mobile build services. "
+    },
+    {
+      "id": "edge-02",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 1839,
+      "answer_preview": "The documentation excerpts state that image attachments are saved as compressed JPEG. This is mentioned in two excerpts: \n\n* EXCERPT 1: \"up to **2 image attachments**, compressed for fast upload\"\n* EX"
+    },
+    {
+      "id": "edge-03",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 1641,
+      "answer_preview": "The documentation does not cover paying the Imaginer subscription with Bitcoin. It only mentions completing the purchase through the App Store. For more information, you can try reaching out to the Di"
+    },
+    {
+      "id": "edge-04",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 2353,
+      "answer_preview": "The documentation excerpts do not mention Apple Vision Pro as a supported device. According to EXCERPT 4, the Michelangelo app currently supports iPhone and the web preview player, but it does not men"
+    },
+    {
+      "id": "meta-01",
+      "pass": true,
+      "failures": [],
+      "intent": "support_question",
+      "grounded": true,
+      "latency_ms": 2200,
+      "answer_preview": "I can help you with questions about the Michelangelo app, such as its features, usage, and support. If you have a specific question, I'll do my best to answer it based on the provided documentation ex"
+    }
+  ]
+}

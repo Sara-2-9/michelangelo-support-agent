@@ -21,7 +21,11 @@ interface AuthContextValue {
   userId: string | null;
   ready: boolean;
   isAnonymous: boolean;
-  /** Sends a magic link that converts the anonymous account into a permanent one. */
+  /**
+   * Sends a magic link for the given email. If the current anonymous account
+   * has no email yet, the link CLAIMS it (same user id, history preserved).
+   * If the email already belongs to a past account, the link LOGS INTO it.
+   */
   claimEmail: (email: string) => Promise<string | null>;
   /** Signs out and starts a fresh anonymous session (new identity, new history). */
   resetIdentity: () => Promise<void>;
@@ -67,7 +71,18 @@ export function AuthProvider({ children }: PropsWithChildren) {
     // updateUser on an anonymous account keeps the same user id and sends
     // a verification link — history stays attached to the identity.
     const { error } = await supabase.auth.updateUser({ email });
-    return error ? error.message : null;
+    if (!error) return null;
+    // The email already belongs to a previously claimed account (e.g. the
+    // user signed out and got a fresh anonymous identity): fall back to a
+    // magic-link LOGIN into that existing account instead of claiming again.
+    if (error.message.toLowerCase().includes("already been registered")) {
+      const { error: otpError } = await supabase.auth.signInWithOtp({
+        email,
+        options: { shouldCreateUser: false },
+      });
+      return otpError ? otpError.message : null;
+    }
+    return error.message;
   }
 
   async function resetIdentity() {

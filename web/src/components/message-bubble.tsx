@@ -1,44 +1,72 @@
-import type { ChatMessage } from "@/types/chat";
+/**
+ * One chat bubble — restyle step 4 (Figma mockups 5/6/8).
+ *
+ * User: dark-blue bubble (bubble-user) on the right, plain text.
+ * Assistant: dark card (surface + border-ui) on the left with a dynamic
+ * intent badge on top, the answer rendered as MARKDOWN (bold, lists,
+ * links), clean source links, thumbs feedback and the timestamp in the
+ * bottom-right corner. The inner-bottom corner is square (chat-tail look).
+ */
+
+import type { ChatMessage, Source } from "@/types/chat";
 import IntentBadge from "@/components/ui/intent-badge";
 import FeedbackButtons from "@/components/ui/feedback-buttons";
+import Markdown from "@/components/ui/markdown";
 
-/** One chat bubble: user (right, accent) or assistant (left, with metadata). */
+function formatTime(iso: string) {
+  return new Date(iso).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+}
+
+/** "Web > (intro)" → "Intro"; falls back to the full title. */
+function sourceLabel(s: Source) {
+  const tail = s.page_title.split(">").pop()?.trim() ?? "";
+  const cleaned = tail.replace(/^\((.*)\)$/, "$1").trim() || s.page_title;
+  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+}
+
 export default function MessageBubble({ message }: { message: ChatMessage }) {
   const isUser = message.role === "user";
 
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[78%] rounded-2xl border px-3.5 py-3 text-sm leading-relaxed break-words whitespace-pre-wrap ${
-          isUser ? "border-user-border bg-user" : "border-border bg-panel"
+        className={`max-w-[78%] rounded-2xl border border-border-bubble px-4 py-3 text-sm leading-relaxed break-words ${
+          isUser
+            ? "rounded-br-none bg-bubble-user text-white whitespace-pre-wrap"
+            : "rounded-bl-none bg-surface text-white"
         }`}
       >
         {message.intent && <IntentBadge intent={message.intent} />}
 
-        <div>{message.content}</div>
+        {isUser ? <div>{message.content}</div> : <Markdown>{message.content}</Markdown>}
 
         {message.sources && message.sources.length > 0 && (
-          <div className="mt-2.5 flex flex-col gap-1 border-t border-border pt-2.5">
-            <span className="text-[11px] font-semibold uppercase tracking-wide text-muted">
-              Sources
-            </span>
+          <div className="mt-3 flex flex-col gap-1">
+            <span className="text-[13px] text-white">Sources:</span>
             {message.sources.map((s, i) => (
               <a
                 key={i}
-                href={s.source_url}
+                href={s.source_url.replace(/\.md$/, "")}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[13px] text-accent hover:underline"
+                className="text-[13px] font-medium text-[#4d9fff] hover:underline"
               >
-                {s.page_title}
+                {sourceLabel(s)}
               </a>
             ))}
           </div>
         )}
 
-        {!isUser && message.messageId && (
-          <FeedbackButtons messageId={message.messageId} feedback={message.feedback} />
-        )}
+        <div className="mt-2 flex items-end justify-between gap-3">
+          {!isUser && message.messageId ? (
+            <FeedbackButtons messageId={message.messageId} feedback={message.feedback} />
+          ) : (
+            <span />
+          )}
+          {message.createdAt && (
+            <span className="text-[11px] text-white/45">{formatTime(message.createdAt)}</span>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -35,9 +35,9 @@ Michelangelo currently offers support via Discord and email. This agent:
 │      → answer in the user's language + Sources           │
 └──────────────────────────────────────────────────────────┘
                            ▼
-┌─ Online serving (Cloudflare, coming soon) ───────────────┐
-│  Pages: chat UI (React)                                  │
-│  Worker: agent endpoint + intent-routed workflow         │
+┌─ Online serving (Cloudflare, LIVE) ──────────────────────┐
+│  React SPA (chat UI, /auth page) as Workers Static       │
+│  Assets + Worker API in ONE deploy                       │
 │  Cron Trigger: automatic documentation sync              │
 └──────────────────────────────────────────────────────────┘
 ```
@@ -61,8 +61,9 @@ Michelangelo currently offers support via Discord and email. This agent:
 - **TypeScript** end-to-end
 - **Mastra** — agent framework (deterministic RAG now; workflow orchestration in Phase 3)
 - **Cloudflare Workers AI** — embeddings (`bge-m3`) + LLM (`llama-3.3-70b-instruct-fp8-fast`) via OpenAI-compatible endpoint
-- **Supabase (pgvector)** — vector store + SQL
-- Corpus: 42 pages of the official docs (machine-readable `/llms.txt` index)
+- **Supabase (pgvector)** — vector store + SQL + Auth (anonymous sign-in + magic link)
+- **React 19 + Vite + Tailwind CSS v4** — chat UI; React Router (`/` chat, `/auth` sign-in), Font Awesome icons, react-markdown + Tailwind Typography for rich answers
+- Corpus: 43 pages of the official docs (machine-readable `/llms.txt` index)
 
 ## Project status (roadmap)
 
@@ -76,6 +77,7 @@ Michelangelo currently offers support via Discord and email. This agent:
 - [x] **Phase 5.2** — React chat UI (Vite SPA in `web/`) served as Workers Static Assets via `@cloudflare/vite-plugin`: one `npm run dev` runs UI (HMR) + Worker (workerd) together; thumbs up/down feedback persisted to `messages.feedback`; conversation resumed via localStorage
 - [x] **Phase 5.3** — Supabase Auth: automatic anonymous sign-in, conversation history sidebar (direct browser reads scoped by RLS policies), magic-link account claim preserving history, JWT verification + ownership checks in the Worker (IDOR-safe), writes stay behind the service key only
 - [x] **Phase 5.4** — Public deploy on Cloudflare Workers: OAuth login, 4 secrets via `wrangler secret put`, CORS locked to the Worker's own origin, SPA + API live in one deploy. Live at https://michelangelo-support-agent.moro-sara29.workers.dev
+- [x] **Phase 6** — Figma-driven UI restyle + UX hardening: design-token palette (dark surface, gradient composer, chat-tail bubbles), React Router (`/` + `/auth` magic-link page), Font Awesome icons, markdown answers (react-markdown + Tailwind Typography), day dividers, dynamic intent badge, sidebar entries showing each conversation's first user message (PostgREST resource embedding, one round trip), thumbs feedback, avatar popover with Sign out. Mobile hardening: `viewport-fit=cover` + safe-area insets, `h-dvh`, 16px inputs (no iOS auto-zoom), iOS 26 Safari chrome tint via solid `background-color` (theme-color is ignored by Liquid Glass). Auth fix: already-registered emails fall back from anonymous-claim to OTP login. Stale `conversationId` after identity change is retried transparently as a new conversation. Model prompts no longer write a "Sources" section — the UI renders structured sources only; source URLs are normalized to the public web pages (`.md` stripped at retrieval). Eval re-verified at 100% (25/25) after the prompt change.
 
 ## Setup
 
@@ -100,6 +102,8 @@ npm run deploy                    # wrangler deploy (Phase 5.4)
 DB schema: `supabase/migrations/` — applied via Supabase CLI (`supabase login` → `supabase link --project-ref <ref>` → `supabase db push`).
 
 Auth: requires "Anonymous Sign-Ins" enabled in Supabase → Authentication → Sign In / Up. The browser uses the publishable key — safe to expose because RLS policies scope every read to the owner; all writes go through the Worker (service key + JWT verification).
+
+**Pre-launch note**: Supabase's built-in email service is dev-only (~2-4 emails/hour cap → "email rate limit exceeded" under real usage). Before opening the agent to all Michelangelo users, configure a custom SMTP provider (Resend, SendGrid, Brevo…) in Supabase → Authentication → SMTP Settings.
 
 ## Disclaimer
 
