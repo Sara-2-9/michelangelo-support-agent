@@ -68,9 +68,15 @@ export function AuthProvider({ children }: PropsWithChildren) {
   }, []);
 
   async function claimEmail(email: string): Promise<string | null> {
+    // emailRedirectTo: where the magic link lands after the click. Using the
+    // CURRENT origin means localhost:5173 in dev and the workers.dev URL in
+    // production — both must be allow-listed in Supabase → Authentication →
+    // URL Configuration → Redirect URLs (the default Site URL localhost:3000
+    // would otherwise send production users to a dead page).
+    const emailRedirectTo = window.location.origin;
     // updateUser on an anonymous account keeps the same user id and sends
     // a verification link — history stays attached to the identity.
-    const { error } = await supabase.auth.updateUser({ email });
+    const { error } = await supabase.auth.updateUser({ email }, { emailRedirectTo });
     if (!error) return null;
     // The email already belongs to a previously claimed account (e.g. the
     // user signed out and got a fresh anonymous identity): fall back to a
@@ -78,7 +84,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     if (error.message.toLowerCase().includes("already been registered")) {
       const { error: otpError } = await supabase.auth.signInWithOtp({
         email,
-        options: { shouldCreateUser: false },
+        options: { shouldCreateUser: false, emailRedirectTo },
       });
       return otpError ? otpError.message : null;
     }
