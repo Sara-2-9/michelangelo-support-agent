@@ -44,7 +44,7 @@ export default function UserMenu() {
         <FontAwesomeIcon icon={faUser} />
       </button>
       {open && (
-        <div className="absolute right-0 top-12 z-40 flex w-56 flex-col items-center gap-3 rounded-2xl border border-border-ui bg-gradient-to-br from-grad-blue via-grad-violet to-grad-pink p-4 shadow-xl">
+        <div className="absolute right-0 top-12 z-40 flex w-56 flex-col items-center gap-3 rounded-2xl border border-border-ui bg-linear-to-br from-grad-blue via-grad-violet to-grad-pink p-4 shadow-xl">
           <p className="m-0 max-w-full truncate text-sm font-medium text-black" title={session?.user.email ?? ""}>
             {session?.user.email}
           </p>

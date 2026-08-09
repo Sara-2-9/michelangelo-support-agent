@@ -27,7 +27,7 @@ const components: Components = {
 
 export default function Markdown({ children }: { children: string }) {
   return (
-    <div className="prose prose-sm prose-invert max-w-none prose-headings:mt-3 prose-headings:mb-1 prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-1 prose-pre:bg-black/40 prose-code:text-[#ffd36d]">
+    <div className="prose prose-sm prose-invert max-w-none prose-headings:mt-3 prose-headings:mb-1 prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-1 prose-pre:bg-black/40 prose-code:text-warn">
       <ReactMarkdown components={components}>{children}</ReactMarkdown>
     </div>
   );

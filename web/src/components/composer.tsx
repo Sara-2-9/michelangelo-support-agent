@@ -39,7 +39,7 @@ export default function Composer() {
           rows={4}
           // 16px minimum on touch devices: iOS Safari auto-zooms on focus
           // when an input's font-size is smaller than 16px.
-          className="w-full resize-none rounded-2xl border border-border-ui bg-gradient-to-br from-grad-blue via-grad-violet to-grad-pink px-4 py-3.5 pr-14 text-[16px] text-black placeholder:text-placeholder-dark focus:border-white/70 focus:outline-none md:text-sm"
+          className="w-full resize-none rounded-2xl border border-border-ui bg-linear-to-br from-grad-blue via-grad-violet to-grad-pink px-4 py-3.5 pr-14 text-[16px] text-black placeholder:text-placeholder-dark focus:border-white/70 focus:outline-none md:text-sm"
         />
         <button
           onClick={handleSend}

@@ -36,7 +36,7 @@ function Shell() {
     // content clear of the notch and the home indicator.
     <div className="relative flex h-dvh pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]">
       <ConversationSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="mx-auto flex w-full max-w-[820px] flex-1 flex-col px-4">
+      <div className="mx-auto flex w-full max-w-205 flex-1 flex-col px-4">
         <ChatHeader onMenuClick={() => setSidebarOpen(true)} />
         <MessageList />
         <Composer />
