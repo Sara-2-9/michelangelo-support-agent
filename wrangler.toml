@@ -18,6 +18,10 @@ compatibility_flags = ["nodejs_compat"]
 [assets]
 directory = "web/dist/client"
 not_found_handling = "single-page-application"
+# Exposes the assets as env.ASSETS so the Worker can explicitly delegate
+# non-/api paths (SPA deep links like /privacy) — unmatched paths reach the
+# Worker code first, NOT the index.html fallback.
+binding = "ASSETS"
 
 # Phase 1b — daily docs sync at 05:37 UTC (07:37 CEST): the Worker fetches
 # the docs index + pages over HTTP and re-embeds only what changed.

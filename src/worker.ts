@@ -31,6 +31,8 @@ export interface Env {
   SUPABASE_SERVICE_ROLE_KEY: string;
   CLOUDFLARE_ACCOUNT_ID: string;
   CLOUDFLARE_API_TOKEN: string;
+  /** Static-assets binding (wrangler.toml [assets] binding): SPA fallback. */
+  ASSETS: { fetch(request: Request): Promise<Response> };
 }
 
 /**
@@ -95,6 +97,15 @@ async function handleRequest(request: Request, env: Env): Promise<Response> {
     if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders(request) });
 
     const url = new URL(request.url);
+
+    // Requests that match a static asset never reach this code (assets are
+    // served first). Everything ELSE falls through to the Worker — including
+    // SPA deep links like /privacy or /auth, which the not_found_handling
+    // fallback does NOT serve on its own once a Worker script exists.
+    // Delegate them back to the assets binding so the SPA router takes over.
+    if (!url.pathname.startsWith("/api/")) {
+      return env.ASSETS.fetch(request);
+    }
 
     if (url.pathname === "/api/health") {
       return json({ ok: true, service: "michelangelo-support-agent" }, request);

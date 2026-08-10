@@ -1,7 +1,7 @@
 {
   "name": "michelangelo-support-agent",
   "version": "0.1.0",
-  "description": "AI support agent for michelangelo.land users — RAG over official docs, agent orchestration with Mastra, deployable on Cloudflare.",
+  "description": "AI support agent for michelangelo.land users \u2014 RAG over official docs, agent orchestration with Mastra, deployable on Cloudflare.",
   "type": "module",
   "private": true,
   "scripts": {
@@ -16,7 +16,7 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "npm run build && wrangler deploy --config web/dist/michelangelo_support_agent/wrangler.json",
+    "deploy": "npm run build && cd /tmp && wrangler deploy --config \"$OLDPWD/web/dist/michelangelo_support_agent/wrangler.json\"",
     "typecheck": "tsc --noEmit && tsc --noEmit -p web"
   },
   "dependencies": {
