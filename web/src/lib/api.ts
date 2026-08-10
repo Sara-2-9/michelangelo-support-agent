@@ -38,3 +38,19 @@ export async function postFeedback(messageId: string, feedback: Feedback, token:
     body: JSON.stringify({ messageId, feedback }),
   });
 }
+
+/**
+ * Deletes the caller's own account (and, by DB cascade, the whole
+ * conversation history). The Worker derives the user id from the JWT —
+ * only self-deletion is possible.
+ */
+export async function deleteAccount(token: string): Promise<void> {
+  const res = await fetch("/api/account", {
+    method: "DELETE",
+    headers: authHeaders(token),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error ?? `Request failed (${res.status})`);
+  }
+}

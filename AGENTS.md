@@ -20,7 +20,9 @@ AI support agent for users of [Michelangelo](https://michelangelo.land) (an iOS 
 
 **Auth/OAuth learnings (Phase 7)**: (1) OAuth callback errors arrive IN THE URL after the redirect round-trip — a try/catch at the call site never sees them; handle them at app bootstrap by parsing `?error_code=`. (2) `linkIdentity` fails server-side with `email_exists` (Google email already owns an account) or `identity_already_exists` (Google identity linked by a previous login) — both mean "plain OAuth login into the existing account". (3) `linkIdentity` requires Supabase "Allow manual linking" ("Manual linking is disabled" otherwise). (4) `key={userId}` remount is the robust way to reset client state on identity change — better than manually clearing each piece of state. (5) Supabase's built-in email is dev-only (~2-4 emails/hour, "email rate limit exceeded") — production magic links need custom SMTP; Google OAuth needs no SMTP at all.
 
-**Next step**: the project is feature-complete and LIVE: https://michelangelo-support-agent.moro-sara29.workers.dev — Phase 1b docs auto-sync runs daily at 05:37 UTC via Cron Trigger. Optional follow-ups discussed: CI via GitHub Actions (typecheck + eval on PRs), code-splitting the JS bundle (>500 kB warning), publishing the Google OAuth consent screen (currently "Testing" — only test users can sign in with Google).
+**Phase 8 (legal & account management)**: `/privacy` + `/terms` routes rendering markdown from `web/src/constants/legal.ts` (single source of truth) through one shared `LegalPage` — GDPR privacy policy tailored to the real sub-processors (Supabase, Cloudflare Workers AI, Resend, Google) and ToS with AI-accuracy disclaimer + non-affiliation notice. **Self-service account deletion**: `DELETE /api/account` in the Worker (JWT-verified, self-only) → `supabase.auth.admin.deleteUser` — the `auth.users` FK cascade wipes conversations+messages; UI confirmation dialog ("Are you sure?") before the call. Cookie-consent banner (`cookie-banner.tsx`, choice in localStorage; only strictly-necessary storage exists — no tracking cookies). Account panel = right slide-over (mirrors the sidebar overlay pattern) with Google avatar from `user_metadata.avatar_url|picture` (also replaces the header user icon when present), Sign out / Delete Account, legal links. Reusable primitives: `ui/button.tsx` (variant dark/light/surface/danger, icon, iconPosition, iconSpin) and `ui/icon-button.tsx` (round icon-only, required aria label). Empty-state layout: composer CENTERED with legal footer pinned at the bottom (`peer-focus-within:hidden` — never rides the iOS keyboard); after the first message the standard layout returns and the footer disappears. App icon: `web/public/` (favicon 64, apple-touch 180, header/sidebar 96/512). Anonymous users see the conversation list but clicking one redirects to `/auth`. Legal pages use `navigate(-1)` "Back" (falls back to "/" on direct visits). **FontAwesome gotcha**: `bars-sort` is a PRO icon — the free lookalike is `faBarsStaggered`.
+
+**Next step**: the project is feature-complete and LIVE: https://michelangelo-support-agent.moro-sara29.workers.dev — Phase 1b docs auto-sync runs daily at 05:37 UTC via Cron Trigger. Optional follow-ups discussed: CI via GitHub Actions (typecheck + eval on PRs), code-splitting the JS bundle (>500 kB warning), publishing the Google OAuth consent screen (currently "Testing" — only test users can sign in with Google; the public `/privacy` URL unblocked by Phase 8 is a prerequisite).
 
 **Phase 1b notes**: chunking/embeddings logic lives in `src/lib/chunking.ts` + `src/lib/embeddings.ts` (shared by local scripts AND the Worker — single source of truth; Web Crypto hashing, identical output to node:crypto). `src/lib/docs-sync.ts` fetches `/llms.txt` + pages over HTTP, diffs content_hash, embeds only the delta, deletes stale chunks; `parseDocsIndex` is reused by `scripts/fetch-corpus.ts` (reproducible local snapshot). First live test caught a real docs change (new MCP server page: 42→43 pages). Local cron test: `wrangler dev --test-scheduled` + `curl "localhost:8787/__scheduled?cron=37+5+*+*+*"` (needs `assets.directory` in root wrangler.toml).
 
@@ -53,7 +55,9 @@ scripts/
   patch-unicorn-magic.mjs  postinstall patch: fixes esbuild resolving unicorn-magic
                   without npm-run-path exports when bundling for workerd
 src/
-  worker.ts       Cloudflare Worker API: GET /api/health, POST /api/chat
+  worker.ts       Cloudflare Worker API: GET /api/health, POST /api/chat,
+                  POST /api/feedback, DELETE /api/account (self-service
+                  GDPR erasure — auth user deletion cascades to history)
   orchestrator.ts entry point: intent routing → handler dispatch + logging
   router.ts       intent classification (few-shot, small model)
   agent.ts        support_question handler: deterministic RAG (answer())
@@ -72,19 +76,21 @@ supabase/
   migrations/     versioned DB schema — apply with `supabase db push`
 web/              React SPA (Phase 5.2, restyled in Phase 6) — Vite root, own tsconfig, Tailwind CSS v4
   index.html      viewport-fit=cover + theme-color (older iOS only; iOS 26 samples body bg)
+  public/         app icon set: favicon.png (64), apple-touch-icon.png (180),
+                  icon-96.png (header), icon-512.png (sidebar brand)
   src/
-    App.tsx            composition only (Providers + Routes: / chat, /auth; ChatProvider key={userId} remounts on identity change)
+    App.tsx            composition only (Providers + Routes: / chat, /auth, /privacy, /terms; ChatProvider key={userId} remounts on identity change; Shell swaps centered-composer empty layout ↔ standard chat)
     index.css          Tailwind v4 entry: @import + @plugin typography + @theme design tokens
     types/chat.ts      shared types (ChatMessage, Source, ChatResponse, ConversationSummary)
-    constants/         static data (intent labels, storage keys)
+    constants/         static data (intent labels, storage keys, legal.ts = Privacy Policy + ToS markdown — single source of truth for /privacy and /terms)
     lib/api.ts         the ONLY file that knows HTTP/endpoints (adds Bearer JWT)
     lib/supabase.ts    browser client — DIRECT reads only, scoped by RLS
-    context/auth.tsx   AuthProvider + useAuth() — anonymous session, email claim w/ OTP login fallback, Google OAuth (linkIdentity + URL-error fallback)
+    context/auth.tsx   AuthProvider + useAuth() — anonymous session, email claim w/ OTP login fallback, Google OAuth (linkIdentity + URL-error fallback), deleteAccount (Worker → admin.deleteUser → fresh anonymous session)
     context/chat.tsx   ChatProvider + useChat() — conversation state, sidebar data (embedded preview), stale-id retry
     hooks/             reusable logic (use-auto-scroll)
-    pages/             route pages (auth-page: magic-link form)
-    components/        feature components (chat-header, message-list, conversation-sidebar, user-menu, composer, …)
-    components/ui/     primitives (intent-badge, feedback-buttons, markdown, thinking-indicator)
+    pages/             route pages (auth-page: magic-link + Google; legal-page: shared renderer for /privacy and /terms, dynamic history Back)
+    components/        feature components (chat-header, message-list, conversation-sidebar, user-menu = right slide-over account panel w/ avatar + delete flow, composer, cookie-banner, app-footer, …)
+    components/ui/     primitives (button = variant/icon/iconPosition/spin, icon-button = round icon-only, intent-badge, feedback-buttons, markdown, thinking-indicator)
   .env.example      VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY (publishable — public by design)
 vite.config.ts    Vite root=web + tailwindcss() + cloudflare({ configPath: <repo-root wrangler.toml> }) + alias @/→web/src
 wrangler.toml     Worker config; [assets] not_found_handling = "single-page-application"

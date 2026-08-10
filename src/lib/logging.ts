@@ -145,6 +145,16 @@ export function createLogger(supabaseUrl: string, supabaseKey: string) {
     return getConversationOwner(data.conversation_id as string);
   }
 
+  /**
+   * Deletes a user account (GDPR erasure, self-service from the UI).
+   * auth.users deletion CASCADES to conversations (user_id FK) and from
+   * there to messages — one call wipes the whole history.
+   */
+  async function deleteUser(userId: string): Promise<void> {
+    const { error } = await supabase.auth.admin.deleteUser(userId);
+    if (error) throw new Error(`deleteUser: ${error.message}`);
+  }
+
   return {
     createConversation,
     logMessage,
@@ -154,5 +164,6 @@ export function createLogger(supabaseUrl: string, supabaseKey: string) {
     getUserIdFromToken,
     getConversationOwner,
     getMessageOwner,
+    deleteUser,
   };
 }

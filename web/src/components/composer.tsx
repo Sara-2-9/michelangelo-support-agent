@@ -8,9 +8,9 @@
  */
 
 import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { useChat } from "@/context/chat";
+import IconButton from "@/components/ui/icon-button";
 
 export default function Composer() {
   const { send, loading } = useChat();
@@ -24,7 +24,9 @@ export default function Composer() {
   }
 
   return (
-    <footer className="px-1 pt-4 pb-5">
+    // `peer`: lets the legal footer hide itself (peer-focus-within:hidden)
+    // while the textarea is focused, so it never rides the iOS keyboard.
+    <footer className="peer px-1 pt-4 pb-5">
       <div className="relative">
         <textarea
           value={input}
@@ -41,14 +43,13 @@ export default function Composer() {
           // when an input's font-size is smaller than 16px.
           className="w-full resize-none rounded-2xl border border-border-ui bg-linear-to-br from-grad-blue via-grad-violet to-grad-pink px-4 py-3.5 pr-14 text-[16px] text-black placeholder:text-placeholder-dark focus:border-white/70 focus:outline-none md:text-sm"
         />
-        <button
+        <IconButton
           onClick={handleSend}
           disabled={loading || !input.trim()}
-          aria-label="Send message"
-          className="absolute right-3 bottom-4 flex h-9 w-9 items-center justify-center rounded-full bg-white text-icon-dark shadow transition-opacity hover:opacity-85 disabled:cursor-default disabled:opacity-40"
-        >
-          <FontAwesomeIcon icon={faArrowUp} />
-        </button>
+          icon={faArrowUp}
+          label="Send message"
+          className="absolute right-3 bottom-4 bg-white text-icon-dark"
+        />
       </div>
     </footer>
   );

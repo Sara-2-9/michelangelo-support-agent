@@ -10,6 +10,8 @@
  *                       history is loaded server-side from the DB.
  *   POST /api/feedback  { messageId, feedback: "up" | "down" }
  *                       → { ok: true } — only on messages of your own conversations.
+ *   DELETE /api/account → { ok: true } — deletes YOUR OWN account (JWT-identified);
+ *                       cascades to conversations and messages (GDPR erasure).
  *   GET  /api/health    → { ok: true }
  *
  * Security model (Phase 5.3): reads for the sidebar go DIRECTLY from the
@@ -41,7 +43,7 @@ export interface Env {
 function corsHeaders(request: Request) {
   return {
     "Access-Control-Allow-Origin": new URL(request.url).origin,
-    "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+    "Access-Control-Allow-Methods": "POST, GET, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
   };
 }
@@ -151,6 +153,15 @@ async function handleRequest(request: Request, env: Env): Promise<Response> {
         conversationId,
         messageId: result.messageId ?? null,
       }, request);
+    }
+
+    if (url.pathname === "/api/account" && request.method === "DELETE") {
+      // Self-service GDPR erasure: the JWT identifies the caller, and only
+      // THEIR OWN user id is ever passed to the admin API — an account can
+      // only delete itself. The auth.users deletion cascades to
+      // conversations and messages (FK on delete cascade).
+      await orchestrator.logger.deleteUser(userId);
+      return json({ ok: true }, request);
     }
 
     if (url.pathname === "/api/feedback" && request.method === "POST") {

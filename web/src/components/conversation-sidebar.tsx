@@ -2,22 +2,37 @@
  * Conversation sidebar — restyle step 5 (Figma mockups 7/8).
  *
  * Overlay panel (all breakpoints) with a milky translucent look over the
- * animated gradient. Top: circled "+" button (btn-light). Each entry is a
- * pill showing the BEGINNING OF THE FIRST USER MESSAGE of that
- * conversation (not the date) — the preview comes from the embedded
- * PostgREST query in chat context. Account actions live on /auth.
+ * animated gradient. Top row: the app icon on the left (brand anchor —
+ * tells the user which app they are in) and the circled "+" new-chat
+ * button on the right. Each entry is a pill showing the BEGINNING OF THE
+ * FIRST USER MESSAGE of that conversation (not the date) — the preview
+ * comes from the embedded PostgREST query in chat context.
+ *
+ * ANONYMOUS users can SEE their conversation list, but opening a past
+ * conversation is reserved to signed-in users: the click redirects to
+ * /auth instead, where claiming the account preserves the history.
  */
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "@/context/auth";
 import { useChat } from "@/context/chat";
+import IconButton from "@/components/ui/icon-button";
 
 export default function ConversationSidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { conversations, conversationId, selectConversation, newConversation } = useChat();
+  const { isAnonymous } = useAuth();
+  const navigate = useNavigate();
 
   function openConversation(id: string) {
-    selectConversation(id);
     onClose();
+    if (isAnonymous) {
+      // Signed-out visitors keep the list as a preview, but resuming a
+      // conversation requires a permanent identity.
+      navigate("/auth");
+      return;
+    }
+    selectConversation(id);
   }
 
   return (
@@ -30,17 +45,21 @@ export default function ConversationSidebar({ open, onClose }: { open: boolean; 
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex justify-end p-4">
-          <button
+        <div className="flex items-center justify-between p-4">
+          <img
+            src="/icon-512.png"
+            alt="Michelangelo Support Agent"
+            className="h-9 w-9 rounded-xl shadow"
+          />
+          <IconButton
             onClick={() => {
               newConversation();
               onClose();
             }}
-            aria-label="New chat"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-btn-light text-icon-dark shadow transition-transform hover:scale-105"
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </button>
+            icon={faPlus}
+            label="New chat"
+            className="bg-btn-light text-icon-dark"
+          />
         </div>
 
         <div className="mx-4 border-t border-black/15" />

@@ -14,6 +14,7 @@
 import { createContext, use, useEffect, useState, type PropsWithChildren } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+import { deleteAccount as apiDeleteAccount } from "@/lib/api";
 
 interface AuthContextValue {
   /** Null until the initial session bootstrap completes. */
@@ -36,6 +37,11 @@ interface AuthContextValue {
   signInWithGoogle: () => Promise<string | null>;
   /** Signs out and starts a fresh anonymous session (new identity, new history). */
   resetIdentity: () => Promise<void>;
+  /**
+   * Deletes the account server-side (history included, by DB cascade),
+   * then starts a fresh anonymous session. Returns an error message or null.
+   */
+  deleteAccount: () => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -144,6 +150,19 @@ export function AuthProvider({ children }: PropsWithChildren) {
     await supabase.auth.signInAnonymously();
   }
 
+  async function deleteAccount(): Promise<string | null> {
+    const token = session?.access_token;
+    if (!token) return "No active session";
+    try {
+      await apiDeleteAccount(token);
+    } catch (err) {
+      return err instanceof Error ? err.message : "Delete failed";
+    }
+    // The deleted session's JWT is now invalid: drop it and start clean.
+    await resetIdentity();
+    return null;
+  }
+
   const value: AuthContextValue = {
     session,
     userId: session?.user.id ?? null,
@@ -152,6 +171,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     claimEmail,
     signInWithGoogle,
     resetIdentity,
+    deleteAccount,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
