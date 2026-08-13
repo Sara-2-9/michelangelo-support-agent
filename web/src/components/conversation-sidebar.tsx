@@ -8,21 +8,58 @@
  * FIRST USER MESSAGE of that conversation (not the date) — the preview
  * comes from the embedded PostgREST query in chat context.
  *
+ * Each row has an ELLIPSIS button on its right edge: ALWAYS VISIBLE on
+ * touch breakpoints (< md, where hover does not exist), revealed on row
+ * hover (or keyboard focus / while its menu is open) from md up. It opens
+ * a small menu with two per-conversation actions:
+ *   - Share  → creates/reuses the public read-only link (Worker,
+ *     ownership-checked) and copies it to the clipboard
+ *   - Delete → ConfirmDialog, then DELETE /api/conversations/:id via chat
+ *     context (messages cascade server-side; the open chat resets if it
+ *     was the deleted one)
+ * The menu is FIXED-positioned from the ellipsis button's rect so it is
+ * never clipped by the list's overflow-y-auto, and closes on outside
+ * click, Escape or list scroll.
+ *
  * ANONYMOUS users can SEE their conversation list, but opening a past
  * conversation is reserved to signed-in users: the click redirects to
  * /auth instead, where claiming the account preserves the history.
+ * (Share/Delete still work: anonymous sessions carry a valid JWT and the
+ * Worker checks ownership, so users can only touch their own rows.)
  */
 
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faEllipsis, faPlus, faShare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "@/context/auth";
 import { useChat } from "@/context/chat";
+import { shareConversation } from "@/lib/api";
 import IconButton from "@/components/ui/icon-button";
+import ConfirmDialog from "@/components/ui/confirm-dialog";
+
+/** Open ellipsis menu: which conversation + where to anchor (viewport px). */
+interface MenuState {
+  id: string;
+  top: number;
+  left: number;
+}
+
+const MENU_WIDTH = 176; // w-44
 
 export default function ConversationSidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { conversations, conversationId, selectConversation, newConversation } = useChat();
-  const { isAnonymous } = useAuth();
+  const { conversations, conversationId, selectConversation, newConversation, deleteConversation } =
+    useChat();
+  const { isAnonymous, session } = useAuth();
   const navigate = useNavigate();
+
+  const [menu, setMenu] = useState<MenuState | null>(null);
+  const [sharing, setSharing] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [menuError, setMenuError] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   function openConversation(id: string) {
     onClose();
@@ -33,6 +70,70 @@ export default function ConversationSidebar({ open, onClose }: { open: boolean; 
       return;
     }
     selectConversation(id);
+  }
+
+  function closeMenu() {
+    setMenu(null);
+    setCopied(false);
+    setMenuError(null);
+  }
+
+  /** Anchors the menu under the ellipsis button, clamped to the viewport. */
+  function toggleMenu(e: React.MouseEvent<HTMLButtonElement>, id: string) {
+    e.stopPropagation();
+    if (menu?.id === id) {
+      closeMenu();
+      return;
+    }
+    const rect = e.currentTarget.getBoundingClientRect();
+    closeMenu();
+    setMenu({
+      id,
+      top: rect.bottom + 6,
+      left: Math.max(8, Math.min(rect.right - MENU_WIDTH, window.innerWidth - MENU_WIDTH - 8)),
+    });
+  }
+
+  // Escape closes the menu (the ConfirmDialog handles its own Escape).
+  useEffect(() => {
+    if (!menu) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") closeMenu();
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [menu]);
+
+  /** Creates/reuses the public link and copies it; brief "copied" state. */
+  async function handleShare(id: string) {
+    const token = session?.access_token;
+    if (!token || sharing) return;
+    setSharing(true);
+    setMenuError(null);
+    try {
+      const url = await shareConversation(id, token);
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(closeMenu, 1200);
+    } catch (err) {
+      setMenuError(err instanceof Error ? err.message : "Could not create the share link");
+    } finally {
+      setSharing(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (!confirmDeleteId) return;
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      await deleteConversation(confirmDeleteId);
+      setConfirmDeleteId(null);
+    } catch (err) {
+      setDeleteError(err instanceof Error ? err.message : "Could not delete the conversation");
+    } finally {
+      setDeleting(false);
+    }
   }
 
   return (
@@ -64,33 +165,103 @@ export default function ConversationSidebar({ open, onClose }: { open: boolean; 
 
         <div className="mx-4 border-t border-black/15" />
 
-        <div className="flex-1 overflow-y-auto p-3">
+        {/* Scrolling the list would detach an open menu from its anchor —
+            close it instead. */}
+        <div className="flex-1 overflow-y-auto p-3" onScroll={closeMenu}>
           {conversations.length === 0 && (
             <p className="p-2 text-[13px] text-black/50">No conversations yet.</p>
           )}
           {conversations.map((c) => (
-            <button
+            <div
               key={c.id}
-              onClick={() => openConversation(c.id)}
-              title={c.preview ?? undefined}
-              className={`mb-1.5 flex w-full items-center gap-2 rounded-xl px-3.5 py-2.5 text-left text-[13px] transition-colors ${
-                c.id === conversationId
-                  ? "bg-black/25 text-black"
-                  : "bg-black/10 text-black/75 hover:bg-black/20"
+              className={`group mb-1.5 flex items-center gap-1 rounded-xl pr-1.5 transition-colors ${
+                c.id === conversationId ? "bg-black/25 text-black" : "bg-black/10 text-black/75 hover:bg-black/20"
               }`}
             >
-              <span className="truncate">{c.preview ?? "New conversation"}</span>
-              {c.escalated && (
-                <span
-                  aria-label="Escalated to human support"
-                  title="Escalated to human support"
-                  className="ml-auto h-2 w-2 shrink-0 rounded-full bg-warn"
-                />
-              )}
-            </button>
+              <button
+                onClick={() => openConversation(c.id)}
+                title={c.preview ?? undefined}
+                className="flex min-w-0 flex-1 items-center gap-2 px-3.5 py-2.5 text-left text-[13px]"
+              >
+                <span className="truncate">{c.preview ?? "New conversation"}</span>
+                {c.escalated && (
+                  <span
+                    aria-label="Escalated to human support"
+                    title="Escalated to human support"
+                    className="ml-auto h-2 w-2 shrink-0 rounded-full bg-warn"
+                  />
+                )}
+              </button>
+              {/* Ellipsis — always visible on touch (no hover), hover/
+                  focus-only from md up; stays visible while its own menu
+                  is open. */}
+              <button
+                onClick={(e) => toggleMenu(e, c.id)}
+                aria-label="Conversation options"
+                aria-haspopup="menu"
+                aria-expanded={menu?.id === c.id}
+                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-black/70 transition-all hover:bg-black/20 ${
+                  menu?.id === c.id
+                    ? "bg-black/20 opacity-100"
+                    : "opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 max-md:opacity-100"
+                }`}
+              >
+                <FontAwesomeIcon icon={faEllipsis} className="text-xs" />
+              </button>
+            </div>
           ))}
         </div>
       </aside>
+
+      {/* Ellipsis menu — fixed (never clipped by the scrollable list) */}
+      {menu && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={closeMenu} />
+          <div
+            role="menu"
+            aria-label="Conversation actions"
+            className="fixed z-50 w-44 rounded-xl border border-border-ui bg-surface p-1.5 shadow-2xl"
+            style={{ top: menu.top, left: menu.left }}
+          >
+            <button
+              role="menuitem"
+              onClick={() => void handleShare(menu.id)}
+              disabled={sharing}
+              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] text-white transition-colors hover:bg-white/10 disabled:opacity-50"
+            >
+              <FontAwesomeIcon icon={copied ? faCheck : faShare} className="w-3.5" />
+              {copied ? "Link copied!" : sharing ? "Creating link…" : "Share"}
+            </button>
+            <button
+              role="menuitem"
+              onClick={() => {
+                setConfirmDeleteId(menu.id);
+                setDeleteError(null);
+                closeMenu();
+              }}
+              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] text-danger transition-colors hover:bg-white/10"
+            >
+              <FontAwesomeIcon icon={faTrash} className="w-3.5" />
+              Delete
+            </button>
+            {menuError && <p className="m-0 px-3 pt-1 pb-0.5 text-[11px] text-danger">⚠️ {menuError}</p>}
+          </div>
+        </>
+      )}
+
+      {/* Deletion is irreversible — explicit second step (same pattern as
+          Delete Account in the user menu). */}
+      {confirmDeleteId && (
+        <ConfirmDialog
+          title="Delete chat"
+          body="Are you sure? This conversation and its messages will be permanently deleted."
+          confirmLabel="Delete"
+          loading={deleting}
+          error={deleteError}
+          onConfirm={() => void handleDelete()}
+          onCancel={() => setConfirmDeleteId(null)}
+        />
+      )}
     </>
   );
 }

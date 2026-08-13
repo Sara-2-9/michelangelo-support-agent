@@ -28,9 +28,9 @@ export default function ChatHeader({ onMenuClick }: { onMenuClick: () => void })
 
       <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 text-center">
         <h1 className="m-0 text-lg font-bold text-white drop-shadow-md">Michelangelo Support</h1>
-        <p className="m-0 mt-0.5 hidden text-[13px] text-white/85 sm:block">
+        {/* <p className="m-0 mt-0.5 hidden text-[13px] text-white/85 sm:block">
           Answers grounded in the official docs, with sources.
-        </p>
+        </p> */}
       </div>
 
       {isAnonymous ? (

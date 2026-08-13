@@ -11,7 +11,7 @@
  */
 
 import { createContext, use, useCallback, useEffect, useState, type PropsWithChildren } from "react";
-import { postChat, postFeedback } from "@/lib/api";
+import { deleteConversation as deleteConversationApi, postChat, postFeedback } from "@/lib/api";
 import { supabase } from "@/lib/supabase";
 import { STORAGE_KEY } from "@/constants/intents";
 import { useAuth } from "@/context/auth";
@@ -27,6 +27,8 @@ interface ChatContextValue {
   sendFeedback: (messageId: string, feedback: Feedback) => void;
   selectConversation: (id: string) => Promise<void>;
   newConversation: () => void;
+  /** Deletes one conversation (Worker, ownership-checked) and updates state. */
+  deleteConversation: (id: string) => Promise<void>;
 }
 
 const ChatContext = createContext<ChatContextValue | null>(null);
@@ -190,6 +192,19 @@ export function ChatProvider({ children }: PropsWithChildren) {
     setError(null);
   }
 
+  /**
+   * Deletes one conversation server-side (JWT + ownership in the Worker),
+   * then drops it from the sidebar. If it was the OPEN conversation, the
+   * chat resets to the empty state (localStorage pointer removed too).
+   * Throws on failure — the sidebar surfaces the error in its dialog.
+   */
+  async function deleteConversation(id: string) {
+    if (!token) throw new Error("Not signed in");
+    await deleteConversationApi(id, token);
+    setConversations((prev) => prev.filter((c) => c.id !== id));
+    if (conversationId === id) newConversation();
+  }
+
   const value: ChatContextValue = {
     messages,
     loading,
@@ -200,6 +215,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
     sendFeedback,
     selectConversation,
     newConversation,
+    deleteConversation,
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

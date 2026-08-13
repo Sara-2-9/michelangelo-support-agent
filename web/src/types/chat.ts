@@ -39,3 +39,14 @@ export interface ConversationSummary {
   /** Beginning of the first user message — shown in the sidebar (mockup 7). */
   preview: string | null;
 }
+
+/** Response contract of the PUBLIC GET /api/share/:token (read-only view). */
+export interface SharedConversation {
+  started_at: string;
+  messages: {
+    role: "user" | "assistant";
+    content: string;
+    sources: Source[] | null;
+    created_at: string;
+  }[];
+}

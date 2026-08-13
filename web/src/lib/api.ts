@@ -7,7 +7,7 @@
  * verifies it and enforces ownership server-side.
  */
 
-import type { ChatResponse, Feedback } from "@/types/chat";
+import type { ChatResponse, Feedback, SharedConversation } from "@/types/chat";
 
 function authHeaders(token: string) {
   return { "Content-Type": "application/json", Authorization: `Bearer ${token}` };
@@ -53,4 +53,49 @@ export async function deleteAccount(token: string): Promise<void> {
     const body = await res.json().catch(() => ({}));
     throw new Error(body.error ?? `Request failed (${res.status})`);
   }
+}
+
+/**
+ * Deletes ONE of the caller's conversations (messages cascade server-side).
+ * The Worker verifies JWT + ownership (404 unknown, 403 foreign).
+ */
+export async function deleteConversation(conversationId: string, token: string): Promise<void> {
+  const res = await fetch(`/api/conversations/${conversationId}`, {
+    method: "DELETE",
+    headers: authHeaders(token),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error ?? `Request failed (${res.status})`);
+  }
+}
+
+/**
+ * Creates (or reuses) the public read-only link of one of the caller's
+ * conversations and returns the ABSOLUTE share URL ready for the clipboard.
+ */
+export async function shareConversation(conversationId: string, token: string): Promise<string> {
+  const res = await fetch(`/api/conversations/${conversationId}/share`, {
+    method: "POST",
+    headers: authHeaders(token),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error ?? `Request failed (${res.status})`);
+  }
+  const { shareToken } = (await res.json()) as { shareToken: string };
+  return `${window.location.origin}/share/${shareToken}`;
+}
+
+/**
+ * PUBLIC (no auth): loads a shared conversation by its token for the
+ * read-only /share/:token page. The token is the access capability.
+ */
+export async function fetchSharedConversation(shareToken: string): Promise<SharedConversation> {
+  const res = await fetch(`/api/share/${shareToken}`);
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error ?? `Request failed (${res.status})`);
+  }
+  return res.json();
 }

@@ -23,6 +23,7 @@ import AppFooter from "@/components/app-footer";
 import CookieBanner from "@/components/cookie-banner";
 import AuthPage from "@/pages/auth-page";
 import LegalPage from "@/pages/legal-page";
+import SharedConversationPage from "@/pages/shared-conversation-page";
 import {
   PRIVACY_LAST_UPDATED,
   PRIVACY_POLICY,
@@ -92,6 +93,7 @@ function AuthedApp() {
       <Routes>
         <Route path="/" element={<Shell />} />
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/share/:token" element={<SharedConversationPage />} />
         <Route
           path="/privacy"
           element={

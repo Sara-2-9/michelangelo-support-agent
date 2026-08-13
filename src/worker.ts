@@ -10,6 +10,15 @@
  *                       history is loaded server-side from the DB.
  *   POST /api/feedback  { messageId, feedback: "up" | "down" }
  *                       → { ok: true } — only on messages of your own conversations.
+ *   DELETE /api/conversations/:id
+ *                       → { ok: true } — deletes ONE of your conversations
+ *                       (messages cascade via FK). 404/403 ownership pattern.
+ *   POST /api/conversations/:id/share
+ *                       → { shareToken } — creates/reuses the public read-only
+ *                       link for one of your conversations.
+ *   GET  /api/share/:token
+ *                       → { started_at, messages[] } — PUBLIC (no auth): the
+ *                       random token is the capability. Display fields only.
  *   DELETE /api/account → { ok: true } — deletes YOUR OWN account (JWT-identified);
  *                       cascades to conversations and messages (GDPR erasure).
  *   GET  /api/health    → { ok: true }
@@ -111,13 +120,26 @@ async function handleRequest(request: Request, env: Env): Promise<Response> {
       return json({ ok: true, service: "michelangelo-support-agent" }, request);
     }
 
-    // Everything below requires authentication.
     const orchestrator = createOrchestrator({
       supabaseUrl: env.SUPABASE_URL,
       supabaseKey: env.SUPABASE_SERVICE_ROLE_KEY,
       cfAccountId: env.CLOUDFLARE_ACCOUNT_ID,
       cfApiToken: env.CLOUDFLARE_API_TOKEN,
     });
+
+    // PUBLIC share view — intentionally BEFORE the auth gate: the random,
+    // unguessable token is the access capability (whoever has the link can
+    // read). RLS is unaffected: reads go through the service key here.
+    if (url.pathname.startsWith("/api/share/")) {
+      const shareViewMatch = url.pathname.match(/^\/api\/share\/([0-9a-f-]{36})$/);
+      if (shareViewMatch && request.method === "GET") {
+        const shared = await orchestrator.logger.getSharedConversation(shareViewMatch[1]);
+        if (!shared) return json({ error: "Shared conversation not found" }, request, 404);
+        return json(shared, request);
+      }
+      // Malformed token or wrong method: a broken link is a 404, never a 401.
+      return json({ error: "Shared conversation not found" }, request, 404);
+    }
 
     const token = bearerToken(request);
     const userId = token ? await orchestrator.logger.getUserIdFromToken(token) : null;
@@ -164,6 +186,28 @@ async function handleRequest(request: Request, env: Env): Promise<Response> {
         conversationId,
         messageId: result.messageId ?? null,
       }, request);
+    }
+
+    // Single-conversation management (sidebar ellipsis menu):
+    //   DELETE /api/conversations/:id        — delete one chat (messages cascade)
+    //   POST   /api/conversations/:id/share  — create/reuse its public link
+    // Same ownership pattern as /api/chat resume: 404 unknown, 403 foreign.
+    const convMatch = url.pathname.match(/^\/api\/conversations\/([0-9a-f-]{36})(\/share)?$/);
+    if (convMatch) {
+      const conversationId = convMatch[1];
+      const owner = await orchestrator.logger.getConversationOwner(conversationId);
+      if (!owner) return json({ error: "Conversation not found" }, request, 404);
+      if (owner !== userId) return json({ error: "Not your conversation" }, request, 403);
+
+      if (!convMatch[2] && request.method === "DELETE") {
+        await orchestrator.logger.deleteConversation(conversationId);
+        return json({ ok: true }, request);
+      }
+      if (convMatch[2] === "/share" && request.method === "POST") {
+        const shareToken = await orchestrator.logger.getOrCreateShareToken(conversationId);
+        return json({ shareToken }, request);
+      }
+      return json({ error: "Not found" }, request, 404);
     }
 
     if (url.pathname === "/api/account" && request.method === "DELETE") {

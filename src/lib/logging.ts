@@ -155,6 +155,74 @@ export function createLogger(supabaseUrl: string, supabaseKey: string) {
     if (error) throw new Error(`deleteUser: ${error.message}`);
   }
 
+  // ----------------------------------------------------------
+  // Single-conversation management (sidebar ellipsis menu).
+  // ----------------------------------------------------------
+
+  /**
+   * Deletes ONE conversation; messages cascade via FK. The caller (Worker)
+   * has already verified ownership — this function is not exposed to the
+   * browser (no DELETE RLS policy exists, writes stay behind the Worker).
+   */
+  async function deleteConversation(conversationId: string): Promise<void> {
+    const { error } = await supabase.from("conversations").delete().eq("id", conversationId);
+    if (error) throw new Error(`deleteConversation: ${error.message}`);
+  }
+
+  /**
+   * Returns the conversation's public share token, generating one on first
+   * share. The token is a random UUID — unguessable, so "whoever has the
+   * link can read" without any account. Sharing is LIVE (the shared view
+   * reads current messages) and revoked automatically when the
+   * conversation is deleted.
+   */
+  async function getOrCreateShareToken(conversationId: string): Promise<string> {
+    const { data, error } = await supabase
+      .from("conversations")
+      .select("share_token")
+      .eq("id", conversationId)
+      .single();
+    if (error) throw new Error(`getOrCreateShareToken: ${error.message}`);
+    if (data.share_token) return data.share_token as string;
+
+    const shareToken = crypto.randomUUID();
+    const { error: updateError } = await supabase
+      .from("conversations")
+      .update({ share_token: shareToken })
+      .eq("id", conversationId);
+    if (updateError) throw new Error(`getOrCreateShareToken: ${updateError.message}`);
+    return shareToken;
+  }
+
+  /**
+   * Public read by share token (no auth). Returns the conversation's
+   * messages in order, or null when the token is unknown. Intentionally
+   * exposes only display fields — no user_id, feedback, or internals.
+   */
+  async function getSharedConversation(shareToken: string): Promise<{
+    started_at: string;
+    messages: { role: "user" | "assistant"; content: string; sources: unknown; created_at: string }[];
+  } | null> {
+    const { data: conv, error } = await supabase
+      .from("conversations")
+      .select("id, started_at")
+      .eq("share_token", shareToken)
+      .maybeSingle();
+    if (error || !conv) return null;
+
+    const { data: msgs, error: msgError } = await supabase
+      .from("messages")
+      .select("role, content, sources, created_at")
+      .eq("conversation_id", conv.id)
+      .order("created_at", { ascending: true });
+    if (msgError) throw new Error(`getSharedConversation: ${msgError.message}`);
+
+    return {
+      started_at: conv.started_at as string,
+      messages: (msgs ?? []) as { role: "user" | "assistant"; content: string; sources: unknown; created_at: string }[],
+    };
+  }
+
   return {
     createConversation,
     logMessage,
@@ -165,5 +233,8 @@ export function createLogger(supabaseUrl: string, supabaseKey: string) {
     getConversationOwner,
     getMessageOwner,
     deleteUser,
+    deleteConversation,
+    getOrCreateShareToken,
+    getSharedConversation,
   };
 }
