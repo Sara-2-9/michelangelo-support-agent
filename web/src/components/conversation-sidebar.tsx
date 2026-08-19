@@ -21,15 +21,15 @@
  * never clipped by the list's overflow-y-auto, and closes on outside
  * click, Escape or list scroll.
  *
- * ANONYMOUS users can SEE their conversation list, but opening a past
- * conversation is reserved to signed-in users: the click redirects to
- * /auth instead, where claiming the account preserves the history.
- * (Share/Delete still work: anonymous sessions carry a valid JWT and the
- * Worker checks ownership, so users can only touch their own rows.)
+ * ANONYMOUS visitors see NO conversation list (branch no-anon-history):
+ * their chats are persisted server-side but never surfaced. In place of
+ * the list they get a compact SIGN-IN INVITATION spelling out the
+ * benefits of a permanent account (history across sessions and devices,
+ * sharing). The chat itself keeps working without sign-in.
  */
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faEllipsis, faPlus, faShare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "@/context/auth";
@@ -51,7 +51,6 @@ export default function ConversationSidebar({ open, onClose }: { open: boolean; 
   const { conversations, conversationId, selectConversation, newConversation, deleteConversation } =
     useChat();
   const { isAnonymous, session } = useAuth();
-  const navigate = useNavigate();
 
   const [menu, setMenu] = useState<MenuState | null>(null);
   const [sharing, setSharing] = useState(false);
@@ -63,12 +62,6 @@ export default function ConversationSidebar({ open, onClose }: { open: boolean; 
 
   function openConversation(id: string) {
     onClose();
-    if (isAnonymous) {
-      // Signed-out visitors keep the list as a preview, but resuming a
-      // conversation requires a permanent identity.
-      navigate("/auth");
-      return;
-    }
     selectConversation(id);
   }
 
@@ -168,10 +161,33 @@ export default function ConversationSidebar({ open, onClose }: { open: boolean; 
         {/* Scrolling the list would detach an open menu from its anchor —
             close it instead. */}
         <div className="flex-1 overflow-y-auto p-3" onScroll={closeMenu}>
-          {conversations.length === 0 && (
-            <p className="p-2 text-[13px] text-black/50">No conversations yet.</p>
-          )}
-          {conversations.map((c) => (
+          {isAnonymous ? (
+            // No history for anonymous visitors — show WHY signing in is
+            // worth it instead. The chat itself works either way.
+            <div className="m-1 flex flex-col gap-2.5 rounded-xl bg-black/10 p-4">
+              <p className="m-0 text-[13px] font-semibold text-black">Sign in to keep your chats</p>
+              <ul className="m-0 flex list-none flex-col gap-1.5 p-0 text-[12.5px] leading-snug text-black/65">
+                <li>· Conversations are saved — always here when you come back</li>
+                <li>· Pick up where you left off, on any device</li>
+                <li>· Share a conversation with a read-only link</li>
+              </ul>
+              <p className="m-0 text-[12px] leading-snug text-black/50">
+                Without an account the chat works as usual, but disappears on reload.
+              </p>
+              <Link
+                to="/auth"
+                onClick={onClose}
+                className="mt-1 rounded-xl bg-black/85 px-4 py-2 text-center text-[13px] font-semibold text-white transition-opacity hover:opacity-85"
+              >
+                Sign in
+              </Link>
+            </div>
+          ) : (
+            <>
+              {conversations.length === 0 && (
+                <p className="p-2 text-[13px] text-black/50">No conversations yet.</p>
+              )}
+              {conversations.map((c) => (
             <div
               key={c.id}
               className={`group mb-1.5 flex items-center gap-1 rounded-xl pr-1.5 transition-colors ${
@@ -210,6 +226,8 @@ export default function ConversationSidebar({ open, onClose }: { open: boolean; 
               </button>
             </div>
           ))}
+            </>
+          )}
         </div>
       </aside>
 

@@ -1,11 +1,12 @@
 /**
  * /auth — sign-in page. Users choose their method:
  *
- *  1. EMAIL magic link — `claimEmail` claims the anonymous account the
- *     first time (history preserved) or logs into the existing account.
- *  2. GOOGLE OAuth — `signInWithGoogle` links the Google identity to the
- *     anonymous account when possible (history preserved), otherwise logs
- *     into the previously registered Google account.
+ *  1. EMAIL magic link — a new email creates a fresh account, a
+ *     registered email logs into the existing one.
+ *  2. GOOGLE OAuth — always a plain login (single account selection).
+ *
+ * Signing in starts a SEPARATE identity: the anonymous visitor's chats
+ * are never merged into the account (by design, branch no-anon-history).
  *
  * Visual: dark page, centered gradient card, dark input, black button —
  * as per the Figma mockup. Signed-in users see their email + Sign out.
@@ -19,7 +20,7 @@ import { useAuth } from "@/context/auth";
 import Button from "@/components/ui/button";
 
 export default function AuthPage() {
-  const { ready, isAnonymous, session, claimEmail, signInWithGoogle, resetIdentity } = useAuth();
+  const { ready, isAnonymous, session, signInWithEmail, signInWithGoogle, resetIdentity } = useAuth();
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -29,7 +30,7 @@ export default function AuthPage() {
     e.preventDefault();
     if (!email.trim() || state === "sending") return;
     setState("sending");
-    const err = await claimEmail(email.trim());
+    const err = await signInWithEmail(email.trim());
     setState(err ? "error" : "sent");
     setError(err);
   }
