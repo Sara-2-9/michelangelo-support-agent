@@ -9,7 +9,7 @@
  * (GDPR art. 13): keep them up to date if ownership or contacts change.
  */
 
-export const PRIVACY_LAST_UPDATED = "August 9, 2026";
+export const PRIVACY_LAST_UPDATED = "August 19, 2026";
 
 export const PRIVACY_POLICY = `
 Welcome to the Michelangelo Support Agent ("we," "our," or "us"), an
@@ -39,7 +39,13 @@ Email: moro.sara29@gmail.com
 - **Conversation content.** The messages you send, the answers generated,
   your thumbs up/down feedback, and related technical metadata
   (timestamps, intent classification, retrieval sources, response
-  latency) are stored so you can resume your conversation history.
+  latency) are stored on our servers. If you are **signed in**, this lets
+  you resume your conversation history at any time. If you use the
+  service **anonymously**, your conversations are stored in pseudonymous
+  form (linked only to a random ID) to monitor and improve the quality of
+  the service — they are **never shown back to you** after you leave or
+  reload the page, and they are **never linked to an account** you may
+  create later.
 - **Technical data.** Our hosting providers transiently process your IP
   address and device/browser information to deliver and secure the
   service.
@@ -56,8 +62,9 @@ in your messages.
 - **To maintain security and prevent abuse** — authentication, access
   control, rate limiting (our legitimate interest, GDPR art. 6(1)(f)).
 - **To improve the service** — aggregated, non-advertising analysis of
-  intent classifications and feedback (our legitimate interest, GDPR
-  art. 6(1)(f)).
+  intent classifications and feedback, including quality review of
+  pseudonymously stored anonymous conversations (our legitimate interest,
+  GDPR art. 6(1)(f)).
 
 We do **not** use your data for marketing, we do **not** sell your
 personal information, and we do **not** use your conversations to train

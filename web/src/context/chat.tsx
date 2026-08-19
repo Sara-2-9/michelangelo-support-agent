@@ -8,6 +8,14 @@
  * reads the user's conversations DIRECTLY from Supabase (anon key + RLS
  * policies — each user sees only their own rows). Selecting a past
  * conversation loads its messages and resumes it.
+ *
+ * Branch no-anon-history: ANONYMOUS visitors get NO history surface. The
+ * Worker still persists their exchanges server-side (analytics/quality),
+ * but the client never lists their conversations, never restores a
+ * conversationId from localStorage and never stores one — a reload always
+ * starts from a clean chat. The in-memory conversationId is still kept
+ * for the LIVE session so follow-up messages share the same server-side
+ * thread (memory context).
  */
 
 import { createContext, use, useCallback, useEffect, useState, type PropsWithChildren } from "react";
@@ -42,15 +50,18 @@ export function useChat() {
 }
 
 export function ChatProvider({ children }: PropsWithChildren) {
-  const { session, userId, ready } = useAuth();
+  const { session, userId, ready, isAnonymous } = useAuth();
   const token = session?.access_token ?? null;
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [conversations, setConversations] = useState<ConversationSummary[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Anonymous visitors never restore a conversation pointer: a reload must
+  // always land on a fresh, empty chat even though the Worker persisted
+  // the previous exchange server-side.
   const [conversationId, setConversationId] = useState<string | null>(() =>
-    localStorage.getItem(STORAGE_KEY)
+    isAnonymous ? null : localStorage.getItem(STORAGE_KEY)
   );
 
   /**
@@ -58,9 +69,10 @@ export function ChatProvider({ children }: PropsWithChildren) {
    * PostgREST resource embedding fetches each conversation TOGETHER WITH
    * its first user message (filtered + ordered + limited on the embedded
    * `messages` table) — one round trip, no DB migration needed.
+   * Skipped entirely for anonymous visitors: they have no history UI.
    */
   const refreshConversations = useCallback(async () => {
-    if (!userId) return;
+    if (!userId || isAnonymous) return;
     const { data } = await supabase
       .from("conversations")
       .select("id, started_at, escalated, messages(content)")
@@ -128,8 +140,12 @@ export function ChatProvider({ children }: PropsWithChildren) {
 
       if (!convId) {
         setConversationId(data.conversationId);
-        localStorage.setItem(STORAGE_KEY, data.conversationId);
-        refreshConversations(); // the new chat appears in the sidebar
+        // Only signed-in users get a durable pointer + sidebar refresh;
+        // for anonymous visitors the conversationId stays in memory only.
+        if (!isAnonymous) {
+          localStorage.setItem(STORAGE_KEY, data.conversationId);
+          refreshConversations(); // the new chat appears in the sidebar
+        }
       }
 
       setMessages((prev) => [

@@ -44,7 +44,7 @@ export default function MessageList() {
   const bottomRef = useAutoScroll<HTMLDivElement>([messages, loading]);
 
   return (
-    <main className="flex flex-1 flex-col gap-3.5 overflow-y-auto px-1 py-5">
+    <main className="animate-enter flex flex-1 flex-col gap-3.5 overflow-y-auto px-1 py-5 [animation-delay:120ms]">
       {messages.length === 0 && <EmptyState />}
 
       {groupByDay(messages).map((group, gi) => (

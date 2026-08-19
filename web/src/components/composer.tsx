@@ -26,7 +26,7 @@ export default function Composer() {
   return (
     // `peer`: lets the legal footer hide itself (peer-focus-within:hidden)
     // while the textarea is focused, so it never rides the iOS keyboard.
-    <footer className="peer px-1 pt-4 pb-5">
+    <footer className="peer animate-enter px-1 pt-4 pb-5 [animation-delay:240ms]">
       <div className="relative">
         <textarea
           value={input}
