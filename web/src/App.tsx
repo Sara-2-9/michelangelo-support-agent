@@ -58,7 +58,7 @@ function Shell() {
           // the first send the standard chat layout takes over and the
           // footer leaves the stage.
           <>
-            <main className="flex flex-1 flex-col justify-center gap-5 overflow-y-auto px-1 py-5">
+            <main className="animate-enter flex flex-1 flex-col justify-center gap-5 overflow-y-auto px-1 py-5 [animation-delay:120ms]">
               <EmptyState />
               <Composer />
             </main>

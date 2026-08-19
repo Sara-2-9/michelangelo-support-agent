@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 
 export default function AppFooter() {
   return (
-    <footer className="border-t border-white/10 px-2 pt-2.5 pb-[max(0.75rem,env(safe-area-inset-bottom))] peer-focus-within:hidden">
+    <footer className="animate-enter border-t border-white/10 px-2 pt-2.5 pb-[max(0.75rem,env(safe-area-inset-bottom))] peer-focus-within:hidden [animation-delay:240ms]">
       <p className="m-0 text-center text-xs text-white/35">
         AI answers may be inaccurate — verify with the cited docs. Unofficial project, not affiliated
         with Michelangelo.

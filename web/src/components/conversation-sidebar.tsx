@@ -29,12 +29,13 @@
  */
 
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faEllipsis, faPlus, faShare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "@/context/auth";
 import { useChat } from "@/context/chat";
 import { shareConversation } from "@/lib/api";
+import Button from "@/components/ui/button";
 import IconButton from "@/components/ui/icon-button";
 import ConfirmDialog from "@/components/ui/confirm-dialog";
 
@@ -51,6 +52,7 @@ export default function ConversationSidebar({ open, onClose }: { open: boolean; 
   const { conversations, conversationId, selectConversation, newConversation, deleteConversation } =
     useChat();
   const { isAnonymous, session } = useAuth();
+  const navigate = useNavigate();
 
   const [menu, setMenu] = useState<MenuState | null>(null);
   const [sharing, setSharing] = useState(false);
@@ -167,20 +169,20 @@ export default function ConversationSidebar({ open, onClose }: { open: boolean; 
             <div className="m-1 flex flex-col gap-2.5 rounded-xl bg-black/10 p-4">
               <p className="m-0 text-[13px] font-semibold text-black">Sign in to keep your chats</p>
               <ul className="m-0 flex list-none flex-col gap-1.5 p-0 text-[12.5px] leading-snug text-black/65">
-                <li>· Conversations are saved — always here when you come back</li>
-                <li>· Pick up where you left off, on any device</li>
-                <li>· Share a conversation with a read-only link</li>
+                <li>1. Conversations are saved — always here when you come back.</li>
+                <li>2. Pick up where you left off, on any device.</li>
+                <li>3. Share a conversation.</li>
               </ul>
-              <p className="m-0 text-[12px] leading-snug text-black/50">
-                Without an account the chat works as usual, but disappears on reload.
-              </p>
-              <Link
-                to="/auth"
-                onClick={onClose}
-                className="mt-1 rounded-xl bg-black/85 px-4 py-2 text-center text-[13px] font-semibold text-white transition-opacity hover:opacity-85"
+              <Button
+                variant="dark"
+                className="mt-1 w-full"
+                onClick={() => {
+                  onClose();
+                  navigate("/auth");
+                }}
               >
                 Sign in
-              </Link>
+              </Button>
             </div>
           ) : (
             <>

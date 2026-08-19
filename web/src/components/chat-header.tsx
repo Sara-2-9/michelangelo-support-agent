@@ -17,7 +17,7 @@ export default function ChatHeader({ onMenuClick }: { onMenuClick: () => void })
   const { isAnonymous } = useAuth();
 
   return (
-    <header className="relative flex items-center justify-between px-1 py-4">
+    <header className="animate-enter relative flex items-center justify-between px-1 py-4">
       <button
         onClick={onMenuClick}
         aria-label="Open conversation history"
