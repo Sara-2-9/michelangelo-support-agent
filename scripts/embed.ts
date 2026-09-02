@@ -16,15 +16,18 @@ import { readFileSync } from "node:fs";
 import { createClient } from "@supabase/supabase-js";
 import { embedBatch } from "../src/lib/embeddings.js";
 
-// --- config from .env (manual loading: no extra dependencies) ---
-for (const line of readFileSync(".env", "utf-8").split("\n")) {
-  const m = line.match(/^([A-Z_]+)=(.*)$/);
+// --- config from env file (manual loading: no extra dependencies) ---
+// ENV_FILE overrides the default .env — e.g. ENV_FILE=.dev.vars.staging
+// seeds the STAGING knowledge base instead of production.
+const envFile = process.env.ENV_FILE ?? ".env";
+for (const line of readFileSync(envFile, "utf-8").split("\n")) {
+  const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.+?)\s*$/);
   if (m) process.env[m[1]] = m[2].trim();
 }
 const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN } = process.env;
 for (const [k, v] of Object.entries({ SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN })) {
-  if (!v || v.includes("TUO_PROJECT_REF")) {
-    console.error(`❌ Variable ${k} is missing or still a placeholder in .env`);
+  if (!v || v.includes("TUO_PROJECT_REF") || v.includes("<")) {
+    console.error(`❌ Variable ${k} is missing or still a placeholder in ${envFile}`);
     process.exit(1);
   }
 }

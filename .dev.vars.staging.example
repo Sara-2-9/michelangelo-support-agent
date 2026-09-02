@@ -1,0 +1,8 @@
+# Staging worker secrets — copy to `.dev.vars.staging` and fill in with the
+# STAGING project's values (Supabase dashboard → Project Settings → API Keys).
+# Used by `vite dev --mode staging` (E2E tests) — never by production.
+SUPABASE_URL=https://<staging-project-ref>.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=<staging-secret-key>
+# Same Cloudflare account as production (Workers AI is shared).
+CLOUDFLARE_ACCOUNT_ID=<your-cloudflare-account-id>
+CLOUDFLARE_API_TOKEN=<your-workers-ai-token>

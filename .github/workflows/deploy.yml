@@ -1,0 +1,82 @@
+# Deploy — runs when a PR lands on `main` (the code has already passed
+# the full staging suite in CI). Order of operations:
+#   1. build + fast pre-deploy smoke (no LLM, no DB writes)
+#   2. wrangler deploy
+#   3. post-deploy live checks (health, SPA deep link, share-route shape)
+# If anything fails before step 2, the site stays untouched.
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-main
+  cancel-in-progress: false
+
+env:
+  LIVE_URL: https://michelangelo-support-agent.moro-sara29.workers.dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # Default-mode browser env: the PRODUCTION publishable key (public
+      # by design — it ships in the live JS bundle; kept in Secrets anyway
+      # for automatic log masking). Only anonymous sessions are created;
+      # the service role key never enters CI.
+      - name: Create browser env file
+        env:
+          PROD_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
+          PROD_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
+        run: |
+          printf 'VITE_SUPABASE_URL=%s\nVITE_SUPABASE_ANON_KEY=%s\n' \
+            "$PROD_SUPABASE_URL" "$PROD_SUPABASE_ANON_KEY" > web/.env
+
+      - run: npm run typecheck
+      - run: npm run build
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      # Pre-deploy smoke: UI-critical paths only (smoke + cookie banner).
+      # api.spec.ts is skipped here — the local worker has no .dev.vars in
+      # CI; API behavior is verified post-deploy against the live site.
+      - name: Pre-deploy smoke
+        run: npx playwright test e2e/smoke.spec.ts e2e/cookie-banner.spec.ts
+
+      # npm run deploy cds to /tmp and deploys the built config — no repo
+      # .env is ever loaded, so the CI token is the only credential used.
+      - name: Deploy to Cloudflare Workers
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_DEPLOY_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npm run deploy
+
+      # Edge propagation can take a few seconds after a deploy (the 1042
+      # learning from Phase 5.4) — retry before declaring failure.
+      - name: Post-deploy live checks
+        run: |
+          for i in $(seq 1 12); do
+            ok=1
+            curl -fsS "$LIVE_URL/api/health" > /dev/null || ok=0
+            [ "$(curl -s -o /dev/null -w '%{http_code}' "$LIVE_URL/")" = "200" ] || ok=0
+            # SPA deep link must serve the app, not the API 401 (Phase 5.4 regression).
+            [ "$(curl -s -o /dev/null -w '%{http_code}' "$LIVE_URL/privacy")" = "200" ] || ok=0
+            # Public share route: unknown token = 404, never 401.
+            [ "$(curl -s -o /dev/null -w '%{http_code}' "$LIVE_URL/api/share/00000000-0000-4000-8000-000000000000")" = "404" ] || ok=0
+            if [ "$ok" = "1" ]; then echo "✅ Live checks passed"; exit 0; fi
+            echo "…waiting for edge propagation (attempt $i)"; sleep 10
+          done
+          echo "❌ Live checks failed after deploy"; exit 1

@@ -38,3 +38,11 @@ invocation_logs = true
 
 [observability.traces]
 enabled = true
+
+# Local-only environment for E2E tests (`vite dev --mode staging`): makes
+# the Cloudflare Vite plugin load `.dev.vars.staging` (STAGING Supabase
+# project) instead of `.dev.vars`. Deploys never use it: `npm run deploy`
+# does not pass --env. The distinct name prevents any accidental deploy
+# with --env staging from touching the production worker.
+[env.staging]
+name = "michelangelo-support-agent-staging"
