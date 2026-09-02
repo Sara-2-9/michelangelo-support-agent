@@ -136,6 +136,7 @@ Copy `.env.example` to `.env` and fill in: `SUPABASE_URL`, `SUPABASE_SERVICE_ROL
 
 ## Conventions and design decisions to preserve
 
+- **Git flow**: short-lived branches with a category prefix (`fix/…`, `test/…`, `docs/…`, `feat/…`), one unit of work per branch. Merging uses **"Rebase and merge"** (linear history, commits replayed on `main` — hashes are rewritten, so delete the local branch afterwards with `git branch -D`). Branch + head-branch deletion after merge — branches are labels, merged commits stay in `main`'s history forever. Repo settings: only "Allow rebase merging" enabled + "Automatically delete head branches". Branch protection on `main` requires PR + green `test` check.
 - **Language**: code comments, docs, log messages and commit messages are in **English**. All prompts/instructions for AI models are in English too (better model performance, predictable behavior); user language affects only the OUTPUT — answers mirror the user's language, defaulting to English.
 - **Model registry** (`src/lib/models.ts`): the ONLY place model IDs live. Serverless models get deprecated without warning (llama-3.1-8b died mid-development) — check status at https://developers.cloudflare.com/workers-ai/models/. Model routing by task complexity: 3B for classification/summaries, 70B for answers.
 - **Intent routing** (`src/router.ts`): few-shot examples + explicit disambiguation rule (REPORT → bug_report vs FIX → troubleshooting). Intent boundaries are measured, not guessed — borderline cases go to the Phase 4 golden dataset.
