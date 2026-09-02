@@ -15,7 +15,22 @@ corpus/chunks.json
 
 # Cloudflare Workers
 .dev.vars
+.dev.vars.staging
 .wrangler/
 
 # Web build output (rebuilt by npm run build)
 web/dist/
+
+# Staging/test credentials (templates env.staging.example are committed)
+web/.env.staging
+e2e/.auth/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# Personal manual
+manuale
+diagrams
