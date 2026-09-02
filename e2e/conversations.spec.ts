@@ -24,9 +24,17 @@ test.afterAll(async () => {
   const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
-  const { data } = await admin.auth.admin.listUsers();
-  const user = data.users.find((u) => u.email === "e2e.user@example.com");
-  if (user) await admin.from("conversations").delete().eq("user_id", user.id);
+  // Paginate: staging accumulates anonymous users from every run, so the
+  // test user may fall beyond page 1 (same bug class as seed-test-user).
+  for (let page = 1; ; page++) {
+    const { data } = await admin.auth.admin.listUsers({ page, perPage: 1000 });
+    const user = data?.users.find((u) => u.email === "e2e.user@example.com");
+    if (user) {
+      await admin.from("conversations").delete().eq("user_id", user.id);
+      break;
+    }
+    if (!data || data.users.length < 1000) break;
+  }
 });
 
 const ANSWER_TIMEOUT = 90_000;

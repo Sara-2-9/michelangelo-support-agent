@@ -56,13 +56,23 @@ const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },
 });
 
-// Find the user (staging has a handful of users: default page is enough).
-const { data: list, error: listError } = await admin.auth.admin.listUsers();
-if (listError) {
-  console.error("❌ listUsers failed:", listError.message);
-  process.exit(1);
+// Find the user across ALL pages: staging accumulates anonymous users
+// from every E2E run, so the test user quickly falls beyond page 1
+// (default page size is 50 — this bug broke the first CI run).
+const PER_PAGE = 1000;
+let existing;
+for (let page = 1; ; page++) {
+  const { data: list, error: listError } = await admin.auth.admin.listUsers({
+    page,
+    perPage: PER_PAGE,
+  });
+  if (listError) {
+    console.error("❌ listUsers failed:", listError.message);
+    process.exit(1);
+  }
+  existing = list.users.find((u) => u.email === EMAIL);
+  if (existing || list.users.length < PER_PAGE) break;
 }
-const existing = list.users.find((u) => u.email === EMAIL);
 
 if (!existing) {
   const { error } = await admin.auth.admin.createUser({
