@@ -31,6 +31,9 @@ interface ChatContextValue {
   error: string | null;
   conversationId: string | null;
   conversations: ConversationSummary[];
+  /** False until the (anonymous or signed-in) session token exists —
+      sending before that would silently swallow the message. */
+  canSend: boolean;
   send: (message: string) => Promise<void>;
   sendFeedback: (messageId: string, feedback: Feedback) => void;
   selectConversation: (id: string) => Promise<void>;
@@ -227,6 +230,7 @@ export function ChatProvider({ children }: PropsWithChildren) {
     error,
     conversationId,
     conversations,
+    canSend: token !== null,
     send,
     sendFeedback,
     selectConversation,

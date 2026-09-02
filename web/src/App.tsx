@@ -57,8 +57,13 @@ function Shell() {
           // landing) and the legal footer is pinned to the bottom. After
           // the first send the standard chat layout takes over and the
           // footer leaves the stage.
+          // `peer` lives on <main> (NOT inside Composer): the Tailwind
+          // peer-* variants use the sibling combinator, so the marker must
+          // sit on a SIBLING of AppFooter for `peer-focus-within:hidden`
+          // (hide the legal footer while the composer is focused, so it
+          // never rides the iOS keyboard) to match. Found by E2E tests.
           <>
-            <main className="animate-enter flex flex-1 flex-col justify-center gap-5 overflow-y-auto px-1 py-5 [animation-delay:120ms]">
+            <main className="peer animate-enter flex flex-1 flex-col justify-center gap-5 overflow-y-auto px-1 py-5 [animation-delay:120ms]">
               <EmptyState />
               <Composer />
             </main>
