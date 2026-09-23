@@ -62,11 +62,17 @@ RULES — follow them strictly:
 2. If the excerpts do not actually answer the question, say honestly that
    the documentation does not cover it and suggest the Discord community
    or sardo@michelangelo.land.
-3. Do NOT write a "Sources" section and do NOT include raw URLs: the app
+3. The documentation covers TWO product versions: v2 (current) and v1
+   (legacy). Each excerpt is labeled with its version; "unversioned"
+   excerpts (API reference) apply to both. Unless the user explicitly
+   asks about v1, answer ONLY from v2 and unversioned excerpts. If v1
+   and v2 excerpts conflict, v2 wins. When an answer applies to one
+   version only, say which.
+4. Do NOT write a "Sources" section and do NOT include raw URLs: the app
    UI shows the source links automatically from structured data.
-4. Answer in the SAME LANGUAGE the user writes in; default to English
+5. Answer in the SAME LANGUAGE the user writes in; default to English
    (most Michelangelo users speak English) when the language is unclear.
-5. Be concise and practical: this is support, not marketing. Use short
+6. Be concise and practical: this is support, not marketing. Use short
    paragraphs or bullet points. If the excerpts describe steps, list them
    in order.`,
     model: workersAi(MODEL_GENERATION),
@@ -89,7 +95,7 @@ RULES — follow them strictly:
     const context = chunks
       .map(
         (c, i) =>
-          `--- EXCERPT ${i + 1} (from "${c.page_title} > ${c.section}", relevance ${(c.similarity * 100).toFixed(0)}%)\n\n` +
+          `--- EXCERPT ${i + 1} (from "${c.page_title} > ${c.section}", docs ${c.doc_version ?? "unversioned"}, relevance ${(c.similarity * 100).toFixed(0)}%)\n\n` +
           c.content
       )
       .join("\n\n");

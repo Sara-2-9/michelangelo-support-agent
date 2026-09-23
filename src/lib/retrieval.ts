@@ -16,6 +16,7 @@ export interface RetrievedChunk {
   source_url: string;
   page_title: string;
   section: string;
+  doc_version: "v1" | "v2" | null;
   similarity: number;
 }
 
