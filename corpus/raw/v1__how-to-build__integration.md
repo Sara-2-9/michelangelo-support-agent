@@ -1,0 +1,617 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Integration
+
+> In this section, we will explore the integrations available on Michelangelo.land, focusing on the supported APIs and the integration with GitHub.
+
+## What is an API?
+
+API (An Application Programming Interface) is a set of rules and protocols that allows different software applications to communicate with each other. APIs facilitate the integration of external functionality, allowing developers to incorporate third-party services or data into their applications without having to develop that functionality from scratch.
+
+## GitHub Integration
+
+<a href="https://michelangelo.land">Michelangelo.land</a> offers a solid integration with GitHub <Icon icon="github" size={20} iconType="regular" color="#7c7c7c" />, allowing developers to synchronize their projects with GitHub repositories. This integration facilitates source code management, team collaboration, and version control. For a detailed guide on how to set up the GitHub integration, see the <a href="/how-to-build/quickstart#step-5-save-and-version-the-project-on-github">GitHub Integration</a> section.
+
+## Supported Integrations
+
+Michelangelo.land supports a wide range of APIs and libraries to extend the functionality of the applications developed.
+These integrations are divided into two main categories: <a href="/how-to-build/integration#verified-integrations">Verified Integrations</a> and <a href="/how-to-build/integration#unverified-integrations">Unverified Integrations</a>.
+
+### Verified Integrations
+
+Verified Integrations are those that we have tested and are testing to work perfectly in the <a href="https://michelangelo.land">Michelangelo.land</a> environment. These are mainly libraries that start with the prefix "expo-" and are compatible with Expo Go.
+
+<CardGroup cols={1}>
+  <Card title="expo-media-library" href="https://docs.expo.dev/versions/latest/sdk/media-library/">
+    Provides access to user's media library.
+  </Card>
+
+  <Card title="expo-build-properties" href="https://docs.expo.dev/versions/latest/sdk/build-properties/">
+    Config plugin to customize native build properties on prebuild
+  </Card>
+
+  <Card title="expo-dev-client" href="https://docs.expo.dev/versions/latest/sdk/dev-client/">
+    Expo Development Client
+  </Card>
+
+  <Card title="expo-json-utils" href="https://github.com/expo/expo/tree/main/packages/expo-json-utils">
+    Utilities for reading JSONObjects (Android) and NSDictionaries (iOS).
+  </Card>
+
+  <Card title="expo-structured-headers" href="https://github.com/expo/expo/tree/main/packages/expo-structured-headers">
+    Expo module implementation of a parser based on [https://httpwg.org/specs/rfc8941.html](https://httpwg.org/specs/rfc8941.html)
+  </Card>
+
+  <Card title="expo-manifests" href="https://docs.expo.dev/versions/latest/sdk/manifests/">
+    Code to parse and use Expo and Expo Updates manifests.
+  </Card>
+
+  <Card title="expo-symbols" href="https://docs.expo.dev/versions/latest/sdk/symbols/">
+    Provides access to the SF Symbols library on iOS for React Native and Expo apps.
+  </Card>
+
+  <Card title="expo-navigation-bar" href="https://docs.expo.dev/versions/latest/sdk/navigation-bar/">
+    Modify and observe the native navigation bar on Android devices.
+  </Card>
+
+  <Card title="expo-clipboard" href="https://docs.expo.dev/versions/latest/sdk/clipboard/">
+    Provides an interface for getting and setting Clipboard content on Android, iOS and Web.
+  </Card>
+
+  <Card title="expo-tracking-transparency" href="https://docs.expo.dev/versions/latest/sdk/tracking-transparency/">
+    An Expo library for requesting permission to track the users on devices using iOS 14.5 and higher.
+  </Card>
+
+  <Card title="expo-image" href="https://docs.expo.dev/versions/latest/sdk/image/">
+    A cross-platform, performant image component for React Native and Expo with Web support.
+  </Card>
+
+  <Card title="expo-system-ui" href="https://docs.expo.dev/versions/latest/sdk/system-ui/">
+    Interact with system UI elements.
+  </Card>
+
+  <Card title="expo-router" href="https://docs.expo.dev/router/introduction/">
+    Expo Router is a file-based router for React Native and web applications.
+  </Card>
+
+  <Card title="expo-status-bar" href="https://docs.expo.dev/versions/latest/sdk/status-bar/">
+    Provides the same interface as the React Native StatusBar API, but with slightly different defaults to work great in Expo environments.
+  </Card>
+
+  <Card title="expo-screen-capture" href="https://docs.expo.dev/versions/latest/sdk/screen-capture/">
+    Protects screens in your app from being captured or recorded, and notifies if a screenshot is taken.
+  </Card>
+
+  <Card title="expo-sharing" href="https://docs.expo.dev/versions/latest/sdk/sharing/">
+    Provides a way to share files directly with other compatible applications.
+  </Card>
+
+  <Card title="expo-screen-orientation" href="https://docs.expo.dev/versions/latest/sdk/screen-orientation/">
+    Expo universal module for managing device's screen orientation.
+  </Card>
+
+  <Card title="expo-linking" href="https://docs.expo.dev/versions/latest/sdk/linking/">
+    Create and open deep links universally.
+  </Card>
+
+  <Card title="expo-auth-session" href="https://docs.expo.dev/versions/latest/sdk/auth-session/">
+    Expo module for browser-based authentication.
+  </Card>
+
+  <Card title="expo-updates" href="https://docs.expo.dev/versions/latest/sdk/updates/">
+    Fetches and manages remotely-hosted assets and updates to your app's JS bundle.
+  </Card>
+
+  <Card title="expo-splash-screen" href="https://docs.expo.dev/versions/latest/sdk/splash-screen/">
+    Provides a module to allow keeping the native Splash Screen visible until you choose to hide it.
+  </Card>
+
+  <Card title="expo-web-browser" href="https://docs.expo.dev/versions/latest/sdk/webbrowser/">
+    Provides access to the system's web browser and supports handling redirects.&#x20;
+  </Card>
+
+  <Card title="expo-video-thumbnails" href="https://docs.expo.dev/versions/latest/sdk/video-thumbnails/">
+    Provides function that let you generate an image from video.
+  </Card>
+
+  <Card title="expo-task-manager" href="https://docs.expo.dev/versions/latest/sdk/task-manager/">
+    Expo module that provides support for tasks that can run in the background.
+  </Card>
+
+  <Card title="expo-store-review" href="https://docs.expo.dev/versions/latest/sdk/storereview/">
+    Provides access to native APIs for in-app reviews.
+  </Card>
+
+  <Card title="expo-sqlite" href="https://docs.expo.dev/versions/latest/sdk/sqlite/">
+    Provides access to a database using SQLite. The database is persisted across restarts of your app.
+  </Card>
+
+  <Card title="expo-speech" href="https://docs.expo.dev/versions/latest/sdk/speech/">
+    Provides text-to-speech functionality.
+  </Card>
+
+  <Card title="expo-sms" href="https://docs.expo.dev/versions/latest/sdk/sms/">
+    Provides access to the system's UI/app for sending SMS messages.
+  </Card>
+
+  <Card title="expo-sensors" href="https://docs.expo.dev/versions/latest/sdk/sensors/">
+    Provides access to a hardware device's accelerometer, gyroscope, magnetometer, and pedometer.
+  </Card>
+
+  <Card title="expo-secure-store" href="https://docs.expo.dev/versions/latest/sdk/securestore/">
+    Provides a way to encrypt and securely store key-value pairs locally on the device.
+  </Card>
+
+  <Card title="expo-print" href="https://docs.expo.dev/versions/latest/sdk/print/">
+    Provides an API for Android and iOS (AirPrint) printing functionality.
+  </Card>
+
+  <Card title="expo-notifications" href="https://docs.expo.dev/versions/latest/sdk/notifications/">
+    Provides an API to fetch push notification tokens and to present, schedule, receive, and respond to notifications.
+  </Card>
+
+  <Card title="expo-network" href="https://docs.expo.dev/versions/latest/sdk/network/">
+    Provides useful information about the device's network such as its IP address, MAC address, and airplane mode status.
+  </Card>
+
+  <Card title="expo-mail-composer" href="https://docs.expo.dev/versions/latest/sdk/mail-composer/">
+    Provides an API to compose mails using OS specific UI.
+  </Card>
+
+  <Card title="expo-location" href="https://docs.expo.dev/versions/latest/sdk/location/">
+    Allows reading geolocation information from the device. Your app can poll for the current location or subscribe to location update events.
+  </Card>
+
+  <Card title="expo-localization" href="https://docs.expo.dev/versions/latest/sdk/localization/">
+    Provides an interface for native user localization information.
+  </Card>
+
+  <Card title="expo-local-authentication" href="https://docs.expo.dev/versions/latest/sdk/local-authentication/">
+    Provides an API for FaceID and TouchID (iOS) or the Fingerprint API (Android) to authenticate the user with a face or fingerprint scan.
+  </Card>
+
+  <Card title="expo-linear-gradient" href="https://docs.expo.dev/versions/latest/sdk/linear-gradient/">
+    Provides a React component that renders a gradient view.
+  </Card>
+
+  <Card title="expo-keep-awake" href="https://docs.expo.dev/versions/latest/sdk/keep-awake/">
+    Provides a React component that prevents the screen sleeping when rendered. It also exposes static methods to control the behavior imperatively.
+  </Card>
+
+  <Card title="expo-intent-launcher" href="https://docs.expo.dev/versions/latest/sdk/intent-launcher/">
+    Provides a way to launch Android intents, e.g. opening a specific activity.
+  </Card>
+
+  <Card title="expo-image-picker" href="https://docs.expo.dev/versions/latest/sdk/imagepicker/">
+    Provides access to the system's UI for selecting images and videos from the phone's library or taking a photo with the camera.
+  </Card>
+
+  <Card title="expo-image-manipulator" href="https://docs.expo.dev/versions/latest/sdk/imagemanipulator/">
+    Provides functions that let you manipulation images on the local file system, eg: resize, crop.
+  </Card>
+
+  <Card title="expo-haptics" href="https://docs.expo.dev/versions/latest/sdk/haptics/">
+    Provides access to the system's haptics engine on iOS, vibration effects on Android, and Web Vibration API on web.
+  </Card>
+
+  <Card title="expo-gl" href="https://docs.expo.dev/versions/latest/sdk/gl-view/">
+    Provides GLView that acts as OpenGL ES render target and gives GL context object implementing WebGL 2.0 specification.
+  </Card>
+
+  <Card title="expo-font" href="https://docs.expo.dev/versions/latest/sdk/font/">
+    Load fonts at runtime and use them in React Native components.
+  </Card>
+
+  <Card title="expo-file-system" href="https://docs.expo.dev/versions/latest/sdk/filesystem/">
+    Provides access to the local file system on the device.
+  </Card>
+
+  <Card title="expo-document-picker" href="https://docs.expo.dev/versions/latest/sdk/document-picker/">
+    Provides access to the system's UI for selecting documents from the available providers on the user's device.
+  </Card>
+
+  <Card title="expo-device" href="https://docs.expo.dev/versions/latest/sdk/device/">
+    A universal module that gets physical information about the device running the application.
+  </Card>
+
+  <Card title="expo-crypto" href="https://docs.expo.dev/versions/latest/sdk/crypto/">
+    Provides cryptography primitives for Android, iOS and web.
+  </Card>
+
+  <Card title="expo-contacts" href="https://docs.expo.dev/versions/latest/sdk/contacts/">
+    Provides access to the phone's system contacts.
+  </Card>
+
+  <Card title="expo-constants" href="https://docs.expo.dev/versions/latest/sdk/constants/">
+    Provides system information that remains constant throughout the lifetime of your app.
+  </Card>
+
+  <Card title="expo-cellular" href="https://docs.expo.dev/versions/latest/sdk/cellular/">
+    Provides information about the user’s cellular service provider.
+  </Card>
+
+  <Card title="expo-camera" href="https://docs.expo.dev/versions/latest/sdk/camera/">
+    A React component that renders a preview for the device's either front or back camera. Camera's parameters like zoom, auto focus, white balance and flash mode are adjustable. With expo-camera, one can also take photos and record videos that are saved to the app's cache. Morever, the component is also capable of detecting faces and bar codes appearing on the preview.
+  </Card>
+
+  <Card title="expo-calendar" href="https://docs.expo.dev/versions/latest/sdk/calendar/">
+    Provides an API for interacting with the device's system calendars, events, reminders, and associated records.
+  </Card>
+
+  <Card title="expo-brightness" href="https://docs.expo.dev/versions/latest/sdk/brightness/">
+    Provides an API to get and set screen brightness.
+  </Card>
+
+  <Card title="expo-blur" href="https://docs.expo.dev/versions/latest/sdk/blur-view/">
+    A component that renders a native blur view on iOS and falls back to a semi-transparent view on Android. A common usage of this is for navigation bars, tab bars, and modals.
+  </Card>
+
+  <Card title="expo-battery" href="https://docs.expo.dev/versions/latest/sdk/battery/">
+    Provides battery information for the physical device, as well as corresponding event listeners.
+  </Card>
+
+  <Card title="expo-background-fetch" href="https://docs.expo.dev/versions/latest/sdk/background-fetch/">
+    Expo universal module for BackgroundFetch API.
+  </Card>
+
+  <Card title="expo-av" href="https://docs.expo.dev/versions/latest/sdk/av/">
+    Expo universal module for Audio and Video playback.
+  </Card>
+
+  <Card title="expo-asset" href="https://docs.expo.dev/versions/latest/sdk/asset/">
+    An Expo universal module to download assets and pass them into other APIs.
+  </Card>
+
+  <Card title="expo-application" href="https://docs.expo.dev/versions/latest/sdk/application/">
+    A universal module that gets native application information such as its ID, app name, and build version at runtime.
+  </Card>
+
+  <Card title="expo-apple-authentication" href="https://docs.expo.dev/versions/latest/sdk/apple-authentication/">
+    A package that provides 'Sign in with Apple' capability for Expo and React Native apps.
+  </Card>
+
+  <Card title="expo-processing" href="https://github.com/expo/expo/tree/main/packages/expo-processing">
+    Utilities for using Processing.js on Expo.
+  </Card>
+
+  <Card title="expo-atlas" href="https://github.com/expo/atlas#readme">
+    Visualize React Native bundles to understand and optimize your app.
+  </Card>
+
+  <Card title="expo-next-react-navigation" href="https://github.com/nandorojo/expo-next-react-navigation">
+    ⛴ Make Next.js and react-navigation play nicely together with an Expo/React Native Web app.
+  </Card>
+
+  <Card title="expo-2d-context" href="https://github.com/expo/expo-2d-context">
+    A pure-js implementation of the W3C's Canvas-2D Context API that can be run on either Expo Graphics or WebGL.
+  </Card>
+
+  <Card title="expo-three" href="https://github.com/expo/expo-three">
+    Utilities for using THREE.js on Expo.
+  </Card>
+
+  <Card title="expo-skeleton-loading" href="https://www.npmjs.com/package/expo-skeleton-loading">
+    Expo equivalent of react-native-skeleton-loading.
+  </Card>
+
+  <Card title="expo-jwt" href="https://github.com/blake-simpson/expo-jwt">
+    Encode and decode JSON Web Tokens (JWT) in an Expo based React Native project.
+  </Card>
+
+  <Card title="@pachun/simple-expo-update" href="https://github.com/pachun/simple-expo-update">
+    Simpler expo-updates.
+  </Card>
+
+  <Card title="@lodev09/expo-recorder" href="https://github.com/lodev09/expo-recorder">
+    Audio recorder for your React Native apps.
+  </Card>
+
+  <Card title="@appandflow/expo-image-cropping" href="https://github.com/AppAndFlow/expo-image-cropping">
+    A library for cropping image in Expo without any external native plugin.
+  </Card>
+
+  <Card title="@siposdani87/expo-maps-polygon-editor" href="https://github.com/siposdani87/expo-maps-polygon-editor">
+    This multi polygon editor is written in TypeScript for the React Native Maps component. This component allows you to select, create, or modify areas on Apple Maps and Google Maps. You can edit multiple polygons at the same time.
+  </Card>
+
+  <Card title="expo-image-crop" href="https://github.com/brunon80/expo-image-crop">
+    Crop and rotate image without detach your expo project!
+  </Card>
+
+  <Card title="expo-ui-kit" href="https://github.com/react-ui-kit">
+    expo-ui-kit - a components based React-Native UI Kit.
+  </Card>
+
+  <Card title="@expo/react-native-action-sheet" href="https://github.com/expo/react-native-action-sheet">
+    A cross-platform ActionSheet for React Native.
+  </Card>
+
+  <Card title="@expo/vector-icons" href="https://icons.expo.fyi/Index">
+    Built-in support for popular icon fonts and the tooling to create your own Icon components from your font and glyph map. This is a wrapper around react-native-vector-icons to make it compatible with Expo.
+  </Card>
+
+  <Card title="@expo/fingerprint" href="https://github.com/expo/expo/tree/main/packages/@expo/fingerprint#readme">
+    A library to generate a fingerprint from a React Native project.
+  </Card>
+
+  <Card title="toastify-react-native" href="https://github.com/zahidalidev/toastify-react-native">
+    toastify-react-native allows you to add notifications to your react-native app (ios, android) with ease. No more nonsense!
+  </Card>
+
+  <Card title="react-native-safe-area-context" href="https://docs.appandflow.com/safe-area-context">
+    A flexible way to handle safe area insets in JS. Also works on Android and Web!
+  </Card>
+
+  <Card title="expo-face-detector">
+    An open-source framework for making universal native apps with React. Expo runs on Android, iOS, and the web.
+
+    <Icon icon="triangle-exclamation" color="#cf7415" iconType="regular" /> This library is not actively maintained. You can use **react-native-vision-camera** instead.
+  </Card>
+
+  <Card title="expo-barcode-scanner">
+    An open-source framework for making universal native apps with React. Expo runs on Android, iOS, and the web.
+
+    <Icon icon="triangle-exclamation" color="#cf7415" iconType="regular" /> This library is not actively maintained. You can use **expo-camera** instead.
+  </Card>
+
+  <Card title="jest-expo-enzyme">
+    An open-source framework for making universal native apps with React. Expo runs on Android, iOS, and the web.
+
+    <Icon icon="triangle-exclamation" color="#cf7415" iconType="regular" /> This library is not actively maintained. You can use **@testing-library/react-native** instead.
+  </Card>
+
+  <Card title="expo-random">
+    An open-source framework for making universal native apps with React. Expo runs on Android, iOS, and the web.
+
+    <Icon icon="triangle-exclamation" color="#cf7415" iconType="regular" /> This library is not actively maintained. You can use **expo-crypto** instead.
+  </Card>
+
+  <Card title="react-native-shared-element" href="https://github.com/IjzerenHein/react-native-shared-element">
+    Native shared element transition "primitives" for react-native.
+  </Card>
+
+  <Card title="react-native-timer-picker" href="https://www.npmjs.com/package/react-native-timer-picker">
+    A simple, flexible, performant duration picker for React Native apps (Expo & Bare Workflow). Great for timers, alarms and duration inputs. Includes iOS-style haptic and audio feedback.
+  </Card>
+
+  <Card title="react-native-irano" href="https://github.com/Aris-ngoy/react-native-irano">
+    A customizable cross-platform toast notification library for React Native.
+  </Card>
+
+  <Card title="native-notify" href="https://github.com/NativeNotify/native-notify">
+    Expo Push Notifications (React Native) by [https://NativeNotify.com](https://nativenotify.com/). Send your first Expo push notification in less than a minute.
+  </Card>
+
+  <Card title="kratos-selfservice-ui-react-native" href="https://github.com/ory/kratos-selfservice-ui-react-native">
+    A reference implementation of an app using ORY Kratos for auth (login), sign up (registration), profile settings (update password), MFA/2FA, account recovery (password reset), and more for React Native. This repository is available as an expo template!
+  </Card>
+
+  <Card title="expo-image-editor" href="https://github.com/thomas-coldwell/expo-image-editor">
+    A super simple image cropping and rotation tool for Expo that runs on iOS, Android and Web!
+
+    <Icon icon="triangle-exclamation" color="#cf7415" iconType="regular" /> This library is not actively maintained.
+  </Card>
+
+  <Card title="expo-video-player" href="https://github.com/ihmpavel/expo-video-player">
+    Customizable Video Player controls for Expo.
+
+    <Icon icon="triangle-exclamation" color="#cf7415" iconType="regular" /> This library is not actively maintained.
+  </Card>
+
+  <Card title="react-native-appearance" href="https://github.com/expo/react-native-appearance">
+    Access operating system appearance information (currently only light/dark mode) on iOS, Android, and web.
+
+    <Icon icon="triangle-exclamation" color="#cf7415" iconType="regular" /> This library is not actively maintained.
+  </Card>
+
+  <Card title="expo-split-pane" href="https://github.com/nikochan2k/expo-split-pane">
+    Split movable pane for Expo.
+
+    <Icon icon="triangle-exclamation" color="#cf7415" iconType="regular" /> This library is not actively maintained.
+  </Card>
+
+  <Card title="expo-music-picker" href="https://github.com/barthap/expo-music-picker">
+    A music picker library for React Native. Provides access to the system's UI for selecting songs from the phone's music library.
+
+    <Icon icon="triangle-exclamation" color="#cf7415" iconType="regular" /> This library is not actively maintained.
+  </Card>
+
+  <Card title="@expo/react-native-link" href="https://github.com/expo/react-native-link">
+    A Link element for React Native, analogous to the A tag in HTML.
+
+    <Icon icon="triangle-exclamation" color="#cf7415" iconType="regular" /> This library is not actively maintained.
+  </Card>
+
+  <Card title="@expo/react-native-responsive-image" href="https://github.com/expo/react-native-responsive-image">
+    A responsive Image component that chooses the best-resolution image for the current screen
+
+    <Icon icon="triangle-exclamation" color="#cf7415" iconType="regular" /> This library is not actively maintained.
+  </Card>
+
+  <Card title="expo-pixi" href="https://github.com/expo/expo-pixi">
+    Tools for using pixi.js in Expo.
+
+    <Icon icon="triangle-exclamation" color="#cf7415" iconType="regular" /> This library is not actively maintained.
+  </Card>
+
+  <Card title="@expo/ex-navigation" href="https://github.com/expo/ex-navigation">
+    Route-centric navigation for React Native.
+
+    <Icon icon="triangle-exclamation" color="#cf7415" iconType="regular" /> This library is not actively maintained.
+  </Card>
+</CardGroup>
+
+### Unverified Integrations
+
+Unverified Integrations include all those libraries and APIs that are compatible with Expo Go, but have not yet been thoroughly tested within <a href="https://michelangelo.land">Michelangelo.land</a>.
+These integrations may work correctly, but they may also present limitations or unexpected behavior.If you want to use one of these libraries:
+
+* Check compatibility by reading the library's official documentation.
+
+* Test the integration directly in Michelangelo.land to make sure it works properly.
+
+* Share feedback: if a library proves stable, we may consider it for the list of verified integrations.
+
+<CardGroup cols={1}>
+  <Card title="expo-maps" href="https://github.com/expo/expo/tree/main/packages/expo-maps">
+    Provides a Map component that uses Google Maps on Android and Apple Maps on iOS.
+  </Card>
+
+  <Card title="expo-audio" href="https://docs.expo.dev/versions/latest/sdk/audio/">
+    A cross-platform audio library for React Native and Expo apps.
+  </Card>
+
+  <Card title="expo-video" href="https://docs.expo.dev/versions/latest/sdk/video/">
+    A cross-platform, performant video component for React Native and Expo with Web support.
+  </Card>
+
+  <Card title="expo-insights" href="https://github.com/expo/expo/tree/main/packages/expo-insights">
+    Expo module that offers developers insight into the usage data of the app.
+  </Card>
+
+  <Card title="expo-share-extension" href="https://github.com/MaxAst/expo-share-extension">
+    Expo config plugin for creating iOS share extensions with a custom view.
+  </Card>
+
+  <Card title="expo-share-intent" href="https://github.com/achorein/expo-share-intent">
+    Simple share intent in an Expo Native Module.
+  </Card>
+
+  <Card title="expo-speech-recognition" href="https://github.com/jamsch/expo-speech-recognition">
+    Speech Recognition for React Native Expo projects.
+  </Card>
+
+  <Card title="expo-quick-actions" href="https://github.com/EvanBacon/expo-quick-actions">
+    Add home screen quick actions / shortcuts and custom icons to your Expo app.
+  </Card>
+
+  <Card title="expo-drag-drop-content-view" href="https://github.com/AlirezaHadjar/expo-drag-drop-content-view#readme">
+    A Superset of View which listens for dragged contents.
+  </Card>
+
+  <Card title="expo-translate-text" href="https://tomatterton.com">
+    An expo module used to handle translating text in an app.
+  </Card>
+
+  <Card title="expo-selectable-text" href="https://github.com/colaquecez/expo-selectable-text">
+    A React Native library that enables customizable text selection functionality on Android by using Kotlin.
+  </Card>
+
+  <Card title="expo-googlenearby-connection" href="https://www.npmjs.com/package/expo-googlenearby-connection?activeTab=readme">
+    Expo module for Google Nearby Connection SDK.
+  </Card>
+
+  <Card title="expo-totp" href="https://github.com/EdgarJMesquita/expo-totp">
+    Allow TOTP(Time-based One-Time Password) code generation for react native expo.
+  </Card>
+
+  <Card title="@bittingz/expo-widgets" href="https://github.com/mike-stewart-dev/expo-widgets">
+    Bringing widget functionality to expo!
+  </Card>
+
+  <Card title="@siteed/expo-audio-ui" href="https://github.com/deeeed/expo-audio-stream#readme">
+    UI experiments for @siteed/expo-audio-studio.
+  </Card>
+
+  <Card title="@siteed/expo-audio-stream" href="https://github.com/deeeed/expo-audio-stream/blob/main/packages/expo-audio-stream/README.md">
+    DEPRECATED: Use @siteed/expo-audio-studio instead. This package now serves as a compatibility wrapper.
+  </Card>
+
+  <Card title="@pachun/use-expo-push-notifications" href="https://github.com/pachun/use-expo-push-notifications">
+    Simpler (and more testable) expo-notifications event handling.
+  </Card>
+
+  <Card title="expo-alternate-app-icons" href="https://www.npmjs.com/package/expo-alternate-app-icons">
+    Provides functions that let you change the app icon.
+  </Card>
+
+  <Card title="@maniac-tech/react-native-expo-read-sms" href="https://react-native-expo-read-sms.vercel.app">
+    Library to read incoming SMS in Android for Expo (React Native).
+  </Card>
+
+  <Card title="expo-key-event" href="https://github.com/tlow92/expo-key-event">
+    Provides an interface for reading key events such as from external bluetooth keyboards on Android, iOS and Web.
+  </Card>
+
+  <Card title="expo-spellchecker" href="https://github.com/liveakshay/expo-spellchecker">
+    Expo module that exposes underlying native spell checker (iOS  and android) and word completions (iOS only) - to react-native apps, via TypeScript interface.
+  </Card>
+
+  <Card title="expo-pip" href="https://github.com/EdgarJMesquita/expo-pip">
+    A library that provides access to Picture In Picture API for Android only.
+  </Card>
+
+  <Card title="expo-notifee-plugin" href="https://github.com/LunatiqueCoder/expo-notifee-plugin">
+    Expo plugin that configures a Notification Service Extension to use Notifee for remote notifications.
+  </Card>
+
+  <Card title="expo-in-app-updates" href="https://www.npmjs.com/package/expo-in-app-updates">
+    A lightweight and easy-to-use module for implementing native in-app updates for Android and iOS.
+  </Card>
+
+  <Card title="@wwdrew/expo-spotify-sdk" href="https://github.com/wwdrew/expo-spotify-sdk">
+    Expo Module for native Spotify SDKs.
+  </Card>
+
+  <Card title="expo-custom-assets" href="https://github.com/Malaa-tech/expo-custom-assets">
+    Expo plugin to add custom assets to native codebase.
+  </Card>
+
+  <Card title="expo-squircle-view" href="https://github.com/Malaa-tech/expo-squircle-view">
+    A native implementation for figma corner smoothing (Squircle Shape) for react native expo apps.
+  </Card>
+
+  <Card title="expo-video-metadata" href="https://github.com/hirbod/expo-video-metadata">
+    Provides a function that let you get some metadata from video files, like the duration, width, height, fps, codec, hasAudio, orientation, audioChannels, audioCodec, audioSampleRate etc. Check the exported types for more information. This library has web support but is limited to platform APIs.
+  </Card>
+
+  <Card title="@appandflow/expo-camera-characteristics" href="https://www.npmjs.com/package/@appandflow/expo-camera-characteristics?activeTab=readme">
+    This library exposes the rear camera's characteristics such as the sensor size, the focal length and the image resolution.
+  </Card>
+
+  <Card title="expo-health-connect" href="https://github.com/matinzd/expo-health-connect">
+    Expo integration for react-native-health-connect.
+  </Card>
+
+  <Card title="@wwdrew/expo-android-account-manager" href="https://github.com/wwdrew/expo-android-account-manager">
+    Expo Module for Android AccountManager.
+  </Card>
+
+  <Card title="@wwdrew/expo-android-shared-preferences" href="https://github.com/wwdrew/expo-android-shared-preferences">
+    Expo Module for Android SharedPreferences.
+  </Card>
+
+  <Card title="expo-foreground-actions" href="https://www.npmjs.com/package/expo-foreground-actions">
+    Start actions that continue to run in the grace period after the user switches apps.
+  </Card>
+
+  <Card title="expo-dynamic-app-icon" href="https://github.com/outsung/expo-dynamic-app-icon">
+    Programmatically change the app icon in Expo.
+  </Card>
+
+  <Card title="expo-stable-diffusion" href="https://andreizgirvaci.com/blog/how-to-create-ai-generated-images-on-ios-in-react-native-using-stable-diffusion">
+    Run Stable Diffusion using Core ML on iOS within your Expo & React Native App.
+  </Card>
+
+  <Card title="@hot-updater/react-native" href="https://github.com/gronxb/hot-updater#readme">
+    React Native OTA solution for self-hosted.
+  </Card>
+
+  <Card title="app-icon-badge" href="https://github.com/obytes/app-icon-badge">
+    Expo plugin/library to add badges for your app icon: banner, ribbon, and fully customizable.
+  </Card>
+
+  <Card title="@appzung/react-native-code-push" href="https://github.com/AppZung/react-native-code-push">
+    React Native module for AppZung CodePush.
+  </Card>
+
+  <Card title="@rnw-community/react-native-payments" href="https://github.com/rnw-community/rnw-community/tree/master/packages/react-native-payments">
+    Accept Payments with Apple Pay and Android Pay using the Payment Request API.
+  </Card>
+
+  <Card title="@expo/match-media" href="https://github.com/expo/match-media">
+    Universal polyfill for match media API using Expo APIs on mobile.
+  </Card>
+</CardGroup>

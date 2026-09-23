@@ -1,0 +1,161 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Prompt Engineering
+
+> Discover strategies to improve interaction with Michelangelo.land.
+
+## What is Prompt Engineering?
+
+Prompt Engineering is the art and science of **writing effective prompts** to get the most out of generative AI. A good prompt guides the AI ​​to understand the context and come up with more accurate, relevant, and useful responses. Structuring a prompt correctly can make the difference between a generic result and a highly optimized response for your use case.
+
+## Why is it important?
+
+<a href="https://michelangelo.land">Michelangelo.land</a> is designed to work in perfect harmony with your development flow, but the quality of its answers also depends on how the prompt is formulated.&#x20;
+Through intelligent use of Prompt Engineering, you can:
+
+* Get **more precise code** suggestions.
+
+* Generate **more relevant content**.
+
+* **Reduce** the need for **manual iterations**.
+
+* **Customize the output** of <a href="https://michelangelo.land">Michelangelo.land</a> to your needs.
+
+## The Prompt Engineering Section
+
+This section of the documentation collects a **list of strategies and best practices** **to improve the quality of your prompts** and make the most of <a href="https://michelangelo.land">Michelangelo.land</a>. Here you will find:
+
+* Fundamental principles for writing effective prompts.
+
+* Advanced techniques to obtain more precise results.
+
+* Practical examples of prompts optimized for different use cases.
+
+* Common mistakes to avoid to maximize the quality of responses.
+
+Explore the strategies described in this section and sculpt the way you interact with <a href="https://michelangelo.land">Michelangelo.land</a>. With Prompt Engineering, **you and Michelangelo.land can collaborate** more harmoniously, learning from each other and creating increasingly effective solutions **together**.&#x20;
+
+## Prompting Strategies
+
+Depending on your specific needs, these strategies can be very effective when used together. We encourage you to try them out to see which ones yield the best results. While Michelangelo.land can already do a lot with a basic, generic prompt, using some of these techniques can help you get even better results.
+
+## Contextual prompting
+
+Providing context can help Michelangelo.land better understand the scope of your requests.<br />
+There are two ways to provide context directly:<br />
+
+* by clicking the “+Add content” button to tag files
+* including context directly in the prompt itself by setting the stage with basic information, for example:
+
+<Note>
+  Setting the context:
+
+  ```
+  We are building a recipe management app that allows users to create, save and share their favorite recipes. Key features include:
+  - recipe creation
+  - adding ingredients
+  - sharing with friends
+
+  For the first activity, create the screen to add a new recipe.
+  ```
+</Note>
+
+## Incremental prompting
+
+Making gradual, smaller changes produces better results.
+
+<Warning>
+  Avoid:
+
+  ```
+  Build a full recipe app with search functionality, user accounts, recipe ratings, and a shopping list feature.
+  ```
+</Warning>
+
+<Tip>
+  Recommended:
+
+  ```
+  Create the basic homepage with a list of recipes.
+  ```
+
+  ```
+  Great! Now, let's add the functionality to view a single recipe with ingredients and instructions.
+  ```
+
+  ```
+  Perfect! The next step is to implement the recipe rating system.
+  ```
+</Tip>
+
+## Avoid ambiguity
+
+Make sure your prompts are clear and unambiguous. Avoid vague terms and be as specific as possible about what you need.
+
+<Warning>
+  Avoid:
+
+  ```
+  Make my app better.
+  ```
+</Warning>
+
+<Tip>
+  Recommended:
+
+  ```
+  Remove unused components and ensure that the UI and functionality remain the same.
+  ```
+</Tip>
+
+## Defining Project Structure and File Management
+
+Clearly outline your project structure, such as filenames and paths, to ensure organized and manageable code generation.
+
+<Note>
+  Define the project structure:
+
+  ```
+  Create a new form component called 'LoginForm' and save it as 'components/login-form.tsx'. It should include fields for email, password, and a submit button.
+  ```
+</Note>
+
+## Debugging and Issue Reporting
+
+When reporting bugs or requesting changes be specific. Report the issue, describe the current behavior, describe the expected behavior, and add constraints.
+
+<Note>
+  Describe the issue:
+
+  ```
+  When submitting the login form with incorrect credentials, no error message is displayed.
+  An error message should appear informing the user that the credentials are incorrect.
+  The error message should be clearly visible, styled in red, and disappear after 5 seconds.
+  ```
+</Note>
+
+### Using Console Log for reporting bugs
+
+Pasting an error logged in the Log Console into the chat can be very helpful.
+
+<Note>
+  Report the log:
+
+  ```
+  My app stops working when I try to submit a form. The page doesn’t refresh, and no confirmation appears.
+
+  Here's the log of the issue, can you fix it?
+
+      Uncaught (in promise) TypeError: Cannot read properties of null (reading 'appendChild')  
+      at submitForm (https://example.lovable.app/assets/form-handler.js:120:15)  
+      at HTMLButtonElement.onclick (https://example.lovable.app/assets/app.js:45:8)  
+  ```
+</Note>
+
+<br />
+
+<br />
+
+<Card title="More content coming soon..." icon="gear-complex-code" iconType="solid" color="#7c7c7c" />
