@@ -20,6 +20,10 @@ export interface Chunk {
   content: string; // final text to be embedded (context + body)
   content_hash: string; // SHA-256 of content → incremental sync
   char_count: number;
+  // Product version from the docs URL (/v1/ legacy, /v2/ current,
+  // null = version-neutral page such as api-reference). Metadata only:
+  // NOT part of the hashed content, so it never triggers a re-embed.
+  doc_version: "v1" | "v2" | null;
 }
 
 // Target length: above this threshold a section is split on paragraphs.
@@ -127,6 +131,10 @@ export async function chunkPage(markdown: string, sourceUrl: string): Promise<Ch
     if (body.length > 40) sections.push({ section: heading, body });
   }
 
+  // Product version from the URL path: /v1/ = legacy, /v2/ = current,
+  // no prefix (e.g. api-reference) = version-neutral (null).
+  const docVersion = (sourceUrl.match(/\/(v[12])\//)?.[1] as "v1" | "v2" | undefined) ?? null;
+
   // Build the final chunks: prepended context + splitting of long pieces.
   const chunks: Chunk[] = [];
   for (const s of sections) {
@@ -141,6 +149,7 @@ export async function chunkPage(markdown: string, sourceUrl: string): Promise<Ch
         content,
         content_hash: hash,
         char_count: content.length,
+        doc_version: docVersion,
       });
     }
   }

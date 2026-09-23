@@ -42,6 +42,7 @@ interface Chunk {
   content: string;
   content_hash: string;
   char_count: number;
+  doc_version: "v1" | "v2" | null;
 }
 
 const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
