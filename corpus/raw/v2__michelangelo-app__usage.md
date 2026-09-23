@@ -1,0 +1,78 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Usage
+
+> Track your creative activity, contributions, and AI usage in the Michelangelo iOS App
+
+The **Usage** screen shows what Michelangelo made possible for you: how much you created, how consistently you build, and how much AI work went into your projects.
+
+To open it:
+
+1. Go to the **Settings** tab.
+2. Under **Account**, tap **Usage**.
+
+## Your Creative Power
+
+The top section summarizes your total creative output:
+
+* **Lines of code generated** — all the code Michelangelo wrote for you.
+* **Code files created** — how many files that code lives in.
+* **Current streak** — how many days in a row you have created. It stays alive as long as you created something today or yesterday.
+* **Best streak** — your longest run of days in a row.
+* **Most productive month** — the month where you created the most apps.
+* **Most active hour** — the time of day when you usually create, shown in your local time.
+
+Tap the info icon next to a metric to see its meaning directly in the app.
+
+## Contributions
+
+The contributions calendar shows your activity day by day:
+
+* Each square is one day.
+* The darker the square, the more you created that day.
+* It covers the last 12 months.
+
+<Info>
+  The calendar starts from **August 2026**.
+</Info>
+
+## This Month
+
+Your activity for a specific month:
+
+* **Month / year selectors** — look back at any recent month.
+* **Apps generated** — new apps you created that month.
+* **AI generations** — how many times the AI worked for you that month, including edits to apps you already had.
+* **Tokens used** — how much AI work went into your apps that month. Large numbers are shortened (for example, 1.2K or 3.4M).
+
+<Info>
+  AI generations and tokens are available from **August 2026** onward. If there is nothing to show for a month, the app shows `—`.
+</Info>
+
+## All Time
+
+Your totals since you started using Michelangelo:
+
+* **Apps generated** — all the apps you ever created.
+* **AI generations** — all the times the AI worked for you.
+* **Tokens used** — all the AI work behind your apps.
+
+## Good to Know
+
+* Creating a new app and asking the AI to improve an existing one count differently: the first grows your app count, the second grows your AI generations.
+* Streaks, best month, and most active hour follow your local time.
+* Your stats update automatically as you build — just reopen the app to see the latest.
+
+## Next Steps
+
+<CardGroup cols="2">
+  <Card title="Tokens and Limits" icon="gauge" color="#7c7c7c" href="/v2/how-to-build/tokens-and-limits">
+    Understand generation limits and subscriptions.
+  </Card>
+
+  <Card title="Create Project" icon="plus" color="#7c7c7c" href="/v2/michelangelo-app/create-project">
+    Generate a new app and grow your streak.
+  </Card>
+</CardGroup>

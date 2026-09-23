@@ -1,0 +1,102 @@
+> ## Documentation Index
+> Fetch the complete documentation index at: https://docs.michelangelo.land/llms.txt
+> Use this file to discover all available pages before exploring further.
+
+# Welcome
+
+> Sculpt your apps fast using natural language with Michelangelo
+
+<Note>
+  🚀 **You are viewing the v1 documentation** – This version focuses on the **Michelangelo web** for developing **native Expo apps**. For Michelangelo iOS app documentation, refer to the [version 2](/v2/introduction).
+</Note>
+
+## Product Features
+
+<a href="https://michelangelo.land">**Michelangelo**</a> excels in several areas of development. Below is a table showing his skills, description and maturity level:
+
+| Capability         | Description                              | Level                                                                   |
+| ------------------ | ---------------------------------------- | ----------------------------------------------------------------------- |
+| Code generation    | Creating React Native Code with Expo     | <Icon icon="face-smile" iconType="regular" color="#009933" size="20" /> |
+| Code editor        | Edit code directly in the platform       | <Icon icon="face-smile" iconType="regular" color="#009933" size="20" /> |
+| Best practice      | Best practice code generation            | <Icon icon="face-smile" iconType="regular" color="#009933" size="20" /> |
+| Instant viewing    | You can instantly view the app           | <Icon icon="face-smile" iconType="regular" color="#009933" size="20" /> |
+| Share preview      | Share your app with a simple public link | <Icon icon="face-smile" iconType="regular" color="#009933" size="20" /> |
+| Deploy             | Quick and easy app distribution          | <Icon icon="face-smile" iconType="regular" color="#009933" size="20" /> |
+| GitHub integration | Automated connection to GitHub           | <Icon icon="face-smile" iconType="regular" color="#009933" size="20" /> |
+
+<img alt="michelangelo.land" classname="hidden dark:block" src="https://mintcdn.com/michelangeloland/eVXcz9RBB8cp9K1l/images/michelangelo-land.png?fit=max&auto=format&n=eVXcz9RBB8cp9K1l&q=85&s=c1efa5bc6ffa6abd63afe17eaa272b64" width="4800" height="2700" data-path="images/michelangelo-land.png" />
+
+## Overview
+
+Michelangelo simplifies full-stack hybrid application development by combining advanced **AI**, automatic code generation, and integration with popular development **ecosystems**.
+With an **intuitive interface**, **Expo** support, quick and easy app distribution for **iOS** and **Android** and **GitHub** synchronization, it provides developers with a **powerful** and **efficient environment** to delpoy and share **high-quality applications** quickly and at scale.
+
+<CardGroup cols="2">
+  <Card title="Getting Started" icon="rocket-launch" color="#7c7c7c" href="/v1/how-to-build/quickstart">
+    Check out our step-by-step tutorial for to creating a full-stack hybrid app.
+  </Card>
+
+  <Card title="Prompt Engineering" icon="robot" color="#7c7c7c" href="/v1/how-to-build/prompt-engineering">
+    Discover strategies to improve interaction with Michelangelo.
+  </Card>
+
+  <Card title="Share Preview" icon="eye" color="#7c7c7c" href="/v1/manage-and-deploy/share-preview">
+    Share with anyone your application with a simple public link.
+  </Card>
+
+  <Card title="Deploy" icon="arrow-up-right-from-square" color="#7c7c7c" href="/v1/manage-and-deploy/deploy-app">
+    Distribute your applications easily with Michelangelo
+  </Card>
+
+  <Card title="Integration" icon="screwdriver-wrench" color="#7c7c7c" href="/v1/how-to-build/integration">
+    Learn about supported APIs and GitHub integration.
+  </Card>
+
+  <Card title="API" icon="plug" color="#7c7c7c" href="/v1/api-call/your-api-call">
+    Use Michelangelo API to generate code.
+  </Card>
+</CardGroup>
+
+## Stay Connected
+
+<CardGroup cols="2">
+  <Card title="Change Log" icon="bolt" color="#7c7c7c" href="https://discord.com/invite/RJDhCzA7Hv">
+    News and updates from the Michelangelo engineering team.
+  </Card>
+
+  <Card title="Follow on X" icon="X" color="#7c7c7c" href="https://x.com/michelangelo_os">
+    Follow us on X for the latest updates and announcements.
+  </Card>
+
+  <Card title="Community" icon="user-group" color="#7c7c7c" href="https://discord.com/invite/RJDhCzA7Hv">
+    Join our community.
+  </Card>
+</CardGroup>
+
+## Support
+
+<CardGroup cols="2">
+  <Card title="Community Support" icon="discord" color="#7c7c7c" href="https://discord.com/invite/RJDhCzA7Hv">
+    Join the community on Discord for support and discussion.
+  </Card>
+
+  <Card title="Issues" icon="bug" color="#7c7c7c" href="https://discord.com/invite/RJDhCzA7Hv">
+    Check out our Discord channel for reports and issues.
+  </Card>
+
+  <Card title="Priority Support" icon="headset" color="#7c7c7c" href="mailto:sardo@michelangelo.land ">
+    Direct support available for Enterprise users.
+  </Card>
+</CardGroup>
+
+## Learn More
+
+<CardGroup cols="2">
+  <Card title="Website" icon="globe-pointer" color="#7c7c7c" href="https://michelangelo.land">
+    Learn more about Michelangelo
+  </Card>
+
+  <Card title="Our Vision" icon="eye" color="#7c7c7c" href="https://michelangelo.land/our-vision">
+    Learn more about our vision in Michelangelo
+  </Card>
+</CardGroup>
