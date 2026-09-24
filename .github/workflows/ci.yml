@@ -9,6 +9,13 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Serialize CI runs: they share the STAGING Supabase project, and the seed
+# step syncs the test-user password — parallel runs would overwrite each
+# other's password mid-run ("Invalid login credentials" in authed.setup).
+concurrency:
+  group: ci-staging
+  cancel-in-progress: false
+
 jobs:
   test:
     runs-on: ubuntu-latest
